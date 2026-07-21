@@ -1,0 +1,206 @@
+@import "tailwindcss";
+
+:root {
+  --background: #030506;
+  --background-elevated: #0f1820;
+  --background-subtle: #141f28;
+
+  --border-color: #1c2a30;
+  --border-muted: #12191e;
+
+  --foreground: #edf1f2;
+  --foreground-muted: #8b9aa1;
+  --foreground-faint: #5c6b71;
+
+  --accent-100: #a8f0e6;
+  --accent-300: #5ee5d6;
+  --accent: #2dd4bf;
+  --accent-600: #1fa595;
+  --accent-700: #1b9e8f;
+  --accent-900: #0f5f56;
+
+  --danger: #d9635f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-elevated: var(--background-elevated);
+  --color-background-subtle: var(--background-subtle);
+
+  --color-border: var(--border-color);
+  --color-border-muted: var(--border-muted);
+
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-faint: var(--foreground-faint);
+
+  --color-accent-100: var(--accent-100);
+  --color-accent-300: var(--accent-300);
+  --color-accent: var(--accent);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-accent-900: var(--accent-900);
+
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  background-image:
+    linear-gradient(to right, rgba(237, 241, 242, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(237, 241, 242, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-attachment: fixed;
+}
+
+::selection {
+  background-color: var(--accent-900);
+  color: var(--accent-100);
+}
+
+/* Ruler-tick hairline divider: a 1px line with small vertical ticks along it. */
+.ruler-divider {
+  position: relative;
+  height: 2px;
+  background-color: var(--border-color);
+}
+
+.ruler-divider::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* background-image: repeating-linear-gradient(
+    to right,
+    var(--border-color) 0,
+    var(--border-color) 1px,
+    transparent 1px,
+    transparent 24px
+  ); */
+  height: 2px;
+  top: -2px;
+}
+
+@keyframes radar-sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 8s linear infinite;
+}
+
+@keyframes ticker-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.animate-ticker-blink {
+  animation: ticker-blink 2s ease-in-out infinite;
+}
+
+/* Scroll-triggered entrance: fades/slides an element in once it enters the
+   viewport. Direction and stagger delay are set per-instance via the
+   .reveal--* modifier and an inline transition-delay. */
+.reveal {
+  opacity: 0;
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal--up {
+  transform: translateY(20px);
+}
+
+.reveal--left {
+  transform: translateX(-20px);
+}
+
+.reveal--right {
+  transform: translateX(20px);
+}
+
+.reveal--scale {
+  transform: scale(0.96);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-radar-sweep,
+  .animate-ticker-blink {
+    animation: none;
+  }
+}
+
+/* Diagonal hazard-stripe texture for thick interstitial divider bands.
+   background-size is set to the diagonal repeat period (stripe period *
+   sqrt(2)) so the belt-scroll animation loops with no visible seam. */
+.texture-belt {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(237, 241, 242, 0.06) 0px,
+    rgba(237, 241, 242, 0.06) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  background-size: 28.28px 28.28px;
+  animation: belt-scroll 2.2s linear infinite;
+}
+
+.texture-belt:hover {
+  animation-duration: 0.6s;
+}
+
+@keyframes belt-scroll {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -28.28px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .texture-belt {
+    animation: none;
+  }
+}
