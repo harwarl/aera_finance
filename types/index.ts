@@ -28,11 +28,18 @@ export type SecurityBadge = {
   description: string;
 };
 
+export type WhitepaperCallout = {
+  variant: "info" | "warning";
+  title: string;
+  text: string;
+};
+
 export type WhitepaperSection = {
   index: string;
   id: string;
   label: string;
   paragraphs: string[];
+  callout?: WhitepaperCallout;
 };
 
 export type RoadmapStatus = "done" | "current" | "upcoming";

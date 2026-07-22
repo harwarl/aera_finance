@@ -204,6 +204,11 @@ export const whitepaperSections: WhitepaperSection[] = [
       "Aera is non-custodial. Assets remain in the user's own wallet or a smart account they control; Aera only ever holds a scoped trade-approval permission limited to allowlisted contracts and asset classes, revocable at any time.",
       "Smart contracts are independently reviewed by a third-party security firm before every mainnet deployment, and the policy engine that decides when and how to trade is open source and publicly auditable.",
     ],
+    callout: {
+      variant: "info",
+      title: "Revocable at any time",
+      text: "Revoking Aera's trade-approval permission at any time does not require withdrawing funds first — your assets never leave your own wallet or smart account.",
+    },
   },
   {
     index: "06",
@@ -234,6 +239,11 @@ export const whitepaperSections: WhitepaperSection[] = [
     index: "09",
     id: "risk-disclosures",
     label: "Risk Disclosures",
+    callout: {
+      variant: "warning",
+      title: "Not financial advice",
+      text: "This is not financial advice. Aera cannot eliminate market risk, smart contract risk, or protocol-level failures — only allocate capital you can afford to lose.",
+    },
     paragraphs: [
       "Nothing in this document is financial advice. Aera operates within the bounds a user configures, but it cannot eliminate market risk, smart contract risk, or protocol-level failures in the venues it routes through.",
       "Past performance of any strategy or policy configuration is not indicative of future results. Users should only allocate capital they can afford to lose, and should read Section 04 and Section 05 in full before granting the agent trading permissions.",

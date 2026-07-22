@@ -1,6 +1,7 @@
 import { GitBranchPlus, Send, X } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "@/components/shared/Logo";
+import { DotMatrixText } from "@/components/shared/DotMatrixText";
 import { footerLinks, networkStatus, siteConfig } from "@/config/site";
 
 const socials = [
@@ -86,6 +87,10 @@ export function Footer() {
         <div className="flex flex-col items-start justify-between gap-4 font-mono text-[10px] uppercase tracking-widest text-foreground-faint sm:flex-row sm:items-center">
           <span>© 2026 Aera Finance. All rights reserved.</span>
           <span>[ Non-Custodial · On-Chain · Audited ]</span>
+        </div>
+
+        <div className="mt-12 overflow-x-auto">
+          <DotMatrixText text="AERA FINANCE" />
         </div>
       </Container>
     </footer>
