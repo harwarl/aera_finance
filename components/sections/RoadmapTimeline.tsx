@@ -3,40 +3,36 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { roadmapMilestones } from "@/config/roadmap";
-import type { RoadmapStatus } from "@/types";
+import { roadmapMonths } from "@/config/roadmap";
+import type { RoadmapMonth, RoadmapStatus } from "@/types";
 
-const STEP_MS = 160;
-const SEG_MS = 420;
-const NODE_MS = 340;
+const STEP_MS = 70;
+const SEG_MS = 260;
+const NODE_MS = 220;
 const POP_EASE = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 
+function isLit(status: RoadmapStatus) {
+  return status !== "upcoming";
+}
+
 function nodeClasses(status: RoadmapStatus) {
-  if (status === "upcoming") {
-    return "border-border bg-background";
-  }
-  return "border-accent bg-accent";
+  return isLit(status) ? "border-accent bg-accent" : "border-border bg-background";
 }
 
 function segmentClasses(fromStatus: RoadmapStatus) {
   return fromStatus === "done" ? "bg-accent" : "bg-border";
 }
 
-function DateLabel({
-  quarter,
-  status,
-}: {
-  quarter: string;
-  status: RoadmapStatus;
-}) {
+function DateLabel({ month }: { month: RoadmapMonth }) {
   return (
     <span
       className={cn(
         "font-mono text-xs uppercase tracking-widest",
-        status === "upcoming" ? "text-foreground-faint" : "text-accent"
+        isLit(month.status) ? "text-accent" : "text-foreground-faint",
+        month.title && "text-sm"
       )}
     >
-      {quarter}
+      {month.month} <span className="opacity-70">{month.year}</span>
     </span>
   );
 }
@@ -55,6 +51,17 @@ function MilestoneCopy({
         {description}
       </p>
     </div>
+  );
+}
+
+function GlowBeam({ lit }: { lit: boolean }) {
+  return (
+    <span
+      className={cn(
+        "block h-4 w-px",
+        lit ? "bg-accent shadow-[0_0_8px_var(--accent)]" : "bg-border-muted"
+      )}
+    />
   );
 }
 
@@ -128,13 +135,14 @@ export function RoadmapTimeline() {
     <>
       {/* Mobile / tablet: vertical timeline */}
       <div ref={mobileRef} className="flex flex-col lg:hidden">
-        {roadmapMilestones.map((milestone, i) => (
-          <div key={milestone.id} className="flex gap-5">
-            <div className="flex flex-col items-center">
+        {roadmapMonths.map((month, i) => (
+          <div key={month.id} className="flex gap-5">
+            <div className="flex w-3 flex-col items-center">
               <span
                 className={cn(
-                  "h-3 w-3 shrink-0 rotate-45 border transition-transform",
-                  nodeClasses(milestone.status),
+                  "shrink-0 rotate-45 border transition-transform",
+                  month.title ? "h-3 w-3" : "h-1.5 w-1.5",
+                  nodeClasses(month.status),
                   mobileStarted ? "scale-100" : "scale-0"
                 )}
                 style={{
@@ -143,11 +151,11 @@ export function RoadmapTimeline() {
                   transitionDelay: `${i * STEP_MS}ms`,
                 }}
               />
-              {i < roadmapMilestones.length - 1 ? (
+              {i < roadmapMonths.length - 1 ? (
                 <span
                   className={cn(
                     "mt-1 w-px flex-1 origin-top transition-transform ease-out",
-                    segmentClasses(milestone.status),
+                    segmentClasses(month.status),
                     mobileStarted ? "scale-y-100" : "scale-y-0"
                   )}
                   style={{
@@ -159,7 +167,8 @@ export function RoadmapTimeline() {
             </div>
             <div
               className={cn(
-                "pb-10 transition-all ease-out",
+                "transition-all ease-out",
+                month.title ? "pb-10" : "pb-4",
                 mobileStarted
                   ? "translate-y-0 opacity-100"
                   : "translate-y-1.5 opacity-0"
@@ -169,14 +178,13 @@ export function RoadmapTimeline() {
                 transitionDelay: `${i * STEP_MS + NODE_MS * 0.4}ms`,
               }}
             >
-              <DateLabel quarter={milestone.quarter} status={milestone.status} />
-              <div className="mt-2">
-                <MilestoneCopy
-                  title={milestone.title}
-                  description={milestone.description}
-                />
-              </div>
-              {milestone.status === "current" ? (
+              <DateLabel month={month} />
+              {month.title && month.description ? (
+                <div className="mt-2">
+                  <MilestoneCopy title={month.title} description={month.description} />
+                </div>
+              ) : null}
+              {month.status === "current" ? (
                 <span className="mt-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-accent">
                   <span className="h-1.5 w-1.5 animate-ticker-blink bg-accent" />
                   In Progress
@@ -190,41 +198,39 @@ export function RoadmapTimeline() {
       {/* Desktop: horizontal timeline */}
       <div ref={desktopRef} className="hidden overflow-x-auto pb-4 lg:block">
         <div className="flex w-max items-stretch px-2">
-          {roadmapMilestones.map((milestone, i) => {
+          {roadmapMonths.map((month, i) => {
             const above = i % 2 === 0;
+            const lit = isLit(month.status);
             const copyDelay = `${i * STEP_MS + NODE_MS * 0.5}ms`;
             const copyState = desktopStarted
               ? "translate-y-0 opacity-100"
               : cn(above ? "translate-y-1.5" : "-translate-y-1.5", "opacity-0");
 
             return (
-              <div key={milestone.id} className="flex h-full w-56 shrink-0 flex-col">
-                <div className="flex h-32 flex-col items-center justify-end gap-2 text-center">
+              <div key={month.id} className="flex h-full w-48 shrink-0 flex-col">
+                <div className="flex h-44 flex-col items-center justify-end gap-1 text-center">
                   {above ? (
                     <div
-                      className={cn("transition-all ease-out", copyState)}
+                      className={cn("flex flex-col items-center transition-all ease-out", copyState)}
                       style={{ transitionDuration: "420ms", transitionDelay: copyDelay }}
                     >
-                      <MilestoneCopy
-                        title={milestone.title}
-                        description={milestone.description}
-                      />
-                      <div className="mt-2">
-                        <DateLabel
-                          quarter={milestone.quarter}
-                          status={milestone.status}
-                        />
-                      </div>
+                      {month.title && month.description ? (
+                        <div className="mb-2">
+                          <MilestoneCopy title={month.title} description={month.description} />
+                        </div>
+                      ) : null}
+                      <DateLabel month={month} />
+                      <GlowBeam lit={lit} />
                     </div>
                   ) : null}
                 </div>
 
-                <div className="flex items-center">
+                <div className="flex h-3 items-center">
                   {i > 0 ? (
                     <span
                       className={cn(
                         "h-px flex-1 origin-left transition-transform ease-out",
-                        segmentClasses(roadmapMilestones[i - 1].status),
+                        segmentClasses(roadmapMonths[i - 1].status),
                         desktopStarted ? "scale-x-100" : "scale-x-0"
                       )}
                       style={{
@@ -236,18 +242,11 @@ export function RoadmapTimeline() {
                     <span className="flex-1" />
                   )}
                   <span className="relative flex shrink-0 items-center justify-center">
-                    {milestone.status === "current" ? (
-                      <span
-                        className={cn(
-                          "absolute h-4 w-4 rounded-full bg-accent/50",
-                          desktopStarted ? "animate-ping" : "opacity-0"
-                        )}
-                      />
-                    ) : null}
                     <span
                       className={cn(
-                        "relative h-3 w-3 rotate-45 border transition-transform",
-                        nodeClasses(milestone.status),
+                        "relative rotate-45 border transition-transform",
+                        month.title ? "h-3 w-3" : "h-1.5 w-1.5",
+                        nodeClasses(month.status),
                         desktopStarted ? "scale-100" : "scale-0"
                       )}
                       style={{
@@ -256,7 +255,7 @@ export function RoadmapTimeline() {
                         transitionDelay: `${i * STEP_MS + SEG_MS * 0.6}ms`,
                       }}
                     />
-                    {milestone.status === "current" ? (
+                    {month.status === "current" ? (
                       <ArrowRight
                         className={cn(
                           "absolute left-full ml-1.5 h-4 w-4 text-accent transition-all ease-out",
@@ -271,11 +270,11 @@ export function RoadmapTimeline() {
                       />
                     ) : null}
                   </span>
-                  {i < roadmapMilestones.length - 1 ? (
+                  {i < roadmapMonths.length - 1 ? (
                     <span
                       className={cn(
                         "h-px flex-1 origin-left transition-transform ease-out",
-                        segmentClasses(milestone.status),
+                        segmentClasses(month.status),
                         desktopStarted ? "scale-x-100" : "scale-x-0"
                       )}
                       style={{
@@ -288,28 +287,91 @@ export function RoadmapTimeline() {
                   )}
                 </div>
 
-                <div className="flex h-32 flex-col items-center justify-start gap-2 text-center">
+                <div className="flex h-44 flex-col items-center justify-start gap-1 text-center">
                   {!above ? (
                     <div
-                      className={cn("transition-all ease-out", copyState)}
+                      className={cn("flex flex-col items-center transition-all ease-out", copyState)}
                       style={{ transitionDuration: "420ms", transitionDelay: copyDelay }}
                     >
-                      <DateLabel
-                        quarter={milestone.quarter}
-                        status={milestone.status}
-                      />
-                      <div className="mt-2">
-                        <MilestoneCopy
-                          title={milestone.title}
-                          description={milestone.description}
-                        />
-                      </div>
+                      <GlowBeam lit={lit} />
+                      <DateLabel month={month} />
+                      {month.title && month.description ? (
+                        <div className="mt-2">
+                          <MilestoneCopy title={month.title} description={month.description} />
+                        </div>
+                      ) : null}
                     </div>
                   ) : null}
                 </div>
               </div>
             );
           })}
+
+          {/* Decorative continuation: the line bends off past the last known milestone. */}
+          <div className="flex h-full w-24 shrink-0 flex-col">
+            <div className="h-44" />
+            <div className="flex h-3 items-center">
+              <span
+                className={cn(
+                  "h-px w-10 origin-left bg-border transition-transform ease-out",
+                  desktopStarted ? "scale-x-100" : "scale-x-0"
+                )}
+                style={{
+                  transitionDuration: `${SEG_MS}ms`,
+                  transitionDelay: `${roadmapMonths.length * STEP_MS}ms`,
+                }}
+              />
+              <span
+                className={cn(
+                  "h-px w-8 origin-left rotate-45 bg-border transition-transform ease-out",
+                  desktopStarted ? "scale-x-100" : "scale-x-0"
+                )}
+                style={{
+                  transitionDuration: `${SEG_MS}ms`,
+                  transitionDelay: `${roadmapMonths.length * STEP_MS + SEG_MS * 0.7}ms`,
+                }}
+              />
+            </div>
+            <div className="flex h-44 flex-col items-end pr-[calc(50%-2px)]">
+              <span
+                className={cn(
+                  "h-16 w-px origin-top bg-border transition-transform ease-out",
+                  desktopStarted ? "scale-y-100" : "scale-y-0"
+                )}
+                style={{
+                  transitionDuration: `${SEG_MS}ms`,
+                  transitionDelay: `${roadmapMonths.length * STEP_MS + SEG_MS * 1.4}ms`,
+                }}
+              />
+              <span
+                className={cn(
+                  "-ml-[3.5px] h-2 w-2 shrink-0 rounded-full border border-border bg-background transition-transform",
+                  desktopStarted ? "scale-100" : "scale-0"
+                )}
+                style={{
+                  transitionDuration: `${NODE_MS}ms`,
+                  transitionTimingFunction: POP_EASE,
+                  transitionDelay: `${roadmapMonths.length * STEP_MS + SEG_MS * 2.4}ms`,
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Travels with your scroll: a live signal riding the line. */}
+          <div className="sticky left-1/2 top-0 z-10 h-full w-0">
+            <div className="flex h-44 items-end justify-center" />
+            <div className="flex h-3 items-center justify-center">
+              <span className="relative -translate-x-1/2">
+                <span
+                  className={cn(
+                    "absolute inset-0 -m-1.5 rounded-full bg-accent/50",
+                    desktopStarted ? "animate-ping" : "opacity-0"
+                  )}
+                />
+                <span className="relative block h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" />
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </>

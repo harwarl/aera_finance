@@ -34,20 +34,61 @@ export type WhitepaperCallout = {
   text: string;
 };
 
-export type WhitepaperSection = {
-  index: string;
+export type WhitepaperBlock =
+  | { type: "paragraph"; text: string }
+  | { type: "list"; items: string[] }
+  | { type: "table"; headers: string[]; rows: string[][] };
+
+export type WhitepaperSubsection = {
   id: string;
+  title: string;
+  blocks: WhitepaperBlock[];
+};
+
+export type WhitepaperRoadmapPhase = {
   label: string;
-  paragraphs: string[];
+  description: string;
+};
+
+export type WhitepaperFaqItem = {
+  question: string;
+  answer: string;
+};
+
+export type WhitepaperGlossaryItem = {
+  term: string;
+  definition: string;
+};
+
+export type DocGroup =
+  | "Overview"
+  | "Architecture"
+  | "Product"
+  | "Assets & Fees"
+  | "Protocol";
+
+export type DocPage = {
+  slug: string;
+  group: DocGroup;
+  title: string;
+  intro?: string;
+  blocks?: WhitepaperBlock[];
+  subsections?: WhitepaperSubsection[];
+  roadmapPhases?: WhitepaperRoadmapPhase[];
+  faqs?: WhitepaperFaqItem[];
+  glossary?: WhitepaperGlossaryItem[];
   callout?: WhitepaperCallout;
+  note?: string;
+  closing?: string;
 };
 
 export type RoadmapStatus = "done" | "current" | "upcoming";
 
-export type RoadmapMilestone = {
+export type RoadmapMonth = {
   id: string;
-  quarter: string;
-  title: string;
-  description: string;
+  month: string;
+  year: string;
   status: RoadmapStatus;
+  title?: string;
+  description?: string;
 };

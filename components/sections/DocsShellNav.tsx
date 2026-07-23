@@ -1,39 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { docPages } from "@/config/whitepaper";
+import type { DocGroup } from "@/types";
 
-type NavGroup = {
-  label: string;
-  items: { label: string; href: string }[];
-};
-
-const groups: NavGroup[] = [
-  {
-    label: "Overview",
-    items: [
-      { label: "Home", href: "/" },
-      { label: "Security", href: "/#security" },
-      { label: "FAQ", href: "/#faq" },
-    ],
-  },
-  {
-    label: "Documents",
-    items: [
-      { label: "Whitepaper", href: "/whitepaper" },
-      { label: "Roadmap", href: "/roadmap" },
-    ],
-  },
-  {
-    label: "Get Started",
-    items: [
-      { label: "Waitlist", href: "/waitlist" },
-      { label: "Launch Agent", href: "/#solution" },
-    ],
-  },
+const GROUP_ORDER: DocGroup[] = [
+  "Overview",
+  "Architecture",
+  "Product",
+  "Assets & Fees",
+  "Protocol",
 ];
 
 export function DocsShellNav() {
@@ -58,14 +38,17 @@ export function DocsShellNav() {
   }, []);
 
   const q = query.trim().toLowerCase();
-  const filteredGroups = groups
-    .map((group) => ({
-      ...group,
-      items: group.items.filter((item) =>
-        item.label.toLowerCase().includes(q)
-      ),
-    }))
-    .filter((group) => group.items.length > 0);
+
+  const groups = useMemo(
+    () =>
+      GROUP_ORDER.map((group) => ({
+        label: group,
+        items: docPages
+          .filter((page) => page.group === group)
+          .filter((page) => page.title.toLowerCase().includes(q)),
+      })).filter((group) => group.items.length > 0),
+    [q]
+  );
 
   return (
     <div>
@@ -85,18 +68,19 @@ export function DocsShellNav() {
       </div>
 
       <nav className="mt-6 flex flex-col gap-6">
-        {filteredGroups.map((group) => (
+        {groups.map((group) => (
           <div key={group.label}>
             <span className="font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
               {group.label}
             </span>
             <div className="mt-2 flex flex-col gap-0.5">
-              {group.items.map((item) => {
-                const active = pathname === item.href;
+              {group.items.map((page) => {
+                const href = `/whitepaper/${page.slug}`;
+                const active = pathname === href;
                 return (
                   <Link
-                    key={item.href}
-                    href={item.href}
+                    key={page.slug}
+                    href={href}
                     className={cn(
                       "border-l-2 py-1.5 pl-3 text-sm transition-colors",
                       active
@@ -104,14 +88,14 @@ export function DocsShellNav() {
                         : "border-transparent text-foreground-muted hover:text-foreground"
                     )}
                   >
-                    {item.label}
+                    {page.title}
                   </Link>
                 );
               })}
             </div>
           </div>
         ))}
-        {filteredGroups.length === 0 ? (
+        {groups.length === 0 ? (
           <span className="font-mono text-xs text-foreground-faint">
             No matches
           </span>
