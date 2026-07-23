@@ -15,9 +15,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aera Finance — Autonomous Portfolio Agent, On-Chain",
+  title: "Aera Finance — AI Portfolio Agent for Tokenized Stocks",
   description:
-    "Aera automatically rebalances your on-chain stock token and yield portfolio, executes trades, and explains every decision in plain language. A robo-advisor, on-chain and in real time.",
+    "Aera is an AI agent that manages a portfolio of tokenized real stocks and on-chain yield, built on Robinhood Chain — rebalancing, executing trades, and explaining every decision in plain language.",
 };
 
 export default function RootLayout({

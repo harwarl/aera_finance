@@ -13,18 +13,59 @@ export const docPages: DocPage[] = [
     slug: "introduction",
     group: "Overview",
     title: "Introduction",
-    blocks: [
+    intro:
+      "AERA Finance is an AI agent that manages a portfolio of tokenized real stocks and on-chain yield, built on Robinhood Chain. In plain terms: you give it some money, tell it how you want that money handled, and it takes care of the ongoing work of managing it — buying, selling, and shifting between stocks and yield — so you don't have to watch the market yourself.",
+    subsections: [
       {
-        type: "paragraph",
-        text: "AERA Finance is an autonomous AI agent that manages a portfolio of tokenized real-world securities (\"Stock Tokens\") and on-chain yield, built on Robinhood Chain. AERA continuously monitors market conditions, rebalances a user's portfolio within boundaries the user explicitly sets, executes trades directly, and explains every decision in plain language. Funds remain in a non-custodial, user-controlled smart contract at all times, with hard on-chain limits constraining what the agent can ever do.",
+        id: "why-this-needs-explaining",
+        title: "Why this needs explaining at all",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "If you've used a normal brokerage app, this might sound like nothing new. The part that's actually new is *where* your assets live. Robinhood recently launched its own blockchain and started issuing real stocks as tokens that exist on that blockchain — meaning a share of a stock (or something economically equivalent to it) can now be held in a crypto wallet, the same way you'd hold any other token, instead of being locked inside a brokerage account you can only access through one app.",
+          },
+          {
+            type: "paragraph",
+            text: "That's a big deal, but it also creates a new question nobody has fully answered yet: if your stocks now live on-chain, who manages them day to day? A brokerage app doesn't manage your allocation for you — you do, or a human advisor does. AERA is built to be the automated version of that job, specifically for this new kind of on-chain stock ownership.",
+          },
+        ],
       },
       {
-        type: "paragraph",
-        text: "Real-world assets (RWA) are increasingly represented on-chain, moving from an experimental DeFi niche to a mainstream financial infrastructure category. Tokenized private credit, treasuries, and real estate already represent billions of dollars in on-chain value. In 2026, Robinhood extended this trend directly into public equities by launching Robinhood Chain, an Ethereum-based network purpose-built for real-world assets, and issuing Stock Tokens — tokenized debt securities that track real underlying stocks and ETFs, available as standard ERC-20 tokens with no special integration required.",
+        id: "what-you-get",
+        title: "What you actually get",
+        blocks: [
+          {
+            type: "list",
+            items: [
+              "A portfolio of Stock Tokens and yield-generating positions that stays aligned with rules you set, without you having to check in constantly.",
+              "Every action taken on your behalf comes with a plain-English explanation — not just a transaction hash, an actual sentence explaining what happened and why.",
+              "Full control at all times: you can see everything, change your rules, or pull your money out whenever you want.",
+            ],
+          },
+        ],
       },
       {
-        type: "paragraph",
-        text: "This is a meaningful shift: for the first time, mainstream retail brokerage assets are natively programmable. They can be held, transferred, and composed into new financial products the same way any other on-chain asset can. But composability alone does not solve the oldest problem in investing — deciding what to hold, when to change it, and why. AERA Finance exists to solve that problem for this new asset class specifically.",
+        id: "what-this-documentation-covers",
+        title: "What this documentation covers",
+        blocks: [
+          {
+            type: "list",
+            items: [
+              "[The Portfolio Management Gap](/whitepaper/portfolio-gap) — why this problem exists and why nothing currently solves it.",
+              "[The Vault Model](/whitepaper/vault-model) — where your money actually sits, and why AERA never touches it directly.",
+              "[How a Rebalance Works](/whitepaper/how-rebalancing-works) — the exact step-by-step of what happens when the agent decides to act.",
+              "[Constraints & the Trust Model](/whitepaper/constraints-trust-model) — the actual limits placed on the agent, and how they're enforced.",
+              "[Use Cases](/whitepaper/use-cases) — concrete examples of who this is for and what it looks like in practice.",
+              "[Supported Stock Tokens](/whitepaper/supported-stock-tokens) and [Fee Structure](/whitepaper/fee-structure) — the practical details.",
+              "[Security, Honesty & Roadmap](/whitepaper/security-honesty-roadmap) — including what we haven't finished yet. We think this matters more than most documentation admits.",
+              "[FAQ & Glossary](/whitepaper/faq-glossary) — quick answers and definitions if you just want the short version of something.",
+            ],
+          },
+          {
+            type: "paragraph",
+            text: "If you're new to any of this — tokenized stocks, on-chain vaults, or how an \"AI agent\" can safely execute real trades — keep reading in order. Nothing here assumes you're already a crypto expert.",
+          },
+        ],
       },
     ],
   },
@@ -32,22 +73,68 @@ export const docPages: DocPage[] = [
     slug: "portfolio-gap",
     group: "Overview",
     title: "The Portfolio Management Gap",
-    blocks: [
+    subsections: [
       {
-        type: "paragraph",
-        text: "Managing a portfolio of Stock Tokens and on-chain yield today requires the same judgment a professional portfolio manager would apply: monitoring drift from a target allocation, weighing equity exposure against yield-bearing alternatives, and reacting to changing market conditions. This is true whether the assets are held in a traditional brokerage account or on-chain — the difference is that on-chain assets are:",
-      },
-      {
-        type: "list",
-        items: [
-          "Continuously priced and liquid, meaning the cost of inaction (or slow reaction) is arguably higher than in a brokerage account rebalanced quarterly.",
-          "Composable with on-chain yield sources, creating a genuinely new allocation decision (equity exposure vs. yield) that didn't exist in the same form before.",
-          "Currently unmanaged by any existing product. Traditional robo-advisors do not support tokenized securities or DeFi yield; existing DeFi vaults are not built to reason about equity-specific risk.",
+        id: "what-actually-changed",
+        title: "Start with what actually changed",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "For most of financial history, if you owned a share of Apple stock, that ownership was recorded somewhere you couldn't directly touch — a brokerage's internal ledger, ultimately tracing back to a central depository. You could trade it through an app, but you couldn't, say, send it directly to a friend's wallet, or use it as collateral in a lending protocol, the way you could with a cryptocurrency.",
+          },
+          {
+            type: "paragraph",
+            text: "Robinhood Chain changes that. It's a blockchain built specifically so that real securities — starting with US stocks and ETFs — can exist as tokens: standard, ordinary on-chain tokens (technically ERC-20s, the same token format used for most cryptocurrencies) that represent economic exposure to the real underlying stock. These are called Stock Tokens. They can sit in a normal crypto wallet, move between wallets, and be combined with other on-chain products — including, notably, on-chain lending markets that pay yield on stablecoins.",
+          },
+          {
+            type: "paragraph",
+            text: "This is genuinely new. It's not \"Robinhood added crypto trading\" — it's \"real stocks became composable, programmable assets for the first time.\"",
+          },
         ],
       },
       {
-        type: "paragraph",
-        text: "The result is a real and growing gap: a new, genuinely useful asset class with no automated, trustworthy management layer built for it. AERA closes this gap with an AI agent that manages a user's Stock Token and yield portfolio autonomously, subject to rules the user defines upfront. The core design principle is that autonomy and safety are not in tension — they are both enforced structurally, not by trust alone.",
+        id: "why-a-gap",
+        title: "Why that creates a gap, not just an opportunity",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "New capability doesn't automatically come with new tools to use it well. Consider what \"managing a portfolio\" actually involves:",
+          },
+          {
+            type: "list",
+            items: [
+              "Deciding how much to hold in stocks versus safer, yield-generating positions",
+              "Noticing when one holding has grown to dominate the portfolio (say, one stock doubled in value and now makes up 60% of your money when you only wanted 20%)",
+              "Reacting when conditions change — interest rates shift, volatility spikes, a sector gets riskier",
+            ],
+          },
+          {
+            type: "paragraph",
+            text: "A human financial advisor does this kind of thing for wealthy clients. A robo-advisor (like the automated investing features inside many brokerage apps) does a simplified version of it for regular people — but only for assets held the traditional way, inside a regulated brokerage account.",
+          },
+          {
+            type: "paragraph",
+            text: "Neither of those exists yet for Stock Tokens specifically. Here's why each obvious candidate falls short:",
+          },
+          {
+            type: "list",
+            items: [
+              "**Traditional robo-advisors** are built around brokerage infrastructure. They have no way to see or manage a token sitting in your own crypto wallet — it's simply outside their world.",
+              "**Existing crypto/DeFi tools** know how to manage crypto-native strategies (like moving stablecoins between different lending pools to chase yield), but they don't understand equities. They can't reason about \"this portfolio is too concentrated in tech stocks\" because they were never built to think about stocks at all.",
+              "**Doing it yourself** is always an option, but it requires you to actively track prices, volatility, and yield rates on an ongoing basis — which is exactly the kind of task most people don't have the time, information, or training to do consistently well.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "the-result",
+        title: "The result",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "A real asset class — tokenized real stocks — exists today, is liquid, and is growing, but has no dedicated, automated management layer built for it. That's the gap. AERA is built specifically to fill it, rather than repurposing a tool meant for something else.",
+          },
+        ],
       },
     ],
   },
@@ -55,14 +142,73 @@ export const docPages: DocPage[] = [
     slug: "vault-model",
     group: "Architecture",
     title: "The Vault Model",
-    blocks: [
+    subsections: [
       {
-        type: "paragraph",
-        text: "AERA does not take custody of user funds. Deposits are held in a smart contract vault with a restricted \"manager\" role assigned to the agent's execution key. The manager role may only call a constrained rebalance function, bound by whitelisted assets, maximum trade size, slippage limits, and trade-frequency caps enforced at the contract level.",
+        id: "most-important-decision",
+        title: "The single most important design decision in AERA",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Before explaining how the agent thinks or trades, it's worth explaining something more basic: where does your money actually go, and who can touch it?",
+          },
+          {
+            type: "paragraph",
+            text: "**AERA never takes custody of your funds.** This is worth dwelling on, because it's the foundation everything else is built on top of.",
+          },
+        ],
       },
       {
-        type: "paragraph",
-        text: "The user retains exclusive rights to deposit, withdraw, adjust their own rule parameters, and revoke the agent's permission entirely. Nothing the agent does can move funds outside the vault to any destination other than the trades its manager role is scoped to execute.",
+        id: "what-custody-means",
+        title: "What \"custody\" means, and why it matters",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "\"Custody\" is just a word for \"who actually holds and controls the asset.\" When you put money in a traditional brokerage account, the brokerage has custody — your account shows a balance, but the actual assets are held and controlled by the company. If that company mismanages funds, goes bankrupt, or acts in bad faith, you're exposed to that risk, because you never actually held the asset yourself.",
+          },
+          {
+            type: "paragraph",
+            text: "AERA is built the opposite way. When you deposit funds to use AERA, they go into a **vault** — a smart contract, which is really just a small program living on the blockchain, whose rules are fixed and visible to anyone. This vault is created for you, and functionally, it's yours: you can see everything in it, you can withdraw from it, and no one — including AERA the company — can move funds out of it except in the specific ways the contract allows.",
+          },
+        ],
+      },
+      {
+        id: "what-agent-can-do",
+        title: "What the agent is actually allowed to do",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "AERA's AI agent is given something called a **manager role** on your vault. This sounds like a big grant of power, but it's actually very narrow by design. The manager role allows the agent to call exactly one function: a rebalance function. It cannot withdraw your funds to some other address. It cannot send your money anywhere except into the specific, pre-approved trades that function allows — and even those trades are boxed in by rules described in detail on the [Constraints & the Trust Model](/whitepaper/constraints-trust-model) page (hard limits on trade size, which assets are allowed, and more).",
+          },
+          {
+            type: "paragraph",
+            text: "A useful way to think about it: imagine giving someone a key that only opens one specific cabinet in your house, and that cabinet only lets them swap one approved item for another approved item, in limited quantities, on a limited schedule. That's closer to what the manager role actually is than \"AERA controls your money.\"",
+          },
+        ],
+      },
+      {
+        id: "what-you-can-always-do",
+        title: "What you can always do — no exceptions",
+        blocks: [
+          {
+            type: "list",
+            items: [
+              "**Deposit and withdraw** your funds, at any time, without asking anyone's permission.",
+              "**See everything.** Since the vault lives on a public blockchain, your holdings and full transaction history are visible and verifiable by you directly — not just something AERA tells you about.",
+              "**Change your own rules** — for example, tightening your risk limits or changing which sectors you're comfortable holding.",
+              "**Revoke the agent's access completely.** One action turns your vault back into a plain holding that nothing but you can touch — instantly, without a waiting period or an approval process.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "why-built-this-way",
+        title: "Why we built it this way instead of the easier way",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "It would genuinely be easier, from an engineering standpoint, to build AERA as a normal company that takes your deposit and manages it internally, the way a traditional fund does. We didn't do that, on purpose. The tradeoff of the vault model is that it's more complex to build — but the benefit is that your worst-case exposure is fundamentally limited. If AERA the company ceased to exist tomorrow, your funds would still be sitting in a vault only you can withdraw from. That's not true of most financial products, and we think it should be true of this one.",
+          },
+        ],
       },
     ],
   },
@@ -71,41 +217,102 @@ export const docPages: DocPage[] = [
     group: "Architecture",
     title: "How a Rebalance Works",
     intro:
-      "AERA closes the portfolio management gap with an AI agent that manages a user's Stock Token and yield portfolio autonomously, subject to rules the user defines upfront.",
+      "This page walks through, in order, exactly what happens from the moment the agent notices something to the moment (if it happens) that a trade executes. Nothing here is simplified to the point of hiding a step — if you want to understand exactly what AERA does on your behalf, this is the page that answers it in full.",
     subsections: [
       {
-        id: "how-it-works",
-        title: "The loop",
+        id: "step-1",
+        title: "Step 1: Continuous monitoring, not scheduled check-ins",
         blocks: [
+          {
+            type: "paragraph",
+            text: "Unlike a human advisor who might review your account once a quarter, AERA's agent is always watching. Specifically, it continuously tracks:",
+          },
           {
             type: "list",
             items: [
-              "Deposit — the user funds a transparent, non-custodial smart contract vault. Funds can be withdrawn at any time.",
-              "Set the rules — the user defines risk tolerance, sector or asset limits, and maximum position sizes. These are enforced on-chain, not merely as a suggestion to the agent.",
-              "Continuous monitoring — the agent evaluates portfolio drift, price volatility, and available yield rates on an ongoing basis, not on a fixed schedule.",
-              "Autonomous, explained action — when a rebalance is warranted, the agent executes the trade directly and publishes a plain-language explanation of what changed and why, alongside the underlying data that drove the decision.",
-              "On-chain safety limits — hard-coded constraints bound what the agent can ever do, regardless of its own reasoning. The user may revoke the agent's permission or withdraw funds at any time.",
+              "**Your current holdings**, compared against the target allocation you set (for example: \"I want roughly 60% in a mix of tech and healthcare stocks, and 40% in stable yield\").",
+              "**Live prices and volatility** for every Stock Token you hold, so it knows not just what things are worth right now, but how much they've been swinging.",
+              "**Available yield rates** on approved on-chain lending positions (for example, through Morpho), so it knows what the \"safe\" side of your portfolio is currently earning.",
             ],
           },
         ],
       },
       {
-        id: "reasoning-layer",
-        title: "Reasoning layer",
+        id: "step-2",
+        title: "Step 2: Recognizing that something's changed enough to matter",
         blocks: [
           {
             type: "paragraph",
-            text: "The agent's reasoning is driven by a large language model with function-calling access to live portfolio state, market data, and yield rates. Every proposed action is logged immutably along with the specific data inputs that produced it, creating a full audit trail independent of any single decision. The agent may only act within the boundaries the user has already agreed to — its role is to execute a pre-consented strategy well, not to invent new strategy outside the user's stated preferences.",
+            text: "A rebalance isn't triggered just because a price moved slightly — that would mean constant, costly trading for no real benefit. Instead, the agent is looking for two kinds of triggers:",
+          },
+          {
+            type: "list",
+            items: [
+              "**Drift**: your actual holdings have moved meaningfully away from your target. A simple example: if one stock in your portfolio doubles in price while everything else stays flat, it now makes up a much bigger share of your total portfolio than you originally wanted — increasing your risk in a way you didn't explicitly choose.",
+              "**Opportunity or risk shift**: something about market conditions has changed enough that your own stated rules call for a different mix — for instance, if yield rates rise significantly, your rules might call for shifting a bit more toward yield and a bit less toward equity, simply because that's what you told the agent to optimize for.",
+            ],
           },
         ],
       },
       {
-        id: "execution-layer",
-        title: "Execution layer",
+        id: "step-3",
+        title: "Step 3: Building a proposal, not just executing blindly",
         blocks: [
           {
             type: "paragraph",
-            text: "Trade execution is routed through established on-chain liquidity infrastructure (such as 1inch and 0x) already live on Robinhood Chain, rather than building new trading infrastructure from scratch. Execution proceeds only if on-chain constraint checks pass; a circuit breaker halts execution and requires manual review if a proposed action deviates significantly from historical patterns in size, frequency, or asset selection.",
+            text: "Before anything happens, the agent puts together a specific proposal: exactly which asset it wants to trade, how much, and — just as important — a plain-language explanation of the reasoning. This isn't an afterthought bolted on for marketing purposes; the explanation is generated directly from the same data that triggered the decision, and it's saved permanently alongside the proposal, whether or not the trade ends up happening.",
+          },
+          {
+            type: "paragraph",
+            text: "**Example of what this might look like in practice:**",
+          },
+          {
+            type: "paragraph",
+            text: "*\"Your tech holdings grew from 30% to 47% of your portfolio after a recent price increase, above your 35% limit. Proposing to sell approximately 12% of tech holdings and move the proceeds into your approved yield position, bringing tech exposure back in line with your target.\"*",
+          },
+        ],
+      },
+      {
+        id: "step-4",
+        title: "Step 4: Checking the proposal against hard, on-chain rules",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Before the agent can act on its own proposal, the vault contract itself checks it against the rules you set — completely independent of whatever the agent \"believes\" is a good idea. This includes things like: is the asset it wants to trade into on your approved list? Is the trade size within the maximum you allowed? Would the trade's expected price impact (slippage) stay within your tolerance? Has the agent already made its allowed number of trades for this period?",
+          },
+          {
+            type: "paragraph",
+            text: "If the proposal fails any of these checks, it simply does not execute. There's no override, no exception, no \"trust me\" — a failed check is a hard stop.",
+          },
+        ],
+      },
+      {
+        id: "step-5",
+        title: "Step 5: A second check for anything merely unusual",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Some problems don't look like a rule violation on paper, but still look wrong. Imagine the agent proposes something technically inside all your limits, but wildly different from anything it's done before — an unusually large trade, an unusual number of trades in a short period, or a rarely-used asset suddenly showing up. A separate system (we call this the circuit breaker) checks for exactly this kind of pattern. If something looks like an outlier, execution pauses and the proposal is held for manual human review, rather than proceeding automatically just because it technically passed the hard rules.",
+          },
+        ],
+      },
+      {
+        id: "step-6",
+        title: "Step 6: Execution",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "If a proposal clears both checks, the trade actually executes on-chain. Rather than building custom trading infrastructure from scratch, AERA routes trades through established, already-live liquidity providers on Robinhood Chain (such as 1inch and 0x), which helps ensure you get a fair, competitive price given how much liquidity is actually available at that moment.",
+          },
+        ],
+      },
+      {
+        id: "step-7",
+        title: "Step 7: Recording everything, always",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Whatever happens — the trade executes, gets blocked by a rule, or gets paused for review — it's written permanently into an immutable log: the market data that triggered it, the reasoning behind it, and the outcome. This log is available to you at any time through your dashboard. Nothing about this process happens somewhere you can't later go back and check.",
           },
         ],
       },
@@ -255,14 +462,62 @@ export const docPages: DocPage[] = [
     group: "Product",
     title: "Use Cases",
     intro:
-      "AERA's capabilities are deliberately narrow — it maintains an allocation and routes yield within limits you set. What that supports in practice:",
-    blocks: [
+      "Rather than describing this abstractly, here are concrete pictures of who ends up using AERA and what their experience actually looks like.",
+    subsections: [
       {
-        type: "list",
-        items: [
-          "Maintain a target equity allocation across Stock Tokens without manually tracking drift or timing trades yourself.",
-          "Route idle, unallocated capital into on-chain yield within the risk bounds you set, rather than leaving it uninvested between decisions.",
-          "Hold a long-term position while still reacting to real-time market moves, without needing to watch prices or execute trades yourself.",
+        id: "hands-off-holder",
+        title: "The hands-off holder",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "**Who they are:** someone who believes in owning tokenized stocks long-term but doesn't want the ongoing job of watching allocation drift or manually rebalancing.",
+          },
+          {
+            type: "paragraph",
+            text: "**What using AERA looks like for them:** they deposit funds once, set a target allocation and risk tolerance (say, \"I'm comfortable with moderate volatility, no more than 40% in any single sector\"), and then largely leave it alone. Every so often, they get a notification: a rebalance happened, with a plain-English explanation of why. They can check their dashboard whenever curiosity strikes, but they don't need to.",
+          },
+        ],
+      },
+      {
+        id: "yield-conscious-investor",
+        title: "The yield-conscious investor",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "**Who they are:** someone who doesn't want capital sitting idle, and wants a sensible, ongoing balance between equity exposure and on-chain yield, without manually shifting funds back and forth themselves.",
+          },
+          {
+            type: "paragraph",
+            text: "**What using AERA looks like for them:** they set rules that let the agent shift the equity/yield balance as relative conditions change — for example, allowing more weight toward yield when rates rise meaningfully, and back toward equity when they fall. They're less focused on picking specific stocks and more focused on overall capital efficiency.",
+          },
+        ],
+      },
+      {
+        id: "risk-boundary-setter",
+        title: "The risk-boundary setter",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "**Who they are:** someone with strong, specific opinions about what they will and won't hold — a hard cap on exposure to any one sector, or a firm rule against certain volatile assets — but who doesn't want to enforce that boundary manually, trade by trade, forever.",
+          },
+          {
+            type: "paragraph",
+            text: "**What using AERA looks like for them:** they spend real time upfront setting precise rules (maximum single-position size, disallowed sectors, volatility ceilings), and then trust that those rules are mechanically enforced by the contract, not just \"kept in mind\" by a human or a model that might drift from them over time.",
+          },
+        ],
+      },
+      {
+        id: "transparency-first-investor",
+        title: "The transparency-first investor",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "**Who they are:** someone genuinely open to automated portfolio management, but only if every action can be independently understood and verified — not a black box they're expected to simply trust.",
+          },
+          {
+            type: "paragraph",
+            text: "**What using AERA looks like for them:** they regularly review the decision log, cross-checking the stated reasoning against the actual market data at the time. For this kind of user, the explanation attached to every action isn't a nice bonus — it's the entire reason they're comfortable using an autonomous system at all.",
+          },
         ],
       },
     ],
@@ -274,58 +529,98 @@ export const docPages: DocPage[] = [
     blocks: [
       {
         type: "paragraph",
-        text: "AERA manages Stock Tokens issued on Robinhood Chain — tokenized securities that track real underlying public stocks and ETFs, available as standard ERC-20 tokens. Because AERA's manager role is bound by an on-chain asset whitelist (see The Vault Model), it can only ever act on assets explicitly approved for it — it cannot trade an asset that hasn't been added to that list.",
+        text: "AERA works with a deliberately limited, curated list of Stock Tokens issued on Robinhood Chain, along with a small number of approved on-chain yield positions (such as Morpho-based stablecoin yield markets).",
       },
     ],
-    note: "AERA is currently in Phase 0 (Validation). A specific list of supported Stock Tokens will be published as the asset whitelist is finalized ahead of Phase 3.",
+    subsections: [
+      {
+        id: "why-a-limited-list",
+        title: "Why a limited list, on purpose",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "It might seem like more supported assets would automatically be better, but AERA treats this list as a safety boundary, not just a feature waiting to be expanded. An asset is only added once we've confirmed there's enough real on-chain trading liquidity to support execution within AERA's slippage and trade-size constraints. An asset that technically exists but trades thinly isn't a good fit for an automated system executing trades on your behalf — thin liquidity means worse prices and higher risk of something going wrong during execution.",
+          },
+        ],
+      },
+    ],
+    note: "The specific list of currently supported tickers and yield products will be published here once finalized and confirmed live on Robinhood Chain. We'll update this page as coverage expands — and we'll note it here explicitly rather than silently widening the list.",
   },
   {
     slug: "fee-structure",
     group: "Assets & Fees",
     title: "Fee Structure",
-    blocks: [
+    subsections: [
       {
-        type: "paragraph",
-        text: "AERA's revenue model is a management fee assessed on assets under management, consistent with the established model used by traditional robo-advisors and asset managers, applied here to a new on-chain asset class rather than a novel or speculative mechanic.",
+        id: "how-aera-makes-money",
+        title: "How AERA makes money",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "AERA charges a **management fee**, calculated as a small percentage of the total assets it's managing for you (often called AUM — assets under management). This is the same basic model used by traditional robo-advisors and human financial advisors; we're applying an established, well-understood approach to a new kind of asset, rather than inventing an unfamiliar pricing mechanism.",
+          },
+        ],
+      },
+      {
+        id: "what-the-fee-covers",
+        title: "What the fee does and doesn't cover",
+        blocks: [
+          {
+            type: "list",
+            items: [
+              "**Covered by the management fee:** the ongoing work of monitoring your portfolio, generating and executing rebalances, and the infrastructure that keeps the whole system safe (monitoring, signing security, circuit-breaker review).",
+              "**Not covered by the management fee:** on-chain gas costs (the small transaction fees every blockchain charges to process an action) and normal trade execution costs like slippage within the tolerance you set. These are a routine part of any on-chain trade, not something specific to AERA, and they occur separately from the management fee itself.",
+              "**No performance fee, currently.** AERA does not take a cut of your gains — only a fee based on how much you have under management, regardless of how your portfolio performs.",
+            ],
+          },
+        ],
       },
     ],
+    note: "The exact fee percentage will be published here before public launch, once finalized.",
   },
   {
     slug: "security-honesty-roadmap",
     group: "Protocol",
     title: "Security, Honesty & Roadmap",
-    intro:
-      "An autonomous agent is only as trustworthy as its willingness to state what it doesn't yet guarantee. This page is that statement.",
     subsections: [
       {
-        id: "regulatory",
-        title: "Regulatory considerations",
-        blocks: [
-          {
-            type: "paragraph",
-            text: "AERA is designed around a specific regulatory posture: the user defines the strategy's boundaries, and the agent executes mechanically within them, rather than exercising independent discretionary authority. This framing is intended to differentiate AERA from discretionary investment-advisory activity, which typically carries registration requirements in most jurisdictions. AERA's availability will also match the jurisdictional restrictions already in place for the underlying Stock Tokens, since the agent cannot be more permissive than the assets it manages.",
-          },
-        ],
-      },
-      {
-        id: "risks",
-        title: "Risks",
+        id: "security-posture",
+        title: "Security posture — what's actually in place",
         blocks: [
           {
             type: "list",
             items: [
-              "Regulatory reclassification as discretionary investment advice — mitigated by legal review and the mechanical-execution framing, reassessed at each phase.",
-              "Underperforming rebalancing logic — mitigated by a mandatory backtesting gate before any live capital is deployed.",
-              "Signing key compromise — mitigated by MPC/multisig signing and on-chain spending limits that bound the impact of any single compromised key.",
-              "Data feed failure or staleness — mitigated by monitoring, alerting, and a circuit breaker on anomalous proposals.",
-              "Thin underlying liquidity for certain Stock Tokens — mitigated by on-chain slippage limits that block poorly-priced trades rather than executing them.",
+              "The vault uses a restricted manager-role permission model: the agent can only call a narrow rebalance function, not access funds broadly.",
+              "Hard-coded spending limits, an approved asset list, and rate limits are enforced directly in the smart contract — not just described in a policy document.",
+              "An emergency pause function exists, allowing the system (or you, for your own vault) to halt activity immediately if something seems wrong.",
+              "The agent's signing key — the credential it uses to actually authorize trades — is secured using multi-party signing infrastructure (sometimes called MPC or a multisig setup), rather than a single, individually-compromisable hot wallet.",
+              "Continuous, automated monitoring watches for things like stale or failing market data, unusual trading patterns, or attempted violations of the on-chain constraints — with automatic pausing if something looks wrong.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "honesty",
+        title: "Honesty — what we haven't finished yet",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "We think it matters more to tell you what's *not* done than to only describe what is. Specifically, as of this writing:",
+          },
+          {
+            type: "list",
+            items: [
+              "**We have not yet completed an independent smart contract audit.** This is a hard requirement before any beta involving funds beyond the founder's own, and we will publish the full results here once it's done — including any issues found, not just a summary.",
+              "**Our regulatory framing hasn't been independently confirmed yet.** AERA is deliberately designed so that you set the rules and the agent executes mechanically within them, specifically to avoid being classified as discretionary investment advice — but this is a legal question, and we're getting it reviewed by securities counsel rather than assuming our own reasoning is sufficient.",
+              "**Backtesting is still in progress.** We're validating the rebalancing approach against real historical Stock Token price behavior before it's trusted with any capital beyond the founder's own.",
+              "**AERA does not, and will not, guarantee returns.** The constraints described throughout this documentation govern what actions the agent is allowed to take — they say nothing about whether the market will move in your favor. Investing always carries the risk of loss.",
             ],
           },
         ],
       },
       {
         id: "roadmap",
-        title: "Roadmap",
+        title: "Roadmap — where we are and where we're going",
         blocks: [],
       },
     ],
@@ -333,37 +628,32 @@ export const docPages: DocPage[] = [
       {
         label: "Phase 0 — Validation",
         description:
-          "Manual, offline validation of the core rebalancing thesis before any code is written.",
+          "Proving the core rebalancing idea manually, with no code and no live funds involved yet.",
       },
       {
         label: "Phase 1 — Backtesting",
         description:
-          "The rebalancing logic is built and tested against historical Stock Token price behavior, with no live funds involved, to confirm it outperforms a static buy-and-hold baseline on a risk-adjusted basis.",
+          "Building and testing the rebalancing logic against historical market data, with no live funds.",
       },
       {
-        label: "Phase 2 — Founder-run production trial",
+        label: "Phase 2 — Founder-run live trial",
         description:
-          "The full system — vault, agent, execution, monitoring — runs live and autonomously using only the founder's own funds, to prove the architecture holds up under real market conditions before any outside capital is involved.",
+          "Running the complete system — vault, agent, execution, monitoring — live and autonomously, using only the founder's own funds, to prove it holds up under real conditions.",
       },
       {
         label: "Phase 3 — Closed beta",
         description:
-          "Following legal and compliance review, a small number of real users are onboarded to validate trust, usability, and the plain-language explanation model with real feedback.",
+          "After legal and compliance review is complete, a small number of real users are onboarded.",
       },
       {
         label: "Phase 4 — Public launch",
         description:
-          "General availability, continued monitoring and security hardening, and expansion of supported assets and features.",
+          "General availability, with continued security hardening and compliance work as an ongoing process, not a one-time milestone.",
       },
     ],
     note: "Phase 2 runs entirely on the founder's own funds — no outside capital is at risk before Phase 3.",
-    callout: {
-      variant: "warning",
-      title: "Not yet legally confirmed",
-      text: "This regulatory posture is a design intent, not a legal conclusion — it will be confirmed with securities counsel before any beta involves outside user funds.",
-    },
     closing:
-      "Robinhood Chain has made real securities natively programmable for the first time. AERA Finance is built to be the management layer that this new asset class has been missing — autonomous where it can add value, constrained by code where safety demands it, and transparent enough that every action is explainable and auditable. Continuous rather than quarterly, explained rather than opaque, and safe by construction rather than by trust alone.",
+      "We'll keep this page updated as each phase completes — including being upfront if something doesn't go according to plan.",
   },
   {
     slug: "faq-glossary",
@@ -371,51 +661,87 @@ export const docPages: DocPage[] = [
     title: "FAQ & Glossary",
     faqs: [
       {
-        question: "Does AERA take custody of my funds?",
+        question: "What is AERA Finance, in one sentence?",
         answer:
-          "No. AERA is non-custodial — deposits sit in a smart contract vault, and AERA's execution key can only call a constrained rebalance function bound by on-chain limits you control.",
+          "An AI agent that manages a portfolio of tokenized real stocks and on-chain yield on your behalf, automatically rebalancing within limits you set, and explaining every action in plain language.",
       },
       {
-        question: "Can I stop the agent at any time?",
+        question: "Does AERA ever hold or control my funds directly?",
         answer:
-          "Yes. You can withdraw funds or revoke the agent's permission at any time, without needing platform approval.",
+          "No. Your funds stay in a smart contract vault that only you can withdraw from. AERA's agent has a narrow, specific permission to execute rebalances within rules you've already agreed to — it cannot take custody, exceed your limits, or move funds anywhere outside the approved process.",
       },
       {
-        question: "What happens if the agent's signing key is compromised?",
+        question: "Could the agent do something I didn't authorize?",
         answer:
-          "The execution key is held via MPC or multisig signing, and on-chain spending limits bound what any single compromised key could ever move.",
+          "No — not because we're asking you to trust its judgment, but because every proposed action is checked against hard, on-chain rules (an approved asset list, a maximum trade size, a slippage limit, and a trade-frequency cap) before it's allowed to execute. If a proposed action fails any of these checks, it simply doesn't happen, regardless of the agent's own reasoning.",
       },
       {
-        question: "Is AERA live today?",
+        question:
+          "What happens if the agent tries something unusual, even if it's technically allowed?",
         answer:
-          "Not yet. AERA is currently in Phase 0 (Validation). See Security, Honesty & Roadmap for the full phased path to production.",
+          "A separate safety system (the circuit breaker) checks whether a proposed action is a significant outlier compared to the agent's own past behavior — in size, frequency, or the specific asset involved. If so, the system pauses and holds the action for manual human review instead of letting it execute automatically.",
+      },
+      {
+        question: "Can I get my money out whenever I want?",
+        answer:
+          "Yes, always. You can withdraw your funds, or revoke the agent's access to your vault entirely, at any time — no approval process, no waiting period.",
+      },
+      {
+        question: "Is using AERA the same as getting investment advice? Is it regulated?",
+        answer:
+          "AERA is built so that you define your own rules and boundaries, and the agent simply executes within them mechanically, rather than making independent, discretionary judgments about your money. This structure is intended to sit outside typical investment-advisory regulation, but we're having this confirmed by securities counsel rather than assuming it ourselves — and we'll update this answer once that review is complete.",
+      },
+      {
+        question: "What exactly is a \"Stock Token\"?",
+        answer:
+          "A token, issued by Robinhood on Robinhood Chain, that represents economic exposure to a real underlying stock or ETF. It behaves like a normal crypto token (it can sit in a wallet, be transferred, and be used in on-chain products) but its value is tied to a real security, not a purely crypto-native asset.",
+      },
+      {
+        question: "Does AERA guarantee I'll make money, or at least not lose money?",
+        answer:
+          "No, and be wary of anything that claims otherwise. AERA's rules and constraints control *how* the agent is allowed to act — not whether the underlying market moves in your favor. Like any investment, there is a real risk of loss.",
       },
     ],
     glossary: [
       {
-        term: "Stock Token",
-        definition:
-          "A tokenized security issued on Robinhood Chain that tracks a real underlying public stock or ETF, available as a standard ERC-20 token.",
-      },
-      {
         term: "Vault",
         definition:
-          "The non-custodial smart contract that holds a user's deposited funds and enforces the limits AERA's execution key can act within.",
+          "The smart contract holding your deposited funds. You retain full control and full withdrawal rights at all times; it is not held or controlled by AERA the company.",
       },
       {
-        term: "MPC",
+        term: "Manager role",
         definition:
-          "Multi-party computation — a signing method that splits control of a key across multiple parties so no single party can use it alone.",
+          "The narrow, specific permission granted to AERA's agent on your vault, allowing it to call a constrained rebalancing function — and nothing more.",
+      },
+      {
+        term: "Rebalance",
+        definition:
+          "An action that adjusts your portfolio's mix of holdings to better match the target allocation and rules you set, in response to price movement or changing market conditions.",
+      },
+      {
+        term: "Stock Token",
+        definition:
+          "A token issued on Robinhood Chain representing economic exposure to a real underlying stock or ETF.",
       },
       {
         term: "Circuit breaker",
         definition:
-          "An automatic execution halt triggered when a proposed action deviates significantly from historical patterns, requiring manual review before it can proceed.",
+          "A safety mechanism that pauses execution and requires manual review when a proposed action is a significant outlier compared to past behavior, even if it technically passes the standard hard constraints.",
       },
       {
-        term: "Slippage limit",
+        term: "Constraint",
         definition:
-          "An on-chain constraint that blocks a trade from executing if its price would move beyond an allowed threshold.",
+          "A hard rule, enforced directly by the smart contract (not merely suggested to the agent), that limits what the manager role is able to do — for example, a maximum trade size or an approved asset list.",
+      },
+      {
+        term: "AUM (Assets Under Management)",
+        definition:
+          "The total value of the funds AERA is actively managing on your behalf; used as the basis for calculating AERA's management fee.",
+      },
+      {
+        term: "Slippage",
+        definition:
+          "The difference between the expected price of a trade and the actual price it executes at, typically caused by limited available liquidity at the moment of the trade. AERA enforces a maximum slippage tolerance you set, blocking trades that would exceed it.",
       },
     ],
   },

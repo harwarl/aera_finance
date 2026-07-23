@@ -86,7 +86,7 @@ export function Footer() {
 
         <div className="flex flex-col items-start justify-between gap-4 font-mono text-[10px] uppercase tracking-widest text-foreground-faint sm:flex-row sm:items-center">
           <span>© 2026 Aera Finance. All rights reserved.</span>
-          <span>[ Non-Custodial · On-Chain · Audited ]</span>
+          <span>[ Non-Custodial · On-Chain · Phase 0 ]</span>
         </div>
 
         <div className="mt-12 overflow-x-auto">

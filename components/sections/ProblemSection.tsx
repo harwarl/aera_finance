@@ -13,18 +13,19 @@ export function ProblemSection() {
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1.4fr_1fr]">
           <Reveal variant="left" delay={80}>
             <h2 className="max-w-xl text-3xl font-black leading-[1.05] tracking-tight text-foreground sm:text-5xl">
-              Manual on-chain portfolios are quietly{" "}
-              <span className="text-danger">leaking value</span>.
+              Stock Tokens exist. The tool to manage them{" "}
+              <span className="text-danger">doesn&apos;t</span>.
             </h2>
           </Reveal>
 
           <Reveal variant="right" delay={200}>
             <p className="text-sm leading-relaxed text-foreground-muted sm:text-base">
-              Tokenized stocks and yield sit scattered across chains and
-              protocols, drifting out of balance the moment prices move.
-              Fixing that by hand means tracking positions daily, timing
-              trades, and understanding risk most people were never trained
-              for — so allocations sit stale, and returns quietly slip.
+              Robinhood Chain made real stocks composable, programmable
+              on-chain assets — a genuinely new asset class. But managing one
+              means tracking drift, weighing equity against yield, and
+              reacting to markets in real time. Robo-advisors don&apos;t see
+              your wallet. DeFi tools don&apos;t understand equities. That
+              leaves you.
             </p>
 
             <div className="mt-8 border border-border-muted bg-background-elevated/30 p-5">

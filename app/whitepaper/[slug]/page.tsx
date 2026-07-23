@@ -39,11 +39,23 @@ export async function generateMetadata({
   };
 }
 
-const INLINE_PATTERN = /(\*\*[^*]+\*\*|`[^`]+`|\*[^*]+\*)/g;
+const INLINE_PATTERN =
+  /(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|`[^`]+`|\*[^*]+\*)/g;
+const LINK_PATTERN = /^\[([^\]]+)\]\(([^)]+)\)$/;
 
 function renderInline(text: string): React.ReactNode[] {
   return text.split(INLINE_PATTERN).map((segment, i) => {
     if (!segment) return null;
+
+    const linkMatch = segment.match(LINK_PATTERN);
+    if (linkMatch) {
+      const [, label, href] = linkMatch;
+      return (
+        <Link key={i} href={href} className="text-accent underline underline-offset-2 hover:no-underline">
+          {label}
+        </Link>
+      );
+    }
     if (segment.startsWith("**") && segment.endsWith("**")) {
       return (
         <strong key={i} className="font-semibold text-foreground">

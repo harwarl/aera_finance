@@ -16,7 +16,7 @@ export function TrustBar() {
               <ScrambleText value="Integrated With" />
             </span>
             <span className="text-accent">
-              <ScrambleText startDelay={40} value="[ Audited Integrations ]" />
+              <ScrambleText startDelay={40} value="[ Execution Infrastructure ]" />
             </span>
           </div>
         </Container>

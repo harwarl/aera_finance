@@ -30,10 +30,10 @@ export function Hero() {
 
             <Reveal delay={200}>
               <p className="mt-6 max-w-[46ch] text-sm leading-relaxed text-foreground-muted sm:text-base">
-                Aera continuously manages your on-chain stock token and yield
-                portfolio — rebalancing positions, executing trades, and routing
-                yield without you touching a signature. No finance degree
-                required.
+                Aera manages your portfolio of tokenized real stocks and
+                on-chain yield, built on Robinhood Chain — rebalancing
+                positions, executing trades, and routing yield without you
+                touching a signature. No finance degree required.
               </p>
             </Reveal>
 

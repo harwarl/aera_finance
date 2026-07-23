@@ -23,16 +23,17 @@ export function SecuritySection() {
 
             <Reveal variant="left" delay={160}>
               <p className="mt-6 max-w-[46ch] text-sm leading-relaxed text-foreground-muted sm:text-base">
-                Aera never takes custody of your assets. It operates inside
-                limits you set, executes through your own wallet, and leaves
-                a verifiable on-chain trail for every action it takes.
+                Aera never takes custody of your assets. Funds sit in a smart
+                contract vault only you can withdraw from, and every action
+                is bound by hard on-chain limits and logged the moment it
+                happens.
               </p>
             </Reveal>
 
             <Reveal variant="left" delay={240}>
               <div className="mt-8 inline-flex items-center gap-2 border border-border-muted px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
                 <span className="h-1.5 w-1.5 animate-ticker-blink bg-accent" />
-                Last audit: Q1 2026 · Report available on request
+                Phase 0 · Validation — audit required before beta funds
               </div>
             </Reveal>
           </div>

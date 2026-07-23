@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Reveal } from "@/components/shared/Reveal";
 import { ScrambleText } from "@/components/shared/ScrambleText";
 import { WaitlistForm } from "@/components/sections/WaitlistForm";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Waitlist — Aera Finance",
@@ -20,9 +21,7 @@ export default function WaitlistPage() {
       </div>
 
       <Reveal variant="scale">
-        <div className="relative flex h-16 w-16 items-center justify-center border border-accent font-sans text-xl font-black text-accent">
-          A
-        </div>
+        <Image src="/aera.png" alt="aera" width={70} height={70} />
       </Reveal>
 
       <Reveal delay={80}>
