@@ -32,8 +32,8 @@ export function Navbar() {
             <span className="h-1.5 w-1.5 animate-ticker-blink bg-accent" />
             Agent Status · Active
           </span>
-          <Button href="/connect" size="sm">
-            Launch App
+          <Button href="/waitlist" size="sm">
+            Join Waitlist
           </Button>
         </div>
 
@@ -48,19 +48,19 @@ export function Navbar() {
             <span
               className={cn(
                 "absolute left-0 top-0 h-[1.5px] w-5 bg-current transition-all duration-300 ease-out",
-                open && "top-1.75 rotate-45"
+                open && "top-1.75 rotate-45",
               )}
             />
             <span
               className={cn(
                 "absolute left-0 top-1.75 h-[1.5px] w-5 bg-current transition-opacity duration-200 ease-out",
-                open && "opacity-0"
+                open && "opacity-0",
               )}
             />
             <span
               className={cn(
                 "absolute left-0 top-3.5 h-[1.5px] w-5 bg-current transition-all duration-300 ease-out",
-                open && "top-1.75 -rotate-45"
+                open && "top-1.75 -rotate-45",
               )}
             />
           </span>
@@ -82,8 +82,8 @@ export function Navbar() {
                 </a>
               ))}
             </nav>
-            <Button href="/connect" size="sm" className="w-full">
-              Launch App
+            <Button href="/waitlist" size="sm" className="w-full">
+              Join Waitlist
             </Button>
           </Container>
         </div>

@@ -40,8 +40,8 @@ export function Hero() {
             <Reveal delay={320}>
               <div className="mt-10 flex flex-col gap-8 sm:flex-row">
                 <CornerBrackets className="w-full sm:w-auto">
-                  <Button href="/connect" className="w-full sm:w-auto">
-                    Launch Agent
+                  <Button href="/waitlist" className="w-full sm:w-auto">
+                    Join Waitlist
                   </Button>
                 </CornerBrackets>
                 <Button

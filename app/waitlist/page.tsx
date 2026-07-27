@@ -3,6 +3,7 @@ import { Reveal } from "@/components/shared/Reveal";
 import { ScrambleText } from "@/components/shared/ScrambleText";
 import { WaitlistForm } from "@/components/sections/WaitlistForm";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Waitlist — Aera Finance",
@@ -21,7 +22,12 @@ export default function WaitlistPage() {
       </div>
 
       <Reveal variant="scale">
-        <Image src="/aera.png" alt="aera" width={70} height={70} />
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 font-sans text-lg font-black tracking-tight text-foreground"
+        >
+          <Image src="/aera.png" alt="aera" width={70} height={70} />
+        </Link>
       </Reveal>
 
       <Reveal delay={80}>
