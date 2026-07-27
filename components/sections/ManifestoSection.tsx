@@ -20,7 +20,7 @@ export function ManifestoSection() {
         <Reveal delay={200}>
           <div className="mt-12">
             <CornerBrackets>
-              <Button href="#solution">Launch Agent</Button>
+              <Button href="/connect">Launch Agent</Button>
             </CornerBrackets>
           </div>
         </Reveal>

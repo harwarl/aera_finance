@@ -31,7 +31,7 @@ export function DocsTopbar() {
 
       <div className="flex items-center gap-3">
         <PdfButton />
-        <Button href="/#solution" size="sm">
+        <Button href="/connect" size="sm">
           Launch Agent
         </Button>
       </div>

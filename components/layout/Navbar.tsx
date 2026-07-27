@@ -32,7 +32,7 @@ export function Navbar() {
             <span className="h-1.5 w-1.5 animate-ticker-blink bg-accent" />
             Agent Status · Active
           </span>
-          <Button href="#solution" size="sm">
+          <Button href="/connect" size="sm">
             Launch App
           </Button>
         </div>
@@ -82,7 +82,7 @@ export function Navbar() {
                 </a>
               ))}
             </nav>
-            <Button href="#solution" size="sm" className="w-full">
+            <Button href="/connect" size="sm" className="w-full">
               Launch App
             </Button>
           </Container>

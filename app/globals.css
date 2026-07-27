@@ -204,3 +204,37 @@ body {
     animation: none;
   }
 }
+
+@keyframes card-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-card-float {
+  animation: card-float 4.5s ease-in-out infinite;
+}
+
+@keyframes line-flow {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+.animate-line-flow {
+  animation: line-flow 1.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-card-float,
+  .animate-line-flow {
+    animation: none;
+  }
+}

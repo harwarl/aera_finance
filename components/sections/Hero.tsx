@@ -1,6 +1,6 @@
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
-import { RadarDiagram } from "@/components/shared/RadarDiagram";
+import { PortfolioMerge } from "@/components/shared/PortfolioMerge";
 import { Reveal } from "@/components/shared/Reveal";
 import { CornerBrackets } from "../shared/CornerBrackets";
 import { ScrambleText } from "../shared/ScrambleText";
@@ -12,7 +12,7 @@ export function Hero() {
         <Reveal className="mb-10 flex items-center justify-between font-mono text-xs uppercase tracking-widest">
           <span className="text-foreground-muted">
             <span className="text-accent">/ </span>
-            <ScrambleText value=" Powered by AI" />
+            <ScrambleText value=" Intelligence, with guardrails." />
           </span>
           <span className="text-accent">
             <ScrambleText startDelay={40} value="[ On-Chain · Real-Time ]" />
@@ -40,7 +40,7 @@ export function Hero() {
             <Reveal delay={320}>
               <div className="mt-10 flex flex-col gap-8 sm:flex-row">
                 <CornerBrackets className="w-full sm:w-auto">
-                  <Button href="#solution" className="w-full sm:w-auto">
+                  <Button href="/connect" className="w-full sm:w-auto">
                     Launch Agent
                   </Button>
                 </CornerBrackets>
@@ -56,7 +56,7 @@ export function Hero() {
           </div>
 
           <Reveal variant="scale" delay={200} className="hidden lg:block">
-            <RadarDiagram />
+            <PortfolioMerge />
           </Reveal>
         </div>
       </Container>
