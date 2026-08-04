@@ -3,7 +3,9 @@ import type {
   AllocationSlice,
   DecisionLogEntry,
   Holding,
-  PortfolioRule,
+  PortfolioConstraint,
+  PortfolioRules,
+  SupportedAsset,
 } from "@/types";
 
 // Everything in this file is placeholder data for building out the
@@ -24,11 +26,68 @@ export const allocation: AllocationSlice[] = [
   { label: "Cash", pct: 15 },
 ];
 
-export const portfolioRules: PortfolioRule[] = [
-  { label: "Risk Tolerance", value: "Moderate" },
-  { label: "Max Sector Exposure", value: "40% per sector" },
-  { label: "Max Position Size", value: "25% of portfolio" },
-  { label: "Trade Frequency Cap", value: "6 trades / week" },
+// "Rules" are the user's own preferences — the agent operates inside them,
+// and the user can change them any time. Contrast with `portfolioConstraints`
+// below, which the user can see but never edit.
+export const portfolioRules: PortfolioRules = {
+  riskTolerance: "medium",
+  targetStockAllocationPct: 65,
+  sectorPreferences: [
+    { sector: "Technology", stance: "favor" },
+    { sector: "Consumer Discretionary", stance: "favor" },
+    { sector: "Healthcare", stance: "neutral" },
+    { sector: "Financials", stance: "neutral" },
+    { sector: "Energy", stance: "avoid" },
+  ],
+  rebalanceSensitivity: "balanced",
+  notifications: {
+    every_rebalance: true,
+    held_for_review: true,
+    weekly_summary: false,
+  },
+};
+
+export const supportedAssets: SupportedAsset[] = [
+  { symbol: "AAPLx", name: "Apple Stock Token", type: "stock" },
+  { symbol: "TSLAx", name: "Tesla Stock Token", type: "stock" },
+  { symbol: "MSFTx", name: "Microsoft Stock Token", type: "stock" },
+  { symbol: "NVDAx", name: "Nvidia Stock Token", type: "stock" },
+  { symbol: "AMZNx", name: "Amazon Stock Token", type: "stock" },
+  { symbol: "GOOGLx", name: "Alphabet Stock Token", type: "stock" },
+  { symbol: "ETH", name: "Ethereum", type: "crypto" },
+  { symbol: "BTC", name: "Bitcoin", type: "crypto" },
+  { symbol: "USDC", name: "Morpho Yield Position", type: "yield" },
+  { symbol: "DAI", name: "DAI Yield Position", type: "yield" },
+];
+
+// "Constraints" are hard, system-enforced limits the agent can never
+// exceed, regardless of its own reasoning or the user's rules above. Shown
+// read-only — there is deliberately no edit control for any of these.
+export const portfolioConstraints: PortfolioConstraint[] = [
+  {
+    label: "Supported Assets",
+    value: `${supportedAssets.length} Whitelisted Tickers`,
+    description:
+      "Aera only trades a curated whitelist of tokenized stocks and approved yield positions — it can't add new assets on its own.",
+  },
+  {
+    label: "Max Trade Size",
+    value: "15% of portfolio per trade",
+    description:
+      "No single trade can move more than this share of your portfolio, regardless of the agent's confidence.",
+  },
+  {
+    label: "Max Slippage",
+    value: "0.5%",
+    description:
+      "Trades that would cost more than this in slippage are rejected before execution.",
+  },
+  {
+    label: "Max Trade Frequency",
+    value: "6 trades / week",
+    description:
+      "A hard cap on how often the agent can act, independent of opportunity.",
+  },
 ];
 
 export const holdings: Holding[] = [
@@ -37,44 +96,66 @@ export const holdings: Holding[] = [
     symbol: "AAPLx",
     name: "Apple Stock Token",
     type: "stock",
-    value: 38_240.11,
-    allocationPct: 29.8,
+    value: 33_268.18,
+    allocationPct: 25.9,
     change24hPct: 1.4,
+    tradingViewSymbol: "NASDAQ:AAPL",
   },
   {
     id: "tslax",
     symbol: "TSLAx",
     name: "Tesla Stock Token",
     type: "stock",
-    value: 21_960.5,
-    allocationPct: 17.1,
+    value: 19_106.24,
+    allocationPct: 14.9,
     change24hPct: -2.1,
+    tradingViewSymbol: "NASDAQ:TSLA",
   },
   {
     id: "eth",
     symbol: "ETH",
     name: "Ethereum",
     type: "crypto",
-    value: 14_710.0,
-    allocationPct: 11.5,
+    value: 12_797.7,
+    allocationPct: 10.0,
     change24hPct: 0.6,
+    tradingViewSymbol: "COINBASE:ETHUSD",
+  },
+  {
+    id: "btc",
+    symbol: "BTC",
+    name: "Bitcoin",
+    type: "crypto",
+    value: 10_276.03,
+    allocationPct: 8.0,
+    change24hPct: 1.8,
+    tradingViewSymbol: "COINBASE:BTCUSD",
   },
   {
     id: "usdc-yield",
     symbol: "USDC",
     name: "Morpho Yield Position",
     type: "yield",
-    value: 34_680.4,
-    allocationPct: 27.0,
+    value: 30_171.95,
+    allocationPct: 23.5,
     change24hPct: 0.01,
+  },
+  {
+    id: "dai",
+    symbol: "DAI",
+    name: "DAI Yield Position",
+    type: "yield",
+    value: 6_422.52,
+    allocationPct: 5.0,
+    change24hPct: 0.02,
   },
   {
     id: "cash",
     symbol: "USDC",
     name: "Idle Cash",
     type: "yield",
-    value: 18_859.31,
-    allocationPct: 14.6,
+    value: 16_407.7,
+    allocationPct: 12.7,
     change24hPct: 0,
   },
 ];

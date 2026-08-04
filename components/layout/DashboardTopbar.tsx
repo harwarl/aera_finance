@@ -5,13 +5,15 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
 import { cn } from "@/lib/utils";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 const TABS: { label: string; href: string; soon?: boolean }[] = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Decisions", href: "/dashboard/decisions" },
-  { label: "Holdings", href: "/dashboard/holdings", soon: true },
-  { label: "Rules", href: "/dashboard/rules", soon: true },
-  { label: "Account", href: "/dashboard/account", soon: true },
+  { label: "Holdings", href: "/dashboard/holdings" },
+  { label: "Rules", href: "/dashboard/rules" },
+  { label: "Security", href: "/dashboard/security" },
+  { label: "Account", href: "/dashboard/account" },
 ];
 
 function truncateAddress(address: string) {
@@ -21,6 +23,7 @@ function truncateAddress(address: string) {
 export function DashboardTopbar() {
   const pathname = usePathname();
   const { address, isConnected } = useAccount();
+  const isAdmin = useIsAdmin();
 
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-border-muted bg-background px-4 sm:px-6">
@@ -76,6 +79,14 @@ export function DashboardTopbar() {
           <span className="h-1.5 w-1.5 animate-ticker-blink bg-accent" />
           Agent Active
         </span>
+        {isAdmin ? (
+          <Link
+            href="/admin"
+            className="border border-danger px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-danger transition-colors hover:bg-danger hover:text-background"
+          >
+            Admin
+          </Link>
+        ) : null}
         {isConnected && address ? (
           <span className="border border-border px-3 py-1.5 font-mono text-xs text-foreground">
             {truncateAddress(address)}

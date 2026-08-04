@@ -104,6 +104,7 @@ export type Holding = {
   value: number;
   allocationPct: number;
   change24hPct: number;
+  tradingViewSymbol?: string;
 };
 
 export type AllocationSlice = {
@@ -111,9 +112,54 @@ export type AllocationSlice = {
   pct: number;
 };
 
-export type PortfolioRule = {
+export type RiskTolerance = "low" | "medium" | "high";
+
+export type RebalanceSensitivity = "conservative" | "balanced" | "responsive";
+
+export type SectorStance = "favor" | "neutral" | "avoid";
+
+export type SectorPreference = {
+  sector: string;
+  stance: SectorStance;
+};
+
+export type NotificationEvent = "every_rebalance" | "held_for_review" | "weekly_summary";
+
+export type PortfolioRules = {
+  riskTolerance: RiskTolerance;
+  targetStockAllocationPct: number;
+  sectorPreferences: SectorPreference[];
+  rebalanceSensitivity: RebalanceSensitivity;
+  notifications: Record<NotificationEvent, boolean>;
+};
+
+export type PortfolioConstraint = {
   label: string;
   value: string;
+  description: string;
+};
+
+export type SupportedAsset = {
+  symbol: string;
+  name: string;
+  type: HoldingType;
+};
+
+export type WaitlistStatus = "invited" | "not_invited";
+
+export type WaitlistEntry = {
+  id: string;
+  name: string;
+  email: string;
+  joinedAt: string;
+  status: WaitlistStatus;
+};
+
+export type ProtocolFeeSummary = {
+  totalAum: number;
+  accruedFees: number;
+  withdrawnToDate: number;
+  treasuryAddress: string;
 };
 
 export type RoadmapStatus = "done" | "current" | "upcoming";
