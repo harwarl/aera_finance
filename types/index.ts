@@ -82,6 +82,40 @@ export type DocPage = {
   closing?: string;
 };
 
+export type AgentStatus = "active" | "paused" | "review";
+
+export type DecisionStatus = "executed" | "blocked" | "review";
+
+export type DecisionLogEntry = {
+  id: string;
+  timestamp: string;
+  status: DecisionStatus;
+  action: string;
+  detail: string;
+};
+
+export type HoldingType = "stock" | "crypto" | "yield";
+
+export type Holding = {
+  id: string;
+  symbol: string;
+  name: string;
+  type: HoldingType;
+  value: number;
+  allocationPct: number;
+  change24hPct: number;
+};
+
+export type AllocationSlice = {
+  label: string;
+  pct: number;
+};
+
+export type PortfolioRule = {
+  label: string;
+  value: string;
+};
+
 export type RoadmapStatus = "done" | "current" | "upcoming";
 
 export type RoadmapMonth = {
