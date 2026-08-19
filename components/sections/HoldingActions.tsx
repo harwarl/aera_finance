@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, FlagTriangleRight } from "lucide-react";
-import { CornerBrackets } from "@/components/shared/CornerBrackets";
+import { DashboardCard } from "@/components/shared/DashboardCard";
 import { Modal } from "@/components/shared/Modal";
 import { Button } from "@/components/ui/Button";
 
@@ -22,8 +22,8 @@ export function HoldingActions({ symbol }: { symbol: string }) {
   }
 
   return (
-    <CornerBrackets>
-      <div className="border border-border-muted bg-background-elevated/50 p-6">
+    <>
+      <DashboardCard>
         <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
           Actions
         </span>
@@ -56,12 +56,13 @@ export function HoldingActions({ symbol }: { symbol: string }) {
             <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
-      </div>
+      </DashboardCard>
 
       <Modal
         open={modalOpen}
         onClose={closeModal}
         title="Request Manual Review"
+        clean
       >
         {submitted ? (
           <div className="flex flex-col items-center gap-4 text-center">
@@ -93,6 +94,6 @@ export function HoldingActions({ symbol }: { symbol: string }) {
           </form>
         )}
       </Modal>
-    </CornerBrackets>
+    </>
   );
 }

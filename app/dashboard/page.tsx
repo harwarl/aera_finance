@@ -5,8 +5,6 @@ import { DashboardSummary } from "@/components/sections/DashboardSummary";
 import { DashboardDecisionLog } from "@/components/sections/DashboardDecisionLog";
 import { DashboardRules } from "@/components/sections/DashboardRules";
 import { DashboardHoldings } from "@/components/sections/DashboardHoldings";
-import { DashboardAccountControls } from "@/components/sections/DashboardAccountControls";
-import { DashboardFees } from "@/components/sections/DashboardFees";
 
 export const metadata: Metadata = {
   title: "Dashboard — Aera Finance",
@@ -24,10 +22,6 @@ export default function DashboardPage() {
               <DashboardRules />
             </div>
             <DashboardHoldings />
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <DashboardAccountControls />
-              <DashboardFees />
-            </div>
           </div>
         </DashboardGate>
       </Container>

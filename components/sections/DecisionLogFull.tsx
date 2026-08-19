@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CornerBrackets } from "@/components/shared/CornerBrackets";
+import { DashboardCard } from "@/components/shared/DashboardCard";
 import { cn } from "@/lib/utils";
 import { decisionLog } from "@/config/dashboard";
 import {
@@ -51,7 +51,7 @@ export function DecisionLogFull() {
               type="button"
               onClick={() => setFilter(item.value)}
               className={cn(
-                "border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition-colors",
+                "rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition-colors",
                 active
                   ? "border-accent text-accent"
                   : "border-border-muted text-foreground-faint hover:text-foreground-muted"
@@ -63,50 +63,48 @@ export function DecisionLogFull() {
         })}
       </div>
 
-      <CornerBrackets>
-        <div className="border border-border-muted bg-background-elevated/50 p-6">
-          {filtered.length === 0 ? (
-            <p className="py-8 text-center font-mono text-xs uppercase tracking-widest text-foreground-faint">
-              No entries for this filter
-            </p>
-          ) : (
-            <div className="flex flex-col divide-y divide-border-muted">
-              {filtered.map((entry) => (
-                <div
-                  key={entry.id}
-                  className="flex flex-col gap-2 py-5 first:pt-0 last:pb-0"
-                >
-                  <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-widest">
-                    <span className="text-foreground-faint">
-                      {formatRelativeTime(entry.timestamp)}
-                    </span>
-                    <span className="border border-border px-2 py-0.5 text-foreground-muted">
-                      {entry.action}
-                    </span>
+      <DashboardCard>
+        {filtered.length === 0 ? (
+          <p className="py-8 text-center font-mono text-xs uppercase tracking-widest text-foreground-faint">
+            No entries for this filter
+          </p>
+        ) : (
+          <div className="flex flex-col divide-y divide-border-muted">
+            {filtered.map((entry) => (
+              <div
+                key={entry.id}
+                className="flex flex-col gap-2 py-5 first:pt-0 last:pb-0"
+              >
+                <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-widest">
+                  <span className="text-foreground-faint">
+                    {formatRelativeTime(entry.timestamp)}
+                  </span>
+                  <span className="rounded-full border border-border px-2.5 py-0.5 text-foreground-muted">
+                    {entry.action}
+                  </span>
+                  <span
+                    className={cn(
+                      "flex items-center gap-1.5",
+                      STATUS_TEXT_CLASS[entry.status]
+                    )}
+                  >
                     <span
                       className={cn(
-                        "flex items-center gap-1.5",
-                        STATUS_TEXT_CLASS[entry.status]
+                        "h-1.5 w-1.5 rounded-full",
+                        STATUS_DOT_CLASS[entry.status]
                       )}
-                    >
-                      <span
-                        className={cn(
-                          "h-1.5 w-1.5 rounded-full",
-                          STATUS_DOT_CLASS[entry.status]
-                        )}
-                      />
-                      {STATUS_LABEL[entry.status]}
-                    </span>
-                  </div>
-                  <p className="text-sm leading-relaxed text-foreground-muted">
-                    {entry.detail}
-                  </p>
+                    />
+                    {STATUS_LABEL[entry.status]}
+                  </span>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </CornerBrackets>
+                <p className="text-sm leading-relaxed text-foreground-muted">
+                  {entry.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </DashboardCard>
     </div>
   );
 }

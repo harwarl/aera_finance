@@ -1,28 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { formatUnits } from "viem";
 import { CornerBrackets } from "@/components/shared/CornerBrackets";
 import { Modal } from "@/components/shared/Modal";
+import { TxStatus } from "@/components/shared/TxStatus";
 import { Button } from "@/components/ui/Button";
 import { protocolFees } from "@/config/admin";
+import { APPROVED_ASSETS } from "@/config/contracts";
+import { useVaultFeesOwedToAdmin, useVaultWrite, vaultWrite } from "@/hooks/useVaultContract";
 import { formatCurrency } from "@/lib/holdings";
 
 function truncateAddress(address: string) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
+// Fees are tracked in USDT — a dollar-denominated approved asset makes
+// more sense for a fee/AUM display than ETH would.
+const FEE_ASSET = APPROVED_ASSETS.find((asset) => asset.symbol === "USDT")!;
+
 export function AdminTreasury() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [withdrawn, setWithdrawn] = useState(false);
+
+  const { data: accruedFeesRaw, refetch: refetchAccrued } =
+    useVaultFeesOwedToAdmin(FEE_ASSET.address);
+  const tx = useVaultWrite();
+
+  const accruedFees =
+    accruedFeesRaw !== undefined
+      ? Number(formatUnits(accruedFeesRaw, FEE_ASSET.decimals))
+      : protocolFees.accruedFees;
+
+  useEffect(() => {
+    if (tx.isConfirmed) refetchAccrued();
+  }, [tx.isConfirmed, refetchAccrued]);
 
   function closeModal() {
     setModalOpen(false);
-    setWithdrawn(false);
+    tx.reset();
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setWithdrawn(true);
+    if (accruedFeesRaw === undefined) return;
+    await tx.writeContractAsync(vaultWrite.withdrawFees(FEE_ASSET.address, accruedFeesRaw));
   }
 
   return (
@@ -46,7 +67,7 @@ export function AdminTreasury() {
               Accrued Fees
             </span>
             <p className="mt-1.5 text-lg font-bold text-accent">
-              {formatCurrency(protocolFees.accruedFees)}
+              {formatCurrency(accruedFees)}
             </p>
           </div>
           <div>
@@ -67,6 +88,7 @@ export function AdminTreasury() {
           variant="secondary"
           className="mt-5 w-full sm:w-auto"
           onClick={() => setModalOpen(true)}
+          disabled={!accruedFeesRaw}
         >
           Withdraw Accrued Fees
         </Button>
@@ -77,30 +99,17 @@ export function AdminTreasury() {
         onClose={closeModal}
         title="Withdraw Accrued Fees"
       >
-        {withdrawn ? (
-          <div className="flex flex-col items-center gap-4 text-center">
-            <p className="text-sm leading-relaxed text-foreground-muted">
-              {formatCurrency(protocolFees.accruedFees)} would be withdrawn
-              to the treasury address here once the fee contract is live —
-              this is a placeholder, no funds moved.
-            </p>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={closeModal}
-              className="w-full"
-            >
-              Close
-            </Button>
-          </div>
+        {tx.hash ? (
+          <TxStatus tx={tx} onClose={closeModal} confirmedLabel="Fees withdrawn on-chain." />
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <p className="text-sm leading-relaxed text-foreground-muted">
               This withdraws the full accrued balance of{" "}
               <span className="font-bold text-foreground">
-                {formatCurrency(protocolFees.accruedFees)}
+                {formatCurrency(accruedFees)}
               </span>{" "}
-              to {truncateAddress(protocolFees.treasuryAddress)}.
+              via <code className="text-foreground-muted">withdrawFees</code>{" "}
+              — this calls the vault contract for real.
             </p>
             <Button type="submit" className="w-full">
               Confirm Withdrawal

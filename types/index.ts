@@ -94,7 +94,7 @@ export type DecisionLogEntry = {
   detail: string;
 };
 
-export type HoldingType = "stock" | "crypto" | "yield";
+export type HoldingType = "crypto" | "yield";
 
 export type Holding = {
   id: string;
@@ -127,7 +127,7 @@ export type NotificationEvent = "every_rebalance" | "held_for_review" | "weekly_
 
 export type PortfolioRules = {
   riskTolerance: RiskTolerance;
-  targetStockAllocationPct: number;
+  targetCryptoAllocationPct: number;
   sectorPreferences: SectorPreference[];
   rebalanceSensitivity: RebalanceSensitivity;
   notifications: Record<NotificationEvent, boolean>;

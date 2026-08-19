@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { DashboardGate } from "@/components/sections/DashboardGate";
 import { RulesEditor } from "@/components/sections/RulesEditor";
+import { OnChainTradeLimits } from "@/components/sections/OnChainTradeLimits";
 import { PortfolioConstraints } from "@/components/sections/PortfolioConstraints";
 
 export const metadata: Metadata = {
@@ -23,13 +24,16 @@ export default function RulesPage() {
               <p className="mt-2 max-w-[50ch] text-sm leading-relaxed text-foreground-muted">
                 These are your preferences for how the agent manages your
                 portfolio. Change them any time — the agent adapts on the
-                next rebalance.
+                next rebalance. The preferences below aren&apos;t wired to
+                the vault contract yet; the trade limits further down are.
               </p>
             </div>
 
             <RulesEditor />
 
-            <details className="group border border-dashed border-border-muted bg-background-subtle/40 p-6">
+            <OnChainTradeLimits />
+
+            <details className="group rounded-2xl border border-border-muted bg-background-elevated/40 p-6">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-mono text-xs uppercase tracking-widest text-foreground-faint">
                 <span className="flex items-center gap-2">
                   <Lock className="h-3 w-3" />

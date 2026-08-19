@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { DashboardGate } from "@/components/sections/DashboardGate";
 import { AccountWallet } from "@/components/sections/AccountWallet";
+import { AgentAccessControl } from "@/components/sections/AgentAccessControl";
 import { DashboardAccountControls } from "@/components/sections/DashboardAccountControls";
 import { DashboardFees } from "@/components/sections/DashboardFees";
 
@@ -24,6 +25,7 @@ export default function AccountPage() {
               </p>
             </div>
             <AccountWallet />
+            <AgentAccessControl />
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <DashboardAccountControls />
               <DashboardFees />

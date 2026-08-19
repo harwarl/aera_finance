@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { CornerBrackets } from "@/components/shared/CornerBrackets";
+import { DashboardCard } from "@/components/shared/DashboardCard";
+import { SegmentedToggle } from "@/components/shared/SegmentedToggle";
 import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
 import { portfolioRules } from "@/config/dashboard";
 import type {
   NotificationEvent,
@@ -12,36 +12,6 @@ import type {
   SectorPreference,
   SectorStance,
 } from "@/types";
-
-function SegmentedToggle<T extends string>({
-  options,
-  value,
-  onChange,
-}: {
-  options: { value: T; label: string }[];
-  value: T;
-  onChange: (value: T) => void;
-}) {
-  return (
-    <div className="flex border border-border">
-      {options.map((option) => (
-        <button
-          key={option.value}
-          type="button"
-          onClick={() => onChange(option.value)}
-          className={cn(
-            "flex-1 whitespace-nowrap border-r border-border px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors last:border-r-0",
-            value === option.value
-              ? "bg-accent text-background"
-              : "text-foreground-muted hover:text-foreground"
-          )}
-        >
-          {option.label}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 const RISK_OPTIONS: { value: RiskTolerance; label: string }[] = [
   { value: "low", label: "Low" },
@@ -87,8 +57,8 @@ export function RulesEditor() {
   const [riskTolerance, setRiskTolerance] = useState<RiskTolerance>(
     portfolioRules.riskTolerance
   );
-  const [targetStockPct, setTargetStockPct] = useState(
-    portfolioRules.targetStockAllocationPct
+  const [targetCryptoPct, setTargetCryptoPct] = useState(
+    portfolioRules.targetCryptoAllocationPct
   );
   const [sectorPreferences, setSectorPreferences] = useState<
     SectorPreference[]
@@ -113,31 +83,26 @@ export function RulesEditor() {
 
   if (saved) {
     return (
-      <CornerBrackets>
-        <div className="flex flex-col items-center gap-4 border border-border-muted bg-background-elevated/50 p-8 text-center">
-          <p className="max-w-[42ch] text-sm leading-relaxed text-foreground-muted">
-            Your updated rules would be submitted to the vault contract here
-            once it&apos;s live — this is a placeholder, nothing has changed
-            yet.
-          </p>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => setSaved(false)}
-          >
-            Continue Editing
-          </Button>
-        </div>
-      </CornerBrackets>
+      <DashboardCard className="flex flex-col items-center gap-4 text-center">
+        <p className="max-w-[42ch] text-sm leading-relaxed text-foreground-muted">
+          Your updated rules would be submitted to the vault contract here
+          once it&apos;s live — this is a placeholder, nothing has changed
+          yet.
+        </p>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => setSaved(false)}
+        >
+          Continue Editing
+        </Button>
+      </DashboardCard>
     );
   }
 
   return (
-    <CornerBrackets>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-8 border border-border-muted bg-background-elevated/50 p-6"
-      >
+    <DashboardCard>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-8">
         <div>
           <label className="font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
             Risk Tolerance
@@ -160,13 +125,13 @@ export function RulesEditor() {
             min={0}
             max={100}
             step={5}
-            value={targetStockPct}
-            onChange={(e) => setTargetStockPct(Number(e.target.value))}
+            value={targetCryptoPct}
+            onChange={(e) => setTargetCryptoPct(Number(e.target.value))}
             className="mt-4 w-full max-w-md accent-accent"
           />
           <div className="mt-2 flex max-w-md justify-between font-mono text-xs text-foreground-muted">
-            <span>Stock Exposure · {targetStockPct}%</span>
-            <span>Yield · {100 - targetStockPct}%</span>
+            <span>Crypto Exposure · {targetCryptoPct}%</span>
+            <span>Yield · {100 - targetCryptoPct}%</span>
           </div>
         </div>
 
@@ -178,7 +143,7 @@ export function RulesEditor() {
             {sectorPreferences.map((pref) => (
               <div
                 key={pref.sector}
-                className="flex flex-col gap-2 border border-border-muted p-3 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-2 rounded-xl border border-border-muted bg-background/40 p-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <span className="text-sm font-bold text-foreground">
                   {pref.sector}
@@ -217,7 +182,7 @@ export function RulesEditor() {
             {NOTIFICATION_OPTIONS.map((option) => (
               <label
                 key={option.value}
-                className="flex cursor-pointer items-start gap-3 border border-border-muted p-3"
+                className="flex cursor-pointer items-start gap-3 rounded-xl border border-border-muted bg-background/40 p-3"
               >
                 <input
                   type="checkbox"
@@ -253,6 +218,6 @@ export function RulesEditor() {
           Save Changes
         </Button>
       </form>
-    </CornerBrackets>
+    </DashboardCard>
   );
 }

@@ -21,9 +21,9 @@ export const portfolioSummary = {
 };
 
 export const allocation: AllocationSlice[] = [
-  { label: "Stock Tokens", pct: 58 },
-  { label: "Yield", pct: 27 },
-  { label: "Cash", pct: 15 },
+  { label: "Crypto", pct: 30.5 },
+  { label: "Yield", pct: 48.0 },
+  { label: "Cash", pct: 21.5 },
 ];
 
 // "Rules" are the user's own preferences — the agent operates inside them,
@@ -31,13 +31,13 @@ export const allocation: AllocationSlice[] = [
 // below, which the user can see but never edit.
 export const portfolioRules: PortfolioRules = {
   riskTolerance: "medium",
-  targetStockAllocationPct: 65,
+  targetCryptoAllocationPct: 65,
   sectorPreferences: [
-    { sector: "Technology", stance: "favor" },
-    { sector: "Consumer Discretionary", stance: "favor" },
-    { sector: "Healthcare", stance: "neutral" },
-    { sector: "Financials", stance: "neutral" },
-    { sector: "Energy", stance: "avoid" },
+    { sector: "Layer 1", stance: "favor" },
+    { sector: "DeFi", stance: "favor" },
+    { sector: "Stablecoins & Yield", stance: "neutral" },
+    { sector: "Layer 2", stance: "neutral" },
+    { sector: "Meme / Speculative", stance: "avoid" },
   ],
   rebalanceSensitivity: "balanced",
   notifications: {
@@ -48,76 +48,36 @@ export const portfolioRules: PortfolioRules = {
 };
 
 export const supportedAssets: SupportedAsset[] = [
-  { symbol: "AAPLx", name: "Apple Stock Token", type: "stock" },
-  { symbol: "TSLAx", name: "Tesla Stock Token", type: "stock" },
-  { symbol: "MSFTx", name: "Microsoft Stock Token", type: "stock" },
-  { symbol: "NVDAx", name: "Nvidia Stock Token", type: "stock" },
-  { symbol: "AMZNx", name: "Amazon Stock Token", type: "stock" },
-  { symbol: "GOOGLx", name: "Alphabet Stock Token", type: "stock" },
   { symbol: "ETH", name: "Ethereum", type: "crypto" },
   { symbol: "BTC", name: "Bitcoin", type: "crypto" },
   { symbol: "USDC", name: "Morpho Yield Position", type: "yield" },
   { symbol: "DAI", name: "DAI Yield Position", type: "yield" },
 ];
 
-// "Constraints" are hard, system-enforced limits the agent can never
-// exceed, regardless of its own reasoning or the user's rules above. Shown
-// read-only — there is deliberately no edit control for any of these.
+// "Constraints" are limits the agent can never exceed and the user can't
+// touch — contrast with the on-chain Trade Limits (max trade size, max
+// slippage, max trade frequency), which the vault contract actually lets
+// each account owner set for themselves via `updateRules` (see
+// OnChainTradeLimits). The asset whitelist below has no such setter
+// exposed anywhere in the contract, so it's the one constraint that stays
+// genuinely read-only.
 export const portfolioConstraints: PortfolioConstraint[] = [
   {
     label: "Supported Assets",
     value: `${supportedAssets.length} Whitelisted Tickers`,
     description:
-      "Aera only trades a curated whitelist of tokenized stocks and approved yield positions — it can't add new assets on its own.",
-  },
-  {
-    label: "Max Trade Size",
-    value: "15% of portfolio per trade",
-    description:
-      "No single trade can move more than this share of your portfolio, regardless of the agent's confidence.",
-  },
-  {
-    label: "Max Slippage",
-    value: "0.5%",
-    description:
-      "Trades that would cost more than this in slippage are rejected before execution.",
-  },
-  {
-    label: "Max Trade Frequency",
-    value: "6 trades / week",
-    description:
-      "A hard cap on how often the agent can act, independent of opportunity.",
+      "Aera only trades a curated whitelist of crypto assets and approved yield positions — it can't add new assets on its own, and there's no user-facing control to expand it.",
   },
 ];
 
 export const holdings: Holding[] = [
   {
-    id: "aaplx",
-    symbol: "AAPLx",
-    name: "Apple Stock Token",
-    type: "stock",
-    value: 33_268.18,
-    allocationPct: 25.9,
-    change24hPct: 1.4,
-    tradingViewSymbol: "NASDAQ:AAPL",
-  },
-  {
-    id: "tslax",
-    symbol: "TSLAx",
-    name: "Tesla Stock Token",
-    type: "stock",
-    value: 19_106.24,
-    allocationPct: 14.9,
-    change24hPct: -2.1,
-    tradingViewSymbol: "NASDAQ:TSLA",
-  },
-  {
     id: "eth",
     symbol: "ETH",
     name: "Ethereum",
     type: "crypto",
-    value: 12_797.7,
-    allocationPct: 10.0,
+    value: 21_836.55,
+    allocationPct: 17.0,
     change24hPct: 0.6,
     tradingViewSymbol: "COINBASE:ETHUSD",
   },
@@ -126,8 +86,8 @@ export const holdings: Holding[] = [
     symbol: "BTC",
     name: "Bitcoin",
     type: "crypto",
-    value: 10_276.03,
-    allocationPct: 8.0,
+    value: 17_340.79,
+    allocationPct: 13.5,
     change24hPct: 1.8,
     tradingViewSymbol: "COINBASE:BTCUSD",
   },
@@ -136,8 +96,8 @@ export const holdings: Holding[] = [
     symbol: "USDC",
     name: "Morpho Yield Position",
     type: "yield",
-    value: 30_171.95,
-    allocationPct: 23.5,
+    value: 50_737.88,
+    allocationPct: 39.5,
     change24hPct: 0.01,
   },
   {
@@ -145,8 +105,8 @@ export const holdings: Holding[] = [
     symbol: "DAI",
     name: "DAI Yield Position",
     type: "yield",
-    value: 6_422.52,
-    allocationPct: 5.0,
+    value: 10_918.28,
+    allocationPct: 8.5,
     change24hPct: 0.02,
   },
   {
@@ -154,8 +114,8 @@ export const holdings: Holding[] = [
     symbol: "USDC",
     name: "Idle Cash",
     type: "yield",
-    value: 16_407.7,
-    allocationPct: 12.7,
+    value: 27_616.82,
+    allocationPct: 21.5,
     change24hPct: 0,
   },
 ];
@@ -167,7 +127,7 @@ export const decisionLog: DecisionLogEntry[] = [
     status: "executed",
     action: "REBALANCE",
     detail:
-      "Trimmed AAPLx from 34% to 30% after it drifted past your target band, and routed the difference into your approved yield position.",
+      "Trimmed ETH from 21% to 17% after it drifted past your target band, and routed the difference into your approved yield position.",
   },
   {
     id: "dec-2",
@@ -183,7 +143,7 @@ export const decisionLog: DecisionLogEntry[] = [
     status: "blocked",
     action: "REBALANCE",
     detail:
-      "Proposed a 32% TSLAx position — blocked by your 25% max position size constraint before execution. No trade occurred.",
+      "Proposed a 22% BTC position — blocked by your 15% max trade size constraint before execution. No trade occurred.",
   },
   {
     id: "dec-4",

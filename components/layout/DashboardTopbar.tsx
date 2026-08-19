@@ -50,7 +50,7 @@ export function DashboardTopbar() {
                 className="flex cursor-not-allowed items-center gap-1.5 px-3 py-2 font-mono text-xs uppercase tracking-widest text-foreground-faint/50"
               >
                 {tab.label}
-                <span className="border border-border-muted px-1 py-0.5 text-[8px] text-foreground-faint">
+                <span className="rounded-full border border-border-muted px-1.5 py-0.5 text-[8px] text-foreground-faint">
                   Soon
                 </span>
               </span>
@@ -82,19 +82,19 @@ export function DashboardTopbar() {
         {isAdmin ? (
           <Link
             href="/admin"
-            className="border border-danger px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-danger transition-colors hover:bg-danger hover:text-background"
+            className="rounded-full border border-danger px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-danger transition-colors hover:bg-danger hover:text-background"
           >
             Admin
           </Link>
         ) : null}
         {isConnected && address ? (
-          <span className="border border-border px-3 py-1.5 font-mono text-xs text-foreground">
+          <span className="rounded-full border border-border px-3 py-1.5 font-mono text-xs text-foreground">
             {truncateAddress(address)}
           </span>
         ) : (
           <Link
             href="/connect"
-            className="border border-accent px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-accent"
+            className="rounded-full border border-accent px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-accent"
           >
             Connect
           </Link>
