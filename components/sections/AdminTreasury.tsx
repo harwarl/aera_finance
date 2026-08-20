@@ -8,7 +8,13 @@ import { TxStatus } from "@/components/shared/TxStatus";
 import { Button } from "@/components/ui/Button";
 import { protocolFees } from "@/config/admin";
 import { APPROVED_ASSETS } from "@/config/contracts";
-import { useVaultFeesOwedToAdmin, useVaultWrite, vaultWrite } from "@/hooks/useVaultContract";
+import {
+  useVaultFeeRateBps,
+  useVaultFeesOwedToAdmin,
+  useVaultMaxFeeRateBps,
+  useVaultWrite,
+  vaultWrite,
+} from "@/hooks/useVaultContract";
 import { formatCurrency } from "@/lib/holdings";
 
 function truncateAddress(address: string) {
@@ -26,6 +32,11 @@ export function AdminTreasury() {
     useVaultFeesOwedToAdmin(FEE_ASSET.address);
   const tx = useVaultWrite();
 
+  const { data: feeRateBps, refetch: refetchFeeRate } = useVaultFeeRateBps();
+  const { data: maxFeeRateBps } = useVaultMaxFeeRateBps();
+  const [newFeeRatePct, setNewFeeRatePct] = useState("");
+  const feeRateTx = useVaultWrite();
+
   const accruedFees =
     accruedFeesRaw !== undefined
       ? Number(formatUnits(accruedFeesRaw, FEE_ASSET.decimals))
@@ -34,6 +45,10 @@ export function AdminTreasury() {
   useEffect(() => {
     if (tx.isConfirmed) refetchAccrued();
   }, [tx.isConfirmed, refetchAccrued]);
+
+  useEffect(() => {
+    if (feeRateTx.isConfirmed) refetchFeeRate();
+  }, [feeRateTx.isConfirmed, refetchFeeRate]);
 
   function closeModal() {
     setModalOpen(false);
@@ -44,6 +59,13 @@ export function AdminTreasury() {
     e.preventDefault();
     if (accruedFeesRaw === undefined) return;
     await tx.writeContractAsync(vaultWrite.withdrawFees(FEE_ASSET.address, accruedFeesRaw));
+  }
+
+  async function handleFeeRateSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const pct = Number(newFeeRatePct);
+    if (Number.isNaN(pct)) return;
+    await feeRateTx.writeContractAsync(vaultWrite.setFeeRate(BigInt(Math.round(pct * 100))));
   }
 
   return (
@@ -92,6 +114,46 @@ export function AdminTreasury() {
         >
           Withdraw Accrued Fees
         </Button>
+
+        <div className="mt-6 border-t border-border-muted pt-5">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
+            Fee Rate
+          </span>
+          <p className="mt-1.5 text-sm font-bold text-foreground">
+            {feeRateBps !== undefined ? `${Number(feeRateBps) / 100}%` : "—"}
+            {maxFeeRateBps !== undefined ? (
+              <span className="ml-2 font-mono text-[10px] font-normal uppercase tracking-widest text-foreground-faint">
+                Max {Number(maxFeeRateBps) / 100}%
+              </span>
+            ) : null}
+          </p>
+
+          {feeRateTx.hash ? (
+            <div className="mt-3">
+              <TxStatus
+                tx={feeRateTx}
+                onClose={() => feeRateTx.reset()}
+                confirmedLabel="Fee rate updated on-chain."
+              />
+            </div>
+          ) : (
+            <form onSubmit={handleFeeRateSubmit} className="mt-3 flex flex-col gap-2 sm:flex-row">
+              <input
+                type="number"
+                min={0}
+                max={maxFeeRateBps !== undefined ? Number(maxFeeRateBps) / 100 : 10}
+                step={0.1}
+                value={newFeeRatePct}
+                onChange={(e) => setNewFeeRatePct(e.target.value)}
+                placeholder="New rate %"
+                className="w-full border border-border bg-background px-3 py-2 font-mono text-xs text-foreground placeholder:text-foreground-faint focus:border-accent focus:outline-none"
+              />
+              <Button type="submit" size="sm" disabled={newFeeRatePct === ""}>
+                Update
+              </Button>
+            </form>
+          )}
+        </div>
       </div>
 
       <Modal

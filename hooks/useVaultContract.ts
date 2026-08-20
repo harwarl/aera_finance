@@ -41,6 +41,19 @@ export function useVaultFeeRateBps() {
   return useReadContract({ ...vaultContract, functionName: "feeRateBps" });
 }
 
+export function useVaultIsPaused() {
+  return useReadContract({ ...vaultContract, functionName: "isPaused" });
+}
+
+export function useVaultIsApprovedAsset(asset?: Address) {
+  return useReadContract({
+    ...vaultContract,
+    functionName: "isApprovedAsset",
+    args: asset ? [asset] : undefined,
+    query: { enabled: Boolean(asset) },
+  });
+}
+
 export function useVaultIsAdmin(address?: Address) {
   return useReadContract({
     ...vaultContract,
@@ -184,10 +197,16 @@ export const vaultWrite = {
     ({ ...vaultContract, functionName: "revokeAgentAccess", args: [] }) as const,
   selfPause: () =>
     ({ ...vaultContract, functionName: "selfPause", args: [] }) as const,
+  selfResume: () =>
+    ({ ...vaultContract, functionName: "selfResume", args: [] }) as const,
   updateRules: (rules: VaultRules) =>
     ({ ...vaultContract, functionName: "updateRules", args: [rules] }) as const,
   chargeFee: (account: Address) =>
     ({ ...vaultContract, functionName: "chargeFee", args: [account] }) as const,
+  pause: () => ({ ...vaultContract, functionName: "pause", args: [] }) as const,
+  unpause: () => ({ ...vaultContract, functionName: "unpause", args: [] }) as const,
+  setApprovedAsset: (asset: Address, approved: boolean) =>
+    ({ ...vaultContract, functionName: "setApprovedAsset", args: [asset, approved] }) as const,
   withdrawFees: (asset: Address, amount: bigint) =>
     ({ ...vaultContract, functionName: "withdrawFees", args: [asset, amount] }) as const,
   setFeeRate: (newFeeRateBps: bigint) =>

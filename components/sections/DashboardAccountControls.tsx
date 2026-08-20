@@ -6,8 +6,10 @@ import { parseUnits } from "viem";
 import {
   ArrowDownToLine,
   ArrowUpFromLine,
+  ArrowUpToLine,
   PauseCircle,
   PlayCircle,
+  ReceiptText,
   ShieldOff,
 } from "lucide-react";
 import { AssetSelect } from "@/components/shared/AssetSelect";
@@ -19,7 +21,7 @@ import { useVaultAccountStatus, useVaultWrite, vaultWrite } from "@/hooks/useVau
 import { APPROVED_ASSETS, type ApprovedAsset } from "@/config/contracts";
 import { VaultAccountStatus } from "@/types/contracts";
 
-type ActiveModal = "deposit" | "withdraw" | "revoke" | "pause" | null;
+type ActiveModal = "deposit" | "withdraw" | "withdrawAll" | "revoke" | "pause" | "chargeFee" | null;
 
 function AmountForm({
   actionLabel,
@@ -84,11 +86,13 @@ export function DashboardAccountControls() {
   // make an unrelated button look busy.
   const depositTx = useVaultWrite();
   const withdrawTx = useVaultWrite();
+  const withdrawAllTx = useVaultWrite();
   const pauseTx = useVaultWrite();
   const revokeTx = useVaultWrite();
+  const chargeFeeTx = useVaultWrite();
 
   const { data: accountStatus, refetch: refetchStatus } = useVaultAccountStatus(address);
-  const isPaused = accountStatus === VaultAccountStatus.Paused;
+  const isPaused = accountStatus === VaultAccountStatus.PausedByUser;
 
   useEffect(() => {
     if (pauseTx.isConfirmed) refetchStatus();
@@ -99,8 +103,10 @@ export function DashboardAccountControls() {
     setAmount("");
     depositTx.reset();
     withdrawTx.reset();
+    withdrawAllTx.reset();
     pauseTx.reset();
     revokeTx.reset();
+    chargeFeeTx.reset();
   }
 
   function handleAssetChange(symbol: string) {
@@ -126,23 +132,25 @@ export function DashboardAccountControls() {
     e.preventDefault();
     if (!address) return;
 
-    if (isPaused) {
-      // The ABI exposes no self-serve "resume" — selfPause() only ever
-      // pauses. This falls back to setAccountStatus(Active), which per the
-      // contract's access checks may only succeed for an admin/keeper, not
-      // the account owner. If this reverts, resuming likely needs an
-      // admin to do it on your behalf.
-      await pauseTx.writeContractAsync(
-        vaultWrite.setAccountStatus(address, VaultAccountStatus.Active)
-      );
-    } else {
-      await pauseTx.writeContractAsync(vaultWrite.selfPause());
-    }
+    await pauseTx.writeContractAsync(
+      isPaused ? vaultWrite.selfResume() : vaultWrite.selfPause()
+    );
+  }
+
+  async function handleWithdrawAll(e: React.FormEvent) {
+    e.preventDefault();
+    await withdrawAllTx.writeContractAsync(vaultWrite.withdrawAll(asset.address));
   }
 
   async function handleRevoke(e: React.FormEvent) {
     e.preventDefault();
     await revokeTx.writeContractAsync(vaultWrite.revokeAgentAccess());
+  }
+
+  async function handleChargeFee(e: React.FormEvent) {
+    e.preventDefault();
+    if (!address) return;
+    await chargeFeeTx.writeContractAsync(vaultWrite.chargeFee(address));
   }
 
   return (
@@ -151,7 +159,7 @@ export function DashboardAccountControls() {
         <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
           Account Controls
         </span>
-        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <Button
             type="button"
             variant="secondary"
@@ -171,6 +179,14 @@ export function DashboardAccountControls() {
           <Button
             type="button"
             variant="secondary"
+            onClick={() => setActiveModal("withdrawAll")}
+          >
+            <ArrowUpToLine className="h-3.5 w-3.5" />
+            Withdraw All
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
             onClick={() => setActiveModal("pause")}
           >
             {isPaused ? (
@@ -183,6 +199,14 @@ export function DashboardAccountControls() {
           <Button
             type="button"
             variant="secondary"
+            onClick={() => setActiveModal("chargeFee")}
+          >
+            <ReceiptText className="h-3.5 w-3.5" />
+            Charge My Fees
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
             onClick={() => setActiveModal("revoke")}
             className="hover:border-danger hover:text-danger"
           >
@@ -191,7 +215,7 @@ export function DashboardAccountControls() {
           </Button>
         </div>
         <p className="mt-4 text-xs leading-relaxed text-foreground-faint">
-          Deposit, withdraw, pause, and revoke are never more than one
+          Every account action the contract lets you take yourself is one
           click away — nothing here is buried in a settings menu.
         </p>
       </DashboardCard>
@@ -228,6 +252,34 @@ export function DashboardAccountControls() {
         )}
       </Modal>
 
+      <Modal open={activeModal === "withdrawAll"} onClose={closeModal} title="Withdraw All" clean>
+        {withdrawAllTx.hash ? (
+          <TxStatus
+            tx={withdrawAllTx}
+            onClose={closeModal}
+            confirmedLabel="Full balance withdrawn on-chain."
+          />
+        ) : (
+          <form onSubmit={handleWithdrawAll} className="flex flex-col gap-4">
+            <div>
+              <label className="font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
+                Asset
+              </label>
+              <div className="mt-2">
+                <AssetSelect assets={APPROVED_ASSETS} value={asset} onChange={handleAssetChange} />
+              </div>
+            </div>
+            <p className="text-sm leading-relaxed text-foreground-muted">
+              This withdraws your entire {asset.symbol} balance from the
+              vault in one transaction.
+            </p>
+            <Button type="submit" className="w-full" disabled={!address}>
+              Confirm Withdraw All
+            </Button>
+          </form>
+        )}
+      </Modal>
+
       <Modal
         open={activeModal === "pause"}
         onClose={closeModal}
@@ -244,7 +296,7 @@ export function DashboardAccountControls() {
           <form onSubmit={handlePauseSubmit} className="flex flex-col gap-4">
             <p className="text-sm leading-relaxed text-foreground-muted">
               {isPaused
-                ? "This resumes trade execution for your vault only. Note: the contract has no self-serve resume — if this reverts, an admin needs to reactivate your account."
+                ? "This resumes trade execution for your vault only — other users are unaffected."
                 : "This immediately halts trade execution for your vault only — other users are unaffected. Your funds stay exactly where they are."}
             </p>
             <Button type="submit" className="w-full" disabled={!address}>
@@ -271,6 +323,28 @@ export function DashboardAccountControls() {
             </p>
             <Button type="submit" className="w-full hover:bg-danger" disabled={!address}>
               Confirm Revoke
+            </Button>
+          </form>
+        )}
+      </Modal>
+
+      <Modal open={activeModal === "chargeFee"} onClose={closeModal} title="Charge My Fees" clean>
+        {chargeFeeTx.hash ? (
+          <TxStatus
+            tx={chargeFeeTx}
+            onClose={closeModal}
+            confirmedLabel="Fees charged on-chain."
+          />
+        ) : (
+          <form onSubmit={handleChargeFee} className="flex flex-col gap-4">
+            <p className="text-sm leading-relaxed text-foreground-muted">
+              This settles any fees accrued since your last deposit,
+              withdrawal, or rebalance right now, instead of waiting for the
+              next one to trigger it automatically. It only affects your own
+              account.
+            </p>
+            <Button type="submit" className="w-full" disabled={!address}>
+              Confirm Charge Fee
             </Button>
           </form>
         )}

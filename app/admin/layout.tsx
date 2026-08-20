@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
-import { PageGrid } from "@/components/layout/PageGrid";
+import { AdminSidebar } from "@/components/layout/AdminSidebar";
+import { AdminGate } from "@/components/sections/AdminGate";
+import { Container } from "@/components/layout/Container";
 
 export default function AdminLayout({
   children,
@@ -8,28 +8,32 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex min-h-dvh flex-col">
-      <PageGrid />
-      <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-border-muted bg-background px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2.5">
-          <Image src="/aera.png" alt="aera" width={28} height={28} />
-          <span className="flex flex-col leading-none">
-            <span className="font-sans text-sm font-black tracking-tight text-foreground">
-              AERA FINANCE
-            </span>
-            <span className="mt-1 font-mono text-[9px] uppercase tracking-widest text-danger">
-              Admin
-            </span>
-          </span>
-        </Link>
-        <Link
-          href="/dashboard"
-          className="font-mono text-xs uppercase tracking-widest text-foreground-faint transition-colors hover:text-foreground"
-        >
-          Back to Dashboard
-        </Link>
-      </header>
-      <main className="flex-1">{children}</main>
+    <div className="flex min-h-dvh flex-col lg:flex-row">
+      <AdminSidebar />
+      <main className="min-w-0 flex-1">
+        <section className="py-10 sm:py-14">
+          <Container>
+            <AdminGate>
+              <div className="flex flex-col gap-6">
+                <div>
+                  <span className="font-mono text-xs uppercase tracking-widest text-danger">
+                    Restricted
+                  </span>
+                  <p className="mt-2 max-w-[60ch] text-sm leading-relaxed text-foreground-muted">
+                    Access here is gated by checking your connected wallet
+                    against an admin allowlist defined in the app — there&apos;s
+                    no server-verified session yet, so treat this as a
+                    UI-level gate, not real security. Every action still
+                    calls the real vault contract; there is no undo once a
+                    transaction confirms.
+                  </p>
+                </div>
+                {children}
+              </div>
+            </AdminGate>
+          </Container>
+        </section>
+      </main>
     </div>
   );
 }
