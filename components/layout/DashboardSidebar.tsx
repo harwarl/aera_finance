@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { WalletModal } from "@/components/shared/WalletModal";
 
 type NavItem = {
   label: string;
@@ -79,7 +80,13 @@ function NavLink({
   );
 }
 
-function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
+function SidebarContent({
+  onNavigate,
+  onOpenWallet,
+}: {
+  onNavigate?: () => void;
+  onOpenWallet: () => void;
+}) {
   const pathname = usePathname();
   const { address, isConnected } = useAccount();
   const isAdmin = useIsAdmin();
@@ -117,9 +124,13 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           Agent Active
         </span>
         {isConnected && address ? (
-          <span className="rounded-full border border-border px-3 py-1.5 text-center font-mono text-xs text-foreground">
+          <button
+            type="button"
+            onClick={onOpenWallet}
+            className="rounded-full border border-border px-3 py-1.5 text-center font-mono text-xs text-foreground transition-colors hover:border-accent hover:text-accent"
+          >
             {truncateAddress(address)}
-          </span>
+          </button>
         ) : (
           <Link
             href="/connect"
@@ -135,11 +146,12 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
 export function DashboardSidebar() {
   const [open, setOpen] = useState(false);
+  const [walletModalOpen, setWalletModalOpen] = useState(false);
 
   return (
     <>
       <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 border-r border-border-muted bg-background p-5 lg:flex lg:flex-col">
-        <SidebarContent />
+        <SidebarContent onOpenWallet={() => setWalletModalOpen(true)} />
       </aside>
 
       <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-border-muted bg-background px-4 lg:hidden">
@@ -162,9 +174,14 @@ export function DashboardSidebar() {
 
       {open ? (
         <div className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-border-muted bg-background p-5 lg:hidden">
-          <SidebarContent onNavigate={() => setOpen(false)} />
+          <SidebarContent
+            onNavigate={() => setOpen(false)}
+            onOpenWallet={() => setWalletModalOpen(true)}
+          />
         </div>
       ) : null}
+
+      <WalletModal open={walletModalOpen} onClose={() => setWalletModalOpen(false)} />
     </>
   );
 }

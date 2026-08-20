@@ -5,7 +5,7 @@ import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
-import { wagmiConfig } from "@/config/wagmi";
+import { robinhoodTestnet, wagmiConfig } from "@/config/wagmi";
 
 const aeraRainbowTheme = darkTheme({
   accentColor: "#2DD4BF",
@@ -21,7 +21,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={aeraRainbowTheme}>
+        <RainbowKitProvider theme={aeraRainbowTheme} initialChain={robinhoodTestnet}>
           {children}
         </RainbowKitProvider>
       </QueryClientProvider>

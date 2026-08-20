@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { DashboardCard } from "@/components/shared/DashboardCard";
+import { Pagination } from "@/components/shared/Pagination";
 import { cn } from "@/lib/utils";
 import { decisionLog } from "@/config/dashboard";
 import {
@@ -21,8 +22,11 @@ const FILTERS: { value: Filter; label: string }[] = [
   { value: "review", label: "Held for Review" },
 ];
 
+const PAGE_SIZE = 10;
+
 export function DecisionLogFull() {
   const [filter, setFilter] = useState<Filter>("all");
+  const [page, setPage] = useState(1);
 
   const counts = useMemo(() => {
     const base: Record<Filter, number> = {
@@ -40,37 +44,49 @@ export function DecisionLogFull() {
       ? decisionLog
       : decisionLog.filter((entry) => entry.status === filter);
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  function changeFilter(next: Filter) {
+    setFilter(next);
+    setPage(1);
+  }
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap gap-2">
-        {FILTERS.map((item) => {
-          const active = filter === item.value;
-          return (
-            <button
-              key={item.value}
-              type="button"
-              onClick={() => setFilter(item.value)}
-              className={cn(
-                "rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition-colors",
-                active
-                  ? "border-accent text-accent"
-                  : "border-border-muted text-foreground-faint hover:text-foreground-muted"
-              )}
-            >
-              {item.label} · {counts[item.value]}
-            </button>
-          );
-        })}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap gap-2">
+          {FILTERS.map((item) => {
+            const active = filter === item.value;
+            return (
+              <button
+                key={item.value}
+                type="button"
+                onClick={() => changeFilter(item.value)}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition-colors",
+                  active
+                    ? "border-accent text-accent"
+                    : "border-border-muted text-foreground-faint hover:text-foreground-muted"
+                )}
+              >
+                {item.label} · {counts[item.value]}
+              </button>
+            );
+          })}
+        </div>
+
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
 
       <DashboardCard>
-        {filtered.length === 0 ? (
+        {paginated.length === 0 ? (
           <p className="py-8 text-center font-mono text-xs uppercase tracking-widest text-foreground-faint">
             No entries for this filter
           </p>
         ) : (
           <div className="flex flex-col divide-y divide-border-muted">
-            {filtered.map((entry) => (
+            {paginated.map((entry) => (
               <div
                 key={entry.id}
                 className="flex flex-col gap-2 py-5 first:pt-0 last:pb-0"

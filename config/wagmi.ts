@@ -34,14 +34,24 @@ const connectors = connectorsForWallets(
   }
 );
 
-// Placeholder chain set — swap in Robinhood Chain here once its RPC
-// details are public. Mainnet + Sepolia keep connect/sign functional today.
+// Robinhood Chain has no public testnet RPC yet, so this reuses Sepolia's
+// real chain ID and endpoint — just rebranded — as a functional stand-in.
+// Swap in the real Robinhood Testnet chain ID/RPC once it's public; keep
+// the id equal to Sepolia's until then, since changing it without a
+// matching RPC would break wallet connections.
+export const robinhoodTestnet = {
+  ...sepolia,
+  name: "Robinhood Testnet",
+} as const;
+
+// Robinhood Testnet is the default network for the app; mainnet is kept
+// available as an optional switch target, not the default.
 export const wagmiConfig = createConfig({
   connectors,
-  chains: [mainnet, sepolia],
+  chains: [robinhoodTestnet, mainnet],
   transports: {
+    [robinhoodTestnet.id]: http(),
     [mainnet.id]: http(),
-    [sepolia.id]: http(),
   },
   ssr: true,
 });

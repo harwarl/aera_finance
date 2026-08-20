@@ -169,7 +169,56 @@ export const decisionLog: DecisionLogEntry[] = [
     detail:
       "Rotated a portion of idle cash into yield after balances sat uninvested past your configured window.",
   },
+  ...generateFillerDecisions(20),
 ];
+
+// Additional entries beyond the named batch above, generated to give the
+// decision log enough rows to exercise pagination realistically.
+function generateFillerDecisions(count: number): DecisionLogEntry[] {
+  const templates: { status: DecisionLogEntry["status"]; action: string; detail: string }[] = [
+    {
+      status: "executed",
+      action: "REBALANCE",
+      detail:
+        "Trimmed a position back toward its target weight after routine drift — settled on-chain in one transaction.",
+    },
+    {
+      status: "executed",
+      action: "YIELD ROUTE",
+      detail:
+        "Rotated idle stablecoin balance into a higher-yield position after the rate spread cleared your threshold.",
+    },
+    {
+      status: "blocked",
+      action: "REBALANCE",
+      detail:
+        "Proposed trade exceeded your max trade size constraint before execution. No trade occurred.",
+    },
+    {
+      status: "review",
+      action: "REBALANCE",
+      detail:
+        "Proposed trade size was well outside your recent average — held for manual review by the circuit breaker.",
+    },
+    {
+      status: "executed",
+      action: "TRADE",
+      detail:
+        "Executed via the venue with the best net price after fees — settled on-chain in one transaction.",
+    },
+  ];
+
+  const baseTime = new Date("2026-07-24T11:20:09Z").getTime();
+
+  return Array.from({ length: count }, (_, i) => {
+    const template = templates[i % templates.length];
+    return {
+      id: `dec-filler-${i + 1}`,
+      timestamp: new Date(baseTime - (i + 1) * 18 * 60 * 60 * 1000).toISOString(),
+      ...template,
+    };
+  });
+}
 
 export const feeSummary = {
   aum: portfolioSummary.totalValue,
