@@ -162,6 +162,26 @@ export type ProtocolFeeSummary = {
   treasuryAddress: string;
 };
 
+// Matches the shape of the (not-yet-live) error-log API: a paginated list
+// of system errors surfaced across every subsystem the vault/agent touches.
+export type SystemErrorSource =
+  | "Reconciliation"
+  | "Agent"
+  | "Rebalance"
+  | "Deposit"
+  | "Withdrawal"
+  | "RPC";
+
+export type SystemErrorItem = {
+  id: string;
+  account: string;
+  kind: string;
+  message: string;
+  detail: string;
+  occurred_at: string;
+  source: SystemErrorSource;
+};
+
 export type RoadmapStatus = "done" | "current" | "upcoming";
 
 export type RoadmapMonth = {

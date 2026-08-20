@@ -5,6 +5,7 @@
 // with a server-verified role once accounts/auth are real.
 export const ADMIN_ADDRESSES: string[] = [
   "0x9F2a7c1B4e8D5a3F60c2B7d9E4a1F8c3D5b6A902",
+  "0x925b098f9e5f2349926E1de19205b927237fbc46",
 ];
 
 export function isAdminAddress(address: string | undefined) {

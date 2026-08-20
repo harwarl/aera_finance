@@ -4,6 +4,7 @@ import { AdminGate } from "@/components/sections/AdminGate";
 import { AdminWaitlist } from "@/components/sections/AdminWaitlist";
 import { AdminTreasury } from "@/components/sections/AdminTreasury";
 import { AdminProtocolControls } from "@/components/sections/AdminProtocolControls";
+import { AdminErrors } from "@/components/sections/AdminErrors";
 
 export const metadata: Metadata = {
   title: "Admin — Aera Finance",
@@ -35,6 +36,8 @@ export default function AdminPage() {
               <AdminWaitlist />
               <AdminProtocolControls />
             </div>
+
+            <AdminErrors />
           </div>
         </AdminGate>
       </Container>
