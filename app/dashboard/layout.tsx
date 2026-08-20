@@ -1,5 +1,4 @@
-import { PageGrid } from "@/components/layout/PageGrid";
-import { DashboardTopbar } from "@/components/layout/DashboardTopbar";
+import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 
 export default function DashboardLayout({
   children,
@@ -7,10 +6,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex min-h-dvh flex-col">
-      <PageGrid />
-      <DashboardTopbar />
-      <main className="flex-1">{children}</main>
+    <div className="flex min-h-dvh flex-col lg:flex-row">
+      <DashboardSidebar />
+      <main className="min-w-0 flex-1">{children}</main>
     </div>
   );
 }
