@@ -1,8 +1,11 @@
 import type {
+  AgentScoreConfig,
   AgentStatus,
   AllocationSlice,
   DecisionLogEntry,
   Holding,
+  PerformanceCallout,
+  PerformancePoint,
   PortfolioConstraint,
   PortfolioRules,
   SupportedAsset,
@@ -13,11 +16,105 @@ import type {
 // Roadmap: Phase 0). Replace with real on-chain reads once the vault
 // contract and agent are live.
 
+// Peak-to-trough max drawdown, expressed as a negative percentage.
+function maxDrawdownPct(series: number[]) {
+  let peak = series[0];
+  let maxDrop = 0;
+  for (const value of series) {
+    if (value > peak) peak = value;
+    const drop = ((value - peak) / peak) * 100;
+    if (drop < maxDrop) maxDrop = drop;
+  }
+  return Number(maxDrop.toFixed(1));
+}
+
+function buildDateLabels(days: number, anchor = "2026-08-26") {
+  const end = new Date(`${anchor}T00:00:00Z`);
+  return Array.from({ length: days }, (_, i) => {
+    const d = new Date(end);
+    d.setUTCDate(d.getUTCDate() - (days - 1 - i));
+    return d.toISOString().slice(0, 10);
+  });
+}
+
+// Deterministic synthetic series (sums of sine waves, no RNG) so the chart
+// renders identically on server and client. Includes a shared "shock" dip
+// midway through the range — the vault dips slightly while BTC dips hard,
+// which is what the performance callout points at.
+const PERFORMANCE_DAYS = 540;
+const SHOCK_INDEX = Math.round(PERFORMANCE_DAYS * 0.55);
+
+function buildPerformanceSeries(days: number) {
+  const vault: number[] = [];
+  const btc: number[] = [];
+  for (let i = 0; i < days; i++) {
+    const t = i / days;
+    const shock = Math.exp(-(((i - SHOCK_INDEX) / 9) ** 2));
+    const noiseVault = Math.sin(i * 0.35) * 0.6 + Math.sin(i * 0.09) * 1.1;
+    const noiseBtc = Math.sin(i * 0.28) * 1.8 + Math.sin(i * 0.05) * 2.6;
+    vault.push(Number((100 + t * 22 + noiseVault - shock * 3).toFixed(2)));
+    btc.push(Number((100 + t * 5 + noiseBtc - shock * 16).toFixed(2)));
+  }
+  return { vault, btc };
+}
+
+const dateLabels = buildDateLabels(PERFORMANCE_DAYS);
+const { vault: vaultSeries, btc: btcSeries } = buildPerformanceSeries(PERFORMANCE_DAYS);
+
+export const performanceSeries: PerformancePoint[] = dateLabels.map((date, i) => ({
+  date,
+  vault: vaultSeries[i],
+  btc: btcSeries[i],
+}));
+
+export const performanceCallout: PerformanceCallout = {
+  date: dateLabels[SHOCK_INDEX],
+  label: "Flight to Safety",
+  vault: vaultSeries[SHOCK_INDEX],
+  btc: btcSeries[SHOCK_INDEX],
+};
+
+export const performanceTimeframes = [
+  { value: "7D", days: 7 },
+  { value: "30D", days: 30 },
+  { value: "90D", days: 90 },
+  { value: "1Y", days: 365 },
+  { value: "ALL", days: PERFORMANCE_DAYS },
+] as const;
+
+const change24hPct = Number(
+  (
+    ((vaultSeries.at(-1)! - vaultSeries.at(-2)!) / vaultSeries.at(-2)!) *
+    100
+  ).toFixed(2),
+);
+
 export const portfolioSummary = {
   totalValue: 128_450.32,
   driftPct: 2.4,
   driftToleranceP: 5,
   agentStatus: "active" as AgentStatus,
+  vaultName: "Primary Vault",
+  change24hPct,
+  change24hAbs: Number((128_450.32 * (change24hPct / 100)).toFixed(2)),
+  baseYieldPct: 6.8,
+  yieldEarned90dAbs: 1_842.65,
+  maxDrawdownPct: maxDrawdownPct(vaultSeries),
+  btcMaxDrawdownPct: maxDrawdownPct(btcSeries),
+};
+
+export const agentScore: AgentScoreConfig = {
+  value: 32,
+  max: 100,
+  tier: "Calm",
+  factors: [
+    { label: "Volatility", value: 18 },
+    { label: "Trend", value: 22 },
+    { label: "Drawdown", value: 15 },
+    { label: "Leverage", value: 54 },
+    { label: "Macro", value: 58 },
+  ],
+  next: "Nothing to do. Tracking your 30/48/22 crypto/yield/cash target — de-risk only triggers if the score holds above 45 for 12h. Re-check in 15m.",
 };
 
 export const allocation: AllocationSlice[] = [

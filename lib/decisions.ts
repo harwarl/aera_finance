@@ -1,4 +1,22 @@
+import {
+  ArrowLeftRight,
+  Coins,
+  Repeat,
+  type LucideIcon,
+} from "lucide-react";
 import type { DecisionStatus } from "@/types";
+
+export const ACTION_LABEL: Record<string, string> = {
+  REBALANCE: "Rebalance",
+  "YIELD ROUTE": "Yield Routed",
+  TRADE: "Trade Executed",
+};
+
+export const ACTION_ICON: Record<string, LucideIcon> = {
+  REBALANCE: ArrowLeftRight,
+  "YIELD ROUTE": Coins,
+  TRADE: Repeat,
+};
 
 export const STATUS_LABEL: Record<DecisionStatus, string> = {
   executed: "Executed",

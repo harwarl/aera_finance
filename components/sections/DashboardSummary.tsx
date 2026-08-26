@@ -1,96 +1,84 @@
-import { DashboardCard } from "@/components/shared/DashboardCard";
+"use client";
+
+import { useAccount } from "wagmi";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { ScrambleText } from "@/components/shared/ScrambleText";
 import { cn } from "@/lib/utils";
-import { allocation, portfolioSummary } from "@/config/dashboard";
+import { formatCurrency } from "@/lib/holdings";
+import { portfolioSummary } from "@/config/dashboard";
 
-const SEGMENT_COLORS = ["bg-accent", "bg-accent-600", "bg-border"];
+function truncateAddress(address: string) {
+  return `${address.slice(0, 6)}…${address.slice(-4)}`;
+}
 
-function formatCurrency(value: number) {
-  return `$${value.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
+function StatPill({
+  label,
+  value,
+  note,
+}: {
+  label: string;
+  value: string;
+  note?: string;
+}) {
+  return (
+    <div className="flex items-center gap-2 rounded-full border border-border bg-background-elevated/60 px-4 py-2">
+      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+      <span className="whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
+        {label}
+      </span>
+      <span className="whitespace-nowrap text-sm font-bold text-foreground">
+        {value}
+      </span>
+      {note ? (
+        <span className="whitespace-nowrap font-mono text-[10px] text-foreground-faint">
+          {note}
+        </span>
+      ) : null}
+    </div>
+  );
 }
 
 export function DashboardSummary() {
-  const withinTolerance =
-    portfolioSummary.driftPct <= portfolioSummary.driftToleranceP;
+  const { address } = useAccount();
+  const isPositive = portfolioSummary.change24hPct >= 0;
+  const DeltaIcon = isPositive ? ArrowUp : ArrowDown;
 
   return (
-    <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.4fr_1fr_1fr]">
-      <DashboardCard className="flex h-full flex-col">
-        <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
-          Total Portfolio Value
-        </span>
+    <div className="flex flex-col gap-5">
+      <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
+        {portfolioSummary.vaultName}
+        {address ? ` · ${truncateAddress(address)}` : ""}
+      </span>
+
+      <div className="flex flex-wrap items-baseline gap-3">
         <ScrambleText
           value={formatCurrency(portfolioSummary.totalValue)}
-          className="mt-4 block text-4xl font-black tracking-tighter text-foreground sm:text-5xl"
+          className="text-4xl font-black tracking-tighter text-foreground sm:text-5xl"
         />
-
-        <div className="mt-6">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
-            Allocation
-          </span>
-          <div className="mt-2 flex h-2 w-full overflow-hidden rounded-full bg-background">
-            {allocation.map((slice, i) => (
-              <div
-                key={slice.label}
-                className={SEGMENT_COLORS[i % SEGMENT_COLORS.length]}
-                style={{ width: `${slice.pct}%` }}
-              />
-            ))}
-          </div>
-          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
-            {allocation.map((slice, i) => (
-              <span
-                key={slice.label}
-                className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-foreground-muted"
-              >
-                <span
-                  className={cn(
-                    "h-1.5 w-1.5 rounded-full",
-                    SEGMENT_COLORS[i % SEGMENT_COLORS.length]
-                  )}
-                />
-                {slice.label} · {slice.pct}%
-              </span>
-            ))}
-          </div>
-        </div>
-      </DashboardCard>
-
-      <DashboardCard className="flex h-full flex-col justify-between">
-        <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
-          Drift From Target
-        </span>
         <span
           className={cn(
-            "mt-4 text-4xl font-black tracking-tighter sm:text-5xl",
-            withinTolerance ? "text-foreground" : "text-danger"
+            "flex items-center gap-1 font-mono text-sm",
+            isPositive ? "text-accent" : "text-danger"
           )}
         >
-          {portfolioSummary.driftPct}%
+          <DeltaIcon className="h-3.5 w-3.5" />
+          {isPositive ? "+" : ""}
+          {formatCurrency(portfolioSummary.change24hAbs)} · 24h
         </span>
-        <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
-          {withinTolerance ? "Within target" : "Rebalance pending"} ·
-          Tolerance {portfolioSummary.driftToleranceP}%
-        </p>
-      </DashboardCard>
+      </div>
 
-      <DashboardCard className="flex h-full flex-col justify-between">
-        <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
-          Agent Status
-        </span>
-        <div className="mt-4 flex items-center gap-2">
-          <span className="h-2 w-2 animate-ticker-blink rounded-full bg-accent" />
-          <span className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-            Active
-          </span>
-        </div>
-        <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
-          Continuously monitoring
-        </p>
-      </DashboardCard>
+      <div className="flex flex-wrap gap-3">
+        <StatPill label="Base Yield" value={`${portfolioSummary.baseYieldPct}%`} />
+        <StatPill
+          label="Yield Earned 90D"
+          value={formatCurrency(portfolioSummary.yieldEarned90dAbs)}
+        />
+        <StatPill
+          label="Max Drawdown"
+          value={`${portfolioSummary.maxDrawdownPct}%`}
+          note={`vs BTC ${portfolioSummary.btcMaxDrawdownPct}%`}
+        />
+      </div>
     </div>
   );
 }

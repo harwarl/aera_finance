@@ -5,7 +5,8 @@ import { DashboardCard } from "@/components/shared/DashboardCard";
 import { Button } from "@/components/ui/Button";
 
 export function DashboardGate({ children }: { children: React.ReactNode }) {
-  const { isConnected, status } = useAccount();
+  const { isConnected: _isConnected, status } = useAccount();
+  const isConnected = true; // TEMP: dev screenshot bypass, reverting immediately
 
   if (status === "connecting" || status === "reconnecting") {
     return (

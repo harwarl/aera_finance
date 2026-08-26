@@ -1,4 +1,5 @@
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
+import { DesertField } from "@/components/shared/DesertField";
 
 export default function DashboardLayout({
   children,
@@ -6,9 +7,10 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-dvh flex-col lg:flex-row">
+    <div className="relative flex min-h-dvh flex-col lg:flex-row">
+      <DesertField />
       <DashboardSidebar />
-      <main className="min-w-0 flex-1">{children}</main>
+      <main className="relative z-10 min-w-0 flex-1">{children}</main>
     </div>
   );
 }

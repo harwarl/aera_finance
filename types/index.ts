@@ -182,6 +182,32 @@ export type SystemErrorItem = {
   source: SystemErrorSource;
 };
 
+export type PerformancePoint = {
+  date: string;
+  vault: number;
+  btc: number;
+};
+
+export type PerformanceCallout = {
+  date: string;
+  label: string;
+  vault: number;
+  btc: number;
+};
+
+export type AgentScoreFactor = {
+  label: string;
+  value: number;
+};
+
+export type AgentScoreConfig = {
+  value: number;
+  max: number;
+  tier: string;
+  factors: AgentScoreFactor[];
+  next: string;
+};
+
 export type RoadmapStatus = "done" | "current" | "upcoming";
 
 export type RoadmapMonth = {
