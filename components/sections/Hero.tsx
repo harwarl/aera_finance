@@ -1,5 +1,6 @@
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
+import { AgentPulseFeed } from "@/components/shared/AgentPulseFeed";
 import { HeroScene } from "@/components/shared/HeroScene";
 import { Reveal } from "@/components/shared/Reveal";
 import { ScrollCue } from "@/components/shared/ScrollCue";
@@ -20,6 +21,10 @@ export function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-y-0 left-0 hidden w-1/2 bg-gradient-to-r from-background via-background/70 to-transparent sm:block"
       />
+
+      <div className="absolute top-28 right-6 hidden sm:block lg:right-24">
+        <AgentPulseFeed />
+      </div>
 
       <Container className="relative flex flex-1 flex-col justify-end">
         <Reveal className="mb-6 flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-foreground-muted">

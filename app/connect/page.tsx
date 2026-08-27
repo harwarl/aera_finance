@@ -6,7 +6,7 @@ import { ConnectFlow } from "@/components/sections/ConnectFlow";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Connect — Aera Finance",
+  title: "Connect — Atlas",
   description: "Connect and verify your wallet to launch the Aera agent.",
 };
 

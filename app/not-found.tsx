@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "404 — Aera Finance",
+  title: "404 — Atlas",
   description: "This page doesn't exist.",
 };
 
