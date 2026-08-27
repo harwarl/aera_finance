@@ -119,7 +119,7 @@ export function CapabilitiesGallery() {
     >
       <div className="lg:flex lg:h-screen lg:flex-col lg:justify-center">
         <Container>
-          <SectionHeader index="03" label="Capabilities" meta="Scroll To Explore" />
+          <SectionHeader label="Capabilities" meta="Scroll To Explore" />
 
           <h2 className="mt-10 max-w-2xl text-3xl font-black leading-[1.05] tracking-tight text-foreground sm:text-5xl">
             <ScrambleText variant="glitch" value="One agent, six guardrails." />

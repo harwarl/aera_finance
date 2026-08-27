@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
-  CARD_HOLD_MS,
-  REST_DURATION_MS,
-  WAVE_DURATION_MS,
-} from "@/components/shared/HeroScene";
+  DUST_CARD_HOLD_MS as CARD_HOLD_MS,
+  DUST_REST_DURATION_MS as REST_DURATION_MS,
+  DUST_WAVE_DURATION_MS as WAVE_DURATION_MS,
+} from "@/components/shared/HeroSceneDust";
 
-// What the hero's sphere is "thinking" — mirrors HeroScene's own
+// What the hero's sphere is "thinking" — mirrors HeroSceneDust's own
 // wave / pop / rest cycle with its own setTimeout chain (imported durations
 // so the two can't drift if one changes) rather than a prop wired through
 // the WebGL scene: the wave plays with the card hidden, then the card pops

@@ -9,7 +9,7 @@ export function SecuritySection() {
     <section id="security" className="py-20 sm:py-28">
       <Container>
         <Reveal>
-          <SectionHeader index="05" label="Security" meta="Non-Custodial" />
+          <SectionHeader label="Security" meta="Non-Custodial" />
         </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-start">

@@ -1,10 +1,12 @@
 import { Hero } from "@/components/sections/Hero";
-// import { TrustBar } from "@/components/sections/TrustBar";
-import { ProblemSection } from "@/components/sections/ProblemSection";
-import { SolutionSection } from "@/components/sections/SolutionSection";
-import { CapabilitiesGallery } from "@/components/sections/CapabilitiesGallery";
-import { StatsSection } from "@/components/sections/StatsSection";
-import { SecuritySection } from "@/components/sections/SecuritySection";
+import { ProtocolMetrics } from "@/components/sections/ProtocolMetrics";
+import { ProblemFraming } from "@/components/sections/ProblemFraming";
+import { HowItWorksSteps } from "@/components/sections/HowItWorksSteps";
+import { LiveDemo } from "@/components/sections/LiveDemo";
+import { DecisionStack } from "@/components/sections/DecisionStack";
+import { FlightToSafety } from "@/components/sections/FlightToSafety";
+import { AutonomyModes } from "@/components/sections/AutonomyModes";
+import { StatsBig } from "@/components/sections/StatsBig";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { ManifestoSection } from "@/components/sections/ManifestoSection";
 
@@ -12,12 +14,14 @@ export default function Home() {
   return (
     <>
       <Hero />
-      {/* <TrustBar /> */}
-      <ProblemSection />
-      <SolutionSection />
-      <CapabilitiesGallery />
-      <StatsSection />
-      <SecuritySection />
+      <ProtocolMetrics />
+      <ProblemFraming />
+      <HowItWorksSteps />
+      <LiveDemo />
+      <DecisionStack />
+      <FlightToSafety />
+      <AutonomyModes />
+      <StatsBig />
       <FaqSection />
       <ManifestoSection />
     </>

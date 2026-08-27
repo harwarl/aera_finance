@@ -31,7 +31,6 @@ export function SolutionSection() {
       <Container>
         <Reveal>
           <SectionHeader
-            index="02"
             label="The Solution"
             meta="Autonomous, Explained"
           />

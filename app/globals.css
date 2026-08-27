@@ -1,25 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --background: #030506;
-  --background-elevated: #0f1820;
-  --background-subtle: #141f28;
+  --background: #1a1b1d;
+  --background-elevated: #232427;
+  --background-subtle: #2b2c30;
 
-  --border-color: #1c2a30;
-  --border-muted: #12191e;
+  --border-color: #333438;
+  --border-muted: #26272a;
 
-  --foreground: #edf1f2;
-  --foreground-muted: #8b9aa1;
-  --foreground-faint: #5c6b71;
+  --foreground: #f5f4f0;
+  --foreground-muted: #a8a7a3;
+  --foreground-faint: #6f6e6b;
 
-  --accent-100: #a8f0e6;
-  --accent-300: #5ee5d6;
-  --accent: #2dd4bf;
-  --accent-600: #1fa595;
-  --accent-700: #1b9e8f;
-  --accent-900: #0f5f56;
+  --accent-100: #f2ffd1;
+  --accent-300: #e9ffa0;
+  --accent: #dffc5a; /* Robin lime — the single locked accent */
+  --accent-600: #b8d248;
+  --accent-700: #9cb03d;
+  --accent-900: #5c6b1f;
 
-  --danger: #d9635f;
+  --positive: #5ac142; /* green — gains, buy, success */
+  --negative: #eb5e2a; /* red-orange — losses, sell, danger */
+  --caution: #f5c36f; /* peach — pending/neutral-warning states */
 }
 
 /* :root {
@@ -75,7 +77,7 @@
   --color-accent-700: var(--accent-700);
   --color-accent-900: var(--accent-900);
 
-  --color-danger: var(--danger);
+  --color-danger: var(--negative);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);

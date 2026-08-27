@@ -17,7 +17,6 @@ export function FaqSection() {
       <Container>
         <Reveal>
           <SectionHeader
-            index="06"
             label="FAQ"
             meta="The Questions We Get Most"
           />

@@ -8,7 +8,7 @@ export function HowItWorks() {
     <section id="how-it-works" className="py-20 sm:py-28">
       <Container>
         <Reveal>
-          <SectionHeader index="03" label="How It Works" meta="Analyze → Explain" />
+          <SectionHeader label="How It Works" meta="Analyze → Explain" />
         </Reveal>
 
         <Reveal delay={80}>

@@ -1,13 +1,12 @@
 import { cn } from "@/lib/utils";
 import { ScrambleText } from "@/components/shared/ScrambleText";
+import { Reveal } from "../shared/Reveal";
 
 export function SectionHeader({
-  index,
   label,
   meta,
   className,
 }: {
-  index: string;
   label: string;
   meta?: string;
   className?: string;
@@ -19,12 +18,11 @@ export function SectionHeader({
         className,
       )}
     >
-      <span className="text-foreground-muted">
-        <span className="text-accent font-semibold">
-          [<ScrambleText value={index} />]
-        </span>{" "}
-        <ScrambleText value={label} startDelay={90} />
-      </span>
+      <Reveal className="mb-6 flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-foreground-muted">
+        <span className="h-px w-10 bg-accent-100/50" />
+        <ScrambleText value={label} />
+        <span className="hidden h-px w-10 bg-accent/50 sm:block" />
+      </Reveal>
       {meta ? (
         <ScrambleText value={meta} startDelay={180} className="text-accent" />
       ) : null}

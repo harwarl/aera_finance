@@ -8,6 +8,11 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js";
 
+// PRESERVED — this is the original hero scene (dense dust-shell sphere with a
+// traveling ripple wave + agent-message pop cycle), kept around unused after
+// HeroScene.tsx was swapped to the wireframe-mesh scene. Not deleted, only
+// renamed, per instruction. See HeroScene.tsx for the current hero visual.
+//
 // A full-bleed hero background: a sparse starfield spans the whole section,
 // with a dense particle sphere offset to the right as the centerpiece — one
 // single dust shell (no separate wireframe/band mesh) that a ripple of light
@@ -31,10 +36,11 @@ const CENTERPIECE_SCALE = 0.75;
 const RIPPLE_THICKNESS = 0.4; // radians of arc that's lit at any instant
 const RIPPLE_BULGE = 0.16; // extra radial displacement at full intensity
 
-export const WAVE_DURATION_MS = 1900;
-export const CARD_HOLD_MS = 2400;
-export const REST_DURATION_MS = 1300;
-const CYCLE_MS = WAVE_DURATION_MS + CARD_HOLD_MS + REST_DURATION_MS;
+export const DUST_WAVE_DURATION_MS = 1900;
+export const DUST_CARD_HOLD_MS = 2400;
+export const DUST_REST_DURATION_MS = 1300;
+const CYCLE_MS =
+  DUST_WAVE_DURATION_MS + DUST_CARD_HOLD_MS + DUST_REST_DURATION_MS;
 
 function fibonacciDirections(count: number) {
   const dirs: [number, number, number][] = [];
@@ -73,16 +79,16 @@ function createCircleSprite(): THREE.Texture {
       size / 2,
       size / 2,
     );
-    gradient.addColorStop(0, "rgba(255,255,255,1)");
-    gradient.addColorStop(0.5, "rgba(255,255,255,0.55)");
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
+    gradient.addColorStop(0, "rgba(255,255,255,255)");
+    gradient.addColorStop(0.5, "rgba(255,255,255,240)");
+    gradient.addColorStop(1, "rgba(255,255,255,230)");
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, size, size);
   }
   return new THREE.CanvasTexture(canvas);
 }
 
-export function HeroScene() {
+export function HeroSceneDust() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -101,8 +107,8 @@ export function HeroScene() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
     container.appendChild(renderer.domElement);
 
-    const accent = new THREE.Color("#2dd4bf");
-    const dustColor = new THREE.Color("#8b9aa1");
+    const accent = new THREE.Color("#dffc5a");
+    const dustColor = new THREE.Color("#D4D0C9");
     const circleSprite = createCircleSprite();
 
     const centerpiece = new THREE.Group();
@@ -239,8 +245,10 @@ export function HeroScene() {
         waveOrigin = randomDirection();
       }
       const cycleT = now - cycleIndex * CYCLE_MS;
-      const inWave = cycleT < WAVE_DURATION_MS;
-      const rippleAngle = inWave ? (cycleT / WAVE_DURATION_MS) * Math.PI : -1;
+      const inWave = cycleT < DUST_WAVE_DURATION_MS;
+      const rippleAngle = inWave
+        ? (cycleT / DUST_WAVE_DURATION_MS) * Math.PI
+        : -1;
 
       const posAttr = dustGeometry.attributes.position as THREE.BufferAttribute;
       const colorAttr = dustGeometry.attributes.color as THREE.BufferAttribute;
@@ -249,7 +257,8 @@ export function HeroScene() {
         const [dx, dy, dz] = directions[i];
         let intensity = 0;
         if (inWave) {
-          const cosAngle = dx * waveOrigin[0] + dy * waveOrigin[1] + dz * waveOrigin[2];
+          const cosAngle =
+            dx * waveOrigin[0] + dy * waveOrigin[1] + dz * waveOrigin[2];
           const angDist = Math.acos(Math.min(1, Math.max(-1, cosAngle)));
           const delta = Math.abs(angDist - rippleAngle);
           if (delta < RIPPLE_THICKNESS) {
@@ -257,7 +266,8 @@ export function HeroScene() {
           }
         }
 
-        const radius = SPHERE_RADIUS * (baseJitters[i] + RIPPLE_BULGE * intensity);
+        const radius =
+          SPHERE_RADIUS * (baseJitters[i] + RIPPLE_BULGE * intensity);
         posAttr.setXYZ(i, dx * radius, dy * radius, dz * radius);
 
         if (intensity > 0) {

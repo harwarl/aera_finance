@@ -1,12 +1,12 @@
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { AgentPulseFeed } from "@/components/shared/AgentPulseFeed";
-import { HeroScene } from "@/components/shared/HeroScene";
 import { Reveal } from "@/components/shared/Reveal";
 import { ScrollCue } from "@/components/shared/ScrollCue";
 import { Typewriter } from "@/components/shared/Typewriter";
 import { CornerBrackets } from "../shared/CornerBrackets";
 import { ScrambleText } from "../shared/ScrambleText";
+import { HeroSceneDust } from "../shared/HeroSceneDust";
 
 export function Hero() {
   return (
@@ -15,7 +15,7 @@ export function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 hidden sm:block"
       >
-        <HeroScene />
+        <HeroSceneDust />
       </div>
       <div
         aria-hidden="true"

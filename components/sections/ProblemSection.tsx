@@ -8,7 +8,6 @@ export function ProblemSection() {
       <Container>
         <Reveal>
           <SectionHeader
-            index="01"
             label="The Problem"
             meta="Manual Management"
           />

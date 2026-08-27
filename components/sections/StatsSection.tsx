@@ -10,7 +10,7 @@ export function StatsSection() {
     <section className="py-20 sm:py-28">
       <Container>
         <Reveal>
-          <SectionHeader index="04" label="Results" meta="Since Genesis" />
+          <SectionHeader label="Results" meta="Since Genesis" />
         </Reveal>
 
         <div className="mt-10 flex flex-wrap items-end justify-between gap-6">
