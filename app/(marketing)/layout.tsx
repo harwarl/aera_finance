@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PageGrid } from "@/components/layout/PageGrid";
 import { ScrollProgressBar } from "@/components/shared/ScrollProgressBar";
+import { StarfieldBackdrop } from "@/components/shared/StarfieldBackdrop";
 
 export default function MarketingLayout({
   children,
@@ -10,6 +11,7 @@ export default function MarketingLayout({
 }) {
   return (
     <div className="marketing-scope relative flex min-h-dvh flex-col">
+      <StarfieldBackdrop />
       <ScrollProgressBar />
       {/* <PageGrid /> */}
       <Navbar />

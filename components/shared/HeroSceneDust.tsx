@@ -7,19 +7,36 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js";
+import {
+  createCircleSprite,
+  createTunnelField,
+  disposeTunnelField,
+  stepTunnelField,
+} from "@/components/shared/starfieldCore";
 
 // PRESERVED — this is the original hero scene (dense dust-shell sphere with a
 // traveling ripple wave + agent-message pop cycle), kept around unused after
 // HeroScene.tsx was swapped to the wireframe-mesh scene. Not deleted, only
 // renamed, per instruction. See HeroScene.tsx for the current hero visual.
 //
-// A full-bleed hero background: a sparse starfield spans the whole section,
-// with a dense particle sphere offset to the right as the centerpiece — one
-// single dust shell (no separate wireframe/band mesh) that a ripple of light
-// sweeps through every cycle, bulging and brightening whichever dust it
-// passes, meant to read as an AI thinking hard. Two point lights orbit the
-// sphere continuously. Rendered with a chromatic-aberration + bloom post
-// pass. Tilts toward the cursor.
+// A dense particle sphere offset to the right as the hero's centerpiece —
+// one single dust shell (no separate wireframe/band mesh) that a ripple of
+// light sweeps through every cycle, bulging and brightening whichever dust
+// it passes, meant to read as an AI thinking hard. Two point lights orbit
+// the sphere continuously. Rendered with a chromatic-aberration + bloom
+// post pass. Tilts toward the cursor.
+//
+// Also embeds its own copy of the sitewide traveling star tunnel (see
+// starfieldCore) rather than just relying on StarfieldBackdrop showing
+// through behind it. It can't: UnrealBloomPass's composite step bakes an
+// opaque alpha into this canvas's output, so anything sitting behind it —
+// including a `position: fixed` backdrop with a lower z-index — is
+// invisible no matter what. Embedding the same field directly in this
+// scene sidesteps that entirely, since it's composited through the same
+// (already-opaque) canvas instead of trying to show through it. Its
+// travel is scaled to one viewport height (rather than the whole page,
+// like StarfieldBackdrop) since that's roughly how much of the page the
+// hero itself occupies before it's scrolled out of view.
 //
 // Timing is a single repeating cycle — WAVE (ripple sweeps pole to pole),
 // then POP (agent message card shows), then REST (idle) — driven off
@@ -27,7 +44,6 @@ import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js";
 // to re-render. AgentPulseFeed mirrors the same three durations with its
 // own setTimeout chain to stay in step without any prop wiring between them.
 
-const STAR_COUNT = 500;
 const SPHERE_POINT_COUNT = 4200;
 const SPHERE_RADIUS = 2.7;
 const CENTERPIECE_OFFSET_X = 2.2;
@@ -62,31 +78,13 @@ function randomDirection(): [number, number, number] {
   return [r * Math.cos(theta), u, r * Math.sin(theta)];
 }
 
-// WebGL points render as flat squares by default — this soft round sprite
-// (alpha fades out from the center) is what makes them read as dots/stars.
-function createCircleSprite(): THREE.Texture {
-  const size = 64;
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d");
-  if (ctx) {
-    const gradient = ctx.createRadialGradient(
-      size / 2,
-      size / 2,
-      0,
-      size / 2,
-      size / 2,
-      size / 2,
-    );
-    gradient.addColorStop(0, "rgba(255,255,255,255)");
-    gradient.addColorStop(0.5, "rgba(255,255,255,240)");
-    gradient.addColorStop(1, "rgba(255,255,255,230)");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, size, size);
-  }
-  return new THREE.CanvasTexture(canvas);
-}
+const STAR_COUNT = 700;
+const STAR_TUNNEL_DEPTH = 26;
+const STAR_NEAR_SEED = 1;
+const STAR_LATERAL_SPREAD = 6;
+const STAR_FAR = 8;
+const STAR_MAX_TRAVEL = STAR_TUNNEL_DEPTH - STAR_FAR;
+const STAR_INFLUENCE_RADIUS = 2.5; // world units — scaled to this camera, not StarfieldBackdrop's
 
 export function HeroSceneDust() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -162,34 +160,16 @@ export function HeroSceneDust() {
     const rimLight = new THREE.PointLight(accent, 30, 20);
     scene.add(ambient, keyLight, rimLight);
 
-    // Sparse starfield spans the full hero background, independent of the
-    // offset centerpiece above.
-    const starGeometry = new THREE.BufferGeometry();
-    const starPositions = new Float32Array(STAR_COUNT * 3);
-    for (let i = 0; i < STAR_COUNT; i++) {
-      const radius = 3.5 + Math.random() * 4.5;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
-      starPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      starPositions[i * 3 + 2] = radius * Math.cos(phi) * 0.6;
-    }
-    starGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(starPositions, 3),
-    );
-    const starMaterial = new THREE.PointsMaterial({
-      color: accent,
-      map: circleSprite,
-      alphaMap: circleSprite,
-      size: 0.035,
-      transparent: true,
-      opacity: 0.55,
-      sizeAttenuation: true,
-      depthWrite: false,
+    const starField = createTunnelField({
+      count: STAR_COUNT,
+      depth: STAR_TUNNEL_DEPTH,
+      nearSeed: STAR_NEAR_SEED,
+      lateralSpread: STAR_LATERAL_SPREAD,
+      pointSize: 0.05,
+      opacity: 0.85,
+      sprite: circleSprite,
     });
-    const stars = new THREE.Points(starGeometry, starMaterial);
-    scene.add(stars);
+    scene.add(starField.points);
 
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
@@ -214,14 +194,28 @@ export function HeroSceneDust() {
     resizeObserver.observe(container);
 
     const pointer = { x: 0, y: 0 };
+    const mouseWorld = { x: 9999, y: 9999, active: false };
+    const starFovRad = (camera.fov * Math.PI) / 180;
     function handlePointerMove(e: PointerEvent) {
       const rect = container.getBoundingClientRect();
       pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       pointer.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+
+      // Same projection StarfieldBackdrop uses, scaled to this camera —
+      // needed for the embedded star field's comet-follow effect.
+      const halfHeight = camera.position.z * Math.tan(starFovRad / 2);
+      const halfWidth = halfHeight * (rect.width / rect.height);
+      mouseWorld.x = pointer.x * halfWidth;
+      mouseWorld.y = -pointer.y * halfHeight;
+      mouseWorld.active = true;
+    }
+    function handlePointerLeave() {
+      mouseWorld.active = false;
     }
     window.addEventListener("pointermove", handlePointerMove, {
       passive: true,
     });
+    window.addEventListener("pointerout", handlePointerLeave, { passive: true });
 
     let frameId = 0;
     let paused = document.visibilityState === "hidden";
@@ -280,13 +274,16 @@ export function HeroSceneDust() {
       posAttr.needsUpdate = true;
       colorAttr.needsUpdate = true;
 
+      const heroTravel =
+        Math.min(1, Math.max(0, window.scrollY / window.innerHeight)) * STAR_MAX_TRAVEL;
+      stepTunnelField(starField, heroTravel, 1 / 60, t, mouseWorld, STAR_INFLUENCE_RADIUS);
+
       // Gentle tilt toward the cursor, layered on top of the idle spin —
       // the "moving part" reacting to input.
       const tiltX = pointer.y * 0.35;
       const tiltY = pointer.x * 0.45;
       centerpiece.rotation.y = t * 0.18 + tiltY;
       centerpiece.rotation.x = Math.sin(t * 0.25) * 0.15 + tiltX;
-      stars.rotation.y = t * 0.05;
 
       // Lights revolve around the centerpiece continuously.
       keyLight.position.set(
@@ -308,8 +305,18 @@ export function HeroSceneDust() {
       if (!paused) frameId = requestAnimationFrame(tick);
     }
 
-    if (reduceMotion) {
+    function reduceMotionHeroTravel() {
+      return Math.min(1, Math.max(0, window.scrollY / window.innerHeight)) * STAR_MAX_TRAVEL;
+    }
+    function handleScrollStatic() {
+      stepTunnelField(starField, reduceMotionHeroTravel(), 0, 0, mouseWorld, STAR_INFLUENCE_RADIUS);
       composer.render();
+    }
+
+    if (reduceMotion) {
+      stepTunnelField(starField, reduceMotionHeroTravel(), 0, 0, mouseWorld, STAR_INFLUENCE_RADIUS);
+      composer.render();
+      window.addEventListener("scroll", handleScrollStatic, { passive: true });
     } else {
       frameId = requestAnimationFrame(tick);
     }
@@ -318,11 +325,12 @@ export function HeroSceneDust() {
       cancelAnimationFrame(frameId);
       resizeObserver.disconnect();
       window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerout", handlePointerLeave);
+      window.removeEventListener("scroll", handleScrollStatic);
       document.removeEventListener("visibilitychange", handleVisibility);
       dustGeometry.dispose();
       dustMaterial.dispose();
-      starGeometry.dispose();
-      starMaterial.dispose();
+      disposeTunnelField(starField);
       circleSprite.dispose();
       composer.dispose();
       renderer.dispose();

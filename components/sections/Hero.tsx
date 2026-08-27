@@ -34,7 +34,7 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={80}>
-          <h1 className="max-w-3xl text-[clamp(2.4rem,10vw,5rem)] font-black uppercase leading-[0.88] tracking-tight text-foreground">
+          <h1 className="max-w-3xl text-[clamp(2.4rem,10vw,5rem)] font-black uppercase leading-[0.88] tracking-tight text-foreground mb-2">
             <ScrambleText variant="glitch" value="Executed" />
             <br />
             <ScrambleText variant="glitch" value="on chain." />

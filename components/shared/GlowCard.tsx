@@ -41,7 +41,7 @@ export function GlowCard({
         className="pointer-events-none absolute -inset-2 -z-10 opacity-0 blur-lg transition-opacity duration-500 group-hover/glow:opacity-100"
         style={{
           background:
-            "radial-gradient(200px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%)",
+            "radial-gradient(100px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), color-mix(in srgb, var(--accent) 5%, transparent), transparent 70%)",
         }}
       />
 
@@ -51,7 +51,7 @@ export function GlowCard({
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/glow:opacity-100"
           style={{
             background:
-              "radial-gradient(200px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), color-mix(in srgb, var(--accent) 5%, transparent), transparent 70%)",
+              "radial-gradient(100px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), color-mix(in srgb, var(--accent) 5%, transparent), transparent 70%)",
           }}
         />
         {children}
