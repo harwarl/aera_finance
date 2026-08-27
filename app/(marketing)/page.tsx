@@ -6,7 +6,6 @@ import { LiveDemo } from "@/components/sections/LiveDemo";
 import { DecisionStack } from "@/components/sections/DecisionStack";
 import { FlightToSafety } from "@/components/sections/FlightToSafety";
 import { AutonomyModes } from "@/components/sections/AutonomyModes";
-import { StatsBig } from "@/components/sections/StatsBig";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { ManifestoSection } from "@/components/sections/ManifestoSection";
 
@@ -21,7 +20,6 @@ export default function Home() {
       <DecisionStack />
       <AutonomyModes />
       <FlightToSafety />
-      <StatsBig />
       <FaqSection />
       <ManifestoSection />
     </>

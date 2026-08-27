@@ -45,8 +45,15 @@ export function Hero() {
           </h1>
         </Reveal>
 
+        <Reveal delay={100}>
+          <p className="mt-4 max-w-[46ch] text-sm leading-relaxed text-foreground-muted sm:text-base">
+            An AI agent rebalances your portfolio on-chain. Every trade reasoned
+            through and explained before it executes.
+          </p>
+        </Reveal>
+
         <Reveal delay={120}>
-          <div className="flex flex-col gap-4 sm:flex-row mt-2">
+          <div className="flex flex-col gap-4 sm:flex-row mt-6">
             <CornerBrackets className="w-full sm:w-auto">
               <Button href="/onboarding" className="w-full sm:w-auto">
                 Create Your Vault

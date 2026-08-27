@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 // place rather than spinning it faster or reversing it — a still moment,
 // not a new gesture.
 
-const POINT_COUNT = 900;
+const POINT_COUNT = 1500;
 const SPHERE_RADIUS = 1.6;
 const ROTATE_SPEED = 0.25; // rad/sec
 
@@ -82,29 +82,35 @@ export function AeraDustMark({ className }: { className?: string }) {
     container.appendChild(renderer.domElement);
 
     const sprite = createCircleSprite();
+    // A little white mixed into each point (more on some than others) reads
+    // as brighter/hotter than the flat accent color alone would, without
+    // needing a full bloom pass.
+    const bright = accent.clone().lerp(new THREE.Color("#ffffff"), 0.35);
     const directions = fibonacciDirections(POINT_COUNT);
     const positions = new Float32Array(POINT_COUNT * 3);
     const colors = new Float32Array(POINT_COUNT * 3);
+    const tmpColor = new THREE.Color();
     for (let i = 0; i < POINT_COUNT; i++) {
       const jitter = 0.85 + Math.random() * 0.3;
       const [dx, dy, dz] = directions[i];
       positions[i * 3] = dx * SPHERE_RADIUS * jitter;
       positions[i * 3 + 1] = dy * SPHERE_RADIUS * jitter;
       positions[i * 3 + 2] = dz * SPHERE_RADIUS * jitter;
-      colors[i * 3] = accent.r;
-      colors[i * 3 + 1] = accent.g;
-      colors[i * 3 + 2] = accent.b;
+      tmpColor.copy(accent).lerp(bright, Math.random());
+      colors[i * 3] = tmpColor.r;
+      colors[i * 3 + 1] = tmpColor.g;
+      colors[i * 3 + 2] = tmpColor.b;
     }
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     const material = new THREE.PointsMaterial({
-      size: 0.05,
+      size: 0.085,
       map: sprite,
       alphaMap: sprite,
       vertexColors: true,
       transparent: true,
-      opacity: 0.9,
+      opacity: 1,
       sizeAttenuation: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,

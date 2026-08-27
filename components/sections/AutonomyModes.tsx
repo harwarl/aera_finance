@@ -92,8 +92,13 @@ const MODES = [
   },
 ] as const;
 
+// Same two-speed hover as "The Gap": the icon brightens (color + a slight
+// scale pop) immediately, the card's border catches up 100ms later.
 const CARD_HOVER =
-  "transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.55)]";
+  "group [transition:transform_300ms,box-shadow_300ms,border-color_300ms_100ms] hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.55)]";
+const ICON_HOVER_NEUTRAL =
+  "transition-all duration-200 group-hover:scale-110 group-hover:border-accent/40 group-hover:bg-accent/10 group-hover:text-accent";
+const ICON_HOVER_ACCENT = "transition-transform duration-200 group-hover:scale-110";
 
 export function AutonomyModes() {
   return (
@@ -132,8 +137,11 @@ export function AutonomyModes() {
                   className={cn(
                     "flex h-10 w-10 items-center justify-center rounded-lg",
                     pillar.emphasize
-                      ? "bg-accent text-background"
-                      : "border border-border bg-background-subtle text-foreground-muted",
+                      ? cn("bg-accent text-background", ICON_HOVER_ACCENT)
+                      : cn(
+                          "border border-border bg-background-subtle text-foreground-muted",
+                          ICON_HOVER_NEUTRAL,
+                        ),
                   )}
                 >
                   <pillar.Icon className="h-5 w-5" />
@@ -184,7 +192,12 @@ export function AutonomyModes() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background-subtle text-foreground-muted">
+                    <span
+                      className={cn(
+                        "flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background-subtle text-foreground-muted",
+                        ICON_HOVER_NEUTRAL,
+                      )}
+                    >
                       <mode.Icon className="h-4 w-4" />
                     </span>
                     <h3 className="text-lg font-bold text-foreground">

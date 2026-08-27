@@ -69,7 +69,7 @@ export function ProblemFraming() {
 
         <Reveal delay={220} className="mt-4">
           <GlowCard className="grid grid-cols-1 items-center gap-10 border border-border-muted rounded-xl bg-background-elevated/40 p-8 sm:p-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <div className="mx-auto aspect-square w-full max-w-[220px] opacity-90">
+            <div className="mx-auto aspect-square w-full max-w-[220px]">
               <AeraDustMark />
             </div>
             <div>

@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/layout/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { DashboardAgentPanel } from "@/components/sections/DashboardAgentPanel";
 import { DashboardPerformance } from "@/components/sections/DashboardPerformance";
+import { GlowCard } from "@/components/shared/GlowCard";
 import { Reveal } from "@/components/shared/Reveal";
 
 export function LiveDemo() {
@@ -21,7 +22,7 @@ export function LiveDemo() {
         </Reveal>
 
         <Reveal delay={160}>
-          <div className="mt-12 border border-border-muted rounded-xl bg-background-elevated/30">
+          <GlowCard className="mt-12 rounded-xl border border-border-muted bg-background-elevated/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.55)]">
             <div className="flex items-center justify-between border-b border-border-muted px-4 py-3 sm:px-6">
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-danger/60" />
@@ -38,7 +39,7 @@ export function LiveDemo() {
               <DashboardPerformance />
               <DashboardAgentPanel />
             </div>
-          </div>
+          </GlowCard>
         </Reveal>
 
         <Reveal delay={220}>
