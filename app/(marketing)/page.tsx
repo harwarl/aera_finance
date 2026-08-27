@@ -2,7 +2,7 @@ import { Hero } from "@/components/sections/Hero";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { ProblemSection } from "@/components/sections/ProblemSection";
 import { SolutionSection } from "@/components/sections/SolutionSection";
-import { HowItWorks } from "@/components/sections/HowItWorks";
+import { CapabilitiesGallery } from "@/components/sections/CapabilitiesGallery";
 import { StatsSection } from "@/components/sections/StatsSection";
 import { SecuritySection } from "@/components/sections/SecuritySection";
 import { TickerBand } from "@/components/sections/TickerBand";
@@ -14,19 +14,19 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <TexturedBand />
+      {/* <TexturedBand /> */}
       <TrustBar />
-      <TexturedBand />
+      {/* <TexturedBand /> */}
       <ProblemSection />
-      <TexturedBand />
+      {/* <TexturedBand /> */}
       <SolutionSection />
-      <TexturedBand />
-      <HowItWorks />
-      <TexturedBand />
+      {/* <TexturedBand /> */}
+      <CapabilitiesGallery />
+      {/* <TexturedBand /> */}
       <StatsSection />
-      <TexturedBand />
+      {/* <TexturedBand /> */}
       <SecuritySection />
-      <TickerBand />
+      {/* <TickerBand /> */}
       <FaqSection />
       <ManifestoSection />
     </>

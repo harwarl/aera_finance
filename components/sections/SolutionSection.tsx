@@ -46,7 +46,7 @@ export function SolutionSection() {
               </h2>
               <p className="mt-6 max-w-[46ch] text-sm leading-relaxed text-foreground-muted sm:text-base">
                 Every rebalance, trade, and yield move is decided by a
-                risk-bounded policy engine and logged the moment it happens — in
+                risk-bounded policy engine and logged the moment it happens. In
                 plain language, not transaction hashes, so you always know why
                 your portfolio changed.
               </p>

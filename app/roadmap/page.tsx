@@ -37,8 +37,7 @@ export default function RoadmapPage() {
           <Reveal delay={160}>
             <p className="mt-6 max-w-[46ch] text-sm leading-relaxed text-foreground-muted sm:text-base">
               A running log of what Aera&apos;s agent already does, what
-              it&apos;s actively learning to do, and what&apos;s queued up
-              next.
+              it&apos;s actively learning to do, and what&apos;s queued up next.
             </p>
           </Reveal>
 
@@ -87,7 +86,7 @@ export default function RoadmapPage() {
           <Reveal delay={120}>
             <div className="flex flex-wrap gap-8">
               <CornerBrackets>
-                <Button href="/waitlist">Join Waitlist</Button>
+                <Button href="/connect">Connect</Button>
               </CornerBrackets>
               <Button href="/whitepaper" variant="secondary">
                 Read the Whitepaper

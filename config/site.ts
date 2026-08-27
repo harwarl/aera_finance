@@ -55,7 +55,7 @@ export const steps: StepItem[] = [
     index: "03",
     title: "Execute",
     description:
-      "Proposals that clear your on-chain limits route through Robinhood Chain liquidity automatically — no manual signing.",
+      "Proposals that clear your on-chain limits route through Robinhood Chain liquidity automatically. No manual signing.",
   },
   {
     index: "04",
@@ -69,12 +69,12 @@ export const securityBadges: SecurityBadge[] = [
   {
     title: "Restricted manager role",
     description:
-      "The agent can only call a narrow rebalance function on your vault — it cannot access funds broadly.",
+      "The agent can only call a narrow rebalance function on your vault. it cannot access funds broadly.",
   },
   {
     title: "Non-custodial vault",
     description:
-      "Funds sit in a smart contract only you can withdraw from — never held by Aera the company.",
+      "Funds sit in a smart contract only you can withdraw from. It is never held by Aera the company.",
   },
   {
     title: "Hard on-chain constraints",
@@ -97,7 +97,7 @@ export const faqs: FaqItem[] = [
   {
     question: "Which assets does Aera support?",
     answer:
-      "Aera manages Stock Tokens — tokenized real stocks and ETFs issued on Robinhood Chain — alongside a small number of approved on-chain yield positions, such as Morpho-based stablecoin markets.",
+      "Aera manages Stock Tokens, tokenized real stocks and ETFs issued on Robinhood Chain, alongside a small number of approved on-chain yield positions, such as Morpho-based stablecoin markets.",
   },
   {
     question: "How does Aera decide when to rebalance?",
@@ -112,12 +112,12 @@ export const faqs: FaqItem[] = [
   {
     question: "What does Aera cost?",
     answer:
-      "Aera charges a management fee based on assets under management — the same model traditional robo-advisors use. There's no performance fee; gas and normal trade execution costs are separate from the fee itself.",
+      "Aera charges a management fee based on assets under management, the same model traditional robo-advisors use. There's no performance fee; gas and normal trade execution costs are separate from the fee itself.",
   },
   {
     question: "Is Aera live today?",
     answer:
-      "Not yet. Aera is currently in Phase 0 (Validation) — see the Roadmap for the full phased path to a founder-run trial and, eventually, public launch.",
+      "Not yet. Aera is currently in Phase 0 (Validation). See the Roadmap for the full phased path to a founder-run trial and, eventually, public launch.",
   },
 ];
 

@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PageGrid } from "@/components/layout/PageGrid";
+import { ScrollProgressBar } from "@/components/shared/ScrollProgressBar";
 
 export default function MarketingLayout({
   children,
@@ -8,8 +9,9 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex min-h-dvh flex-col">
-      <PageGrid />
+    <div className="marketing-scope relative flex min-h-dvh flex-col">
+      <ScrollProgressBar />
+      {/* <PageGrid /> */}
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />

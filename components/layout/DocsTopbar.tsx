@@ -31,8 +31,8 @@ export function DocsTopbar() {
 
       <div className="flex items-center gap-3">
         <PdfButton />
-        <Button href="/waitlist" size="sm">
-          Join Waitlist
+        <Button href="/connect" size="sm">
+          Connect Wallet
         </Button>
       </div>
     </header>

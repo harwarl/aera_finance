@@ -14,7 +14,8 @@ export function WaitlistForm() {
     return (
       <div className="flex items-center justify-center gap-2 border border-accent/40 bg-background-elevated/50 px-5 py-4 font-mono text-xs uppercase tracking-widest text-accent">
         <Check className="h-4 w-4 shrink-0" />
-        You&apos;re on the list{name.trim() ? `, ${name.trim().split(" ")[0]}` : ""}.
+        You&apos;re on the list
+        {name.trim() ? `, ${name.trim().split(" ")[0]}` : ""}.
       </div>
     );
   }
@@ -55,7 +56,6 @@ export function WaitlistForm() {
 
       <CornerBrackets className="mt-2">
         <Button type="submit" className="w-full">
-          Join Waitlist
           <ArrowRight className="h-3.5 w-3.5" />
         </Button>
       </CornerBrackets>

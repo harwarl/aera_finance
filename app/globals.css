@@ -22,6 +22,40 @@
   --danger: #d9635f;
 }
 
+/* :root {
+  --background: #030506;
+  --background-elevated: #0f1820;
+  --background-subtle: #141f28;
+
+  --border-color: #1c2a30;
+  --border-muted: #12191e;
+
+  --foreground: #edf1f2;
+  --foreground-muted: #8b9aa1;
+  --foreground-faint: #5c6b71;
+  --accent-100: #a8f0e6;
+  --accent-300: #5ee5d6;
+  --accent: #2dd4bf;
+  --accent-600: #1fa595;
+  --accent-700: #1b9e8f;
+  --accent-900: #0f5f56;
+
+  --danger: #d9635f;
+}
+*/
+
+/* Marketing-site accent override: retained as a scoped exception if a
+   specific route needs a different treatment — otherwise the root
+   Robin Neon system above should be the single source of truth site-wide. */
+/* .marketing-scope {
+  --accent-100: var(--accent-100);
+  --accent-300: var(--accent-300);
+  --accent: var(--accent);
+  --accent-600: var(--accent-600);
+  --accent-700: var(--accent-700);
+  --accent-900: var(--accent-900);
+} */
+
 @theme inline {
   --color-background: var(--background);
   --color-background-elevated: var(--background-elevated);
@@ -235,6 +269,41 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .animate-card-float,
   .animate-line-flow {
+    animation: none;
+  }
+}
+
+@keyframes scroll-cue-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-scroll-cue-bounce {
+  animation: scroll-cue-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-caret-blink {
+  animation: caret-blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll-cue-bounce,
+  .animate-caret-blink {
     animation: none;
   }
 }

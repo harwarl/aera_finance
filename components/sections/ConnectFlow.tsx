@@ -60,7 +60,7 @@ export function ConnectFlow() {
       setAuthState("authenticated");
     } catch (err) {
       setAuthError(
-        err instanceof Error ? err.message : "Signature failed. Try again."
+        err instanceof Error ? err.message : "Signature failed. Try again.",
       );
       setAuthState("idle");
     }
@@ -102,8 +102,8 @@ export function ConnectFlow() {
           ) : (
             <>
               <p className="mt-4 text-sm leading-relaxed text-foreground-muted">
-                Connect a wallet to launch the Aera agent. This only reads
-                your address — it can&apos;t move funds on its own.
+                Connect a wallet to launch the Aera agent. This only reads your
+                address — it can&apos;t move funds on its own.
               </p>
 
               <ConnectButton.Custom>
@@ -126,7 +126,7 @@ export function ConnectFlow() {
       <CornerBrackets
         className={cn(
           "transition-opacity duration-300",
-          isConnected ? "opacity-100" : "pointer-events-none opacity-40"
+          isConnected ? "opacity-100" : "pointer-events-none opacity-40",
         )}
       >
         <div className="border border-border-muted bg-background-elevated/60 p-6 sm:p-8">
@@ -143,12 +143,12 @@ export function ConnectFlow() {
           </div>
 
           <p className="mt-4 text-sm leading-relaxed text-foreground-muted">
-            Sign a message to prove you control this wallet. It&apos;s free —
-            no transaction, no gas.
+            Sign a message to prove you control this wallet. It&apos;s free — no
+            transaction, no gas.
           </p>
 
           {authState === "authenticated" ? (
-            <Button href="/" className="mt-5 w-full sm:w-auto">
+            <Button href="/dashboard" className="mt-5 w-full sm:w-auto">
               Enter Aera
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>

@@ -7,7 +7,11 @@ export function ProblemSection() {
     <section id="problem" className="py-20 sm:py-28">
       <Container>
         <Reveal>
-          <SectionHeader index="01" label="The Problem" meta="Manual Management" />
+          <SectionHeader
+            index="01"
+            label="The Problem"
+            meta="Manual Management"
+          />
         </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1.4fr_1fr]">
@@ -20,12 +24,11 @@ export function ProblemSection() {
 
           <Reveal variant="right" delay={200}>
             <p className="text-sm leading-relaxed text-foreground-muted sm:text-base">
-              Robinhood Chain made real stocks composable, programmable
-              on-chain assets — a genuinely new asset class. But managing one
-              means tracking drift, weighing equity against yield, and
-              reacting to markets in real time. Robo-advisors don&apos;t see
-              your wallet. DeFi tools don&apos;t understand equities. That
-              leaves you.
+              Robinhood Chain made real stocks composable, programmable on-chain
+              assets. A genuinely new asset class. But managing one means
+              tracking drift, weighing equity against yield, and reacting to
+              markets in real time. Robo-advisors don't see your wallet. DeFi
+              tools don't understand equities. That leaves you.
             </p>
 
             <div className="mt-8 border border-border-muted bg-background-elevated/30 p-5">
@@ -41,8 +44,16 @@ export function ProblemSection() {
               >
                 <defs>
                   <radialGradient id="drift-glow" cx="100%" cy="100%" r="70%">
-                    <stop offset="0%" stopColor="var(--danger)" stopOpacity="0.35" />
-                    <stop offset="100%" stopColor="var(--danger)" stopOpacity="0" />
+                    <stop
+                      offset="0%"
+                      stopColor="var(--danger)"
+                      stopOpacity="0.35"
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor="var(--danger)"
+                      stopOpacity="0"
+                    />
                   </radialGradient>
                 </defs>
                 <circle cx="300" cy="38" r="26" fill="url(#drift-glow)" />

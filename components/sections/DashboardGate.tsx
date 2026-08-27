@@ -3,10 +3,11 @@
 import { useAccount } from "wagmi";
 import { DashboardCard } from "@/components/shared/DashboardCard";
 import { Button } from "@/components/ui/Button";
+import { useVault } from "@/hooks/useVault";
 
 export function DashboardGate({ children }: { children: React.ReactNode }) {
-  const { isConnected: _isConnected, status } = useAccount();
-  const isConnected = true; // TEMP: dev screenshot bypass, reverting immediately
+  const { isConnected, status } = useAccount();
+  const { vault } = useVault();
 
   if (status === "connecting" || status === "reconnecting") {
     return (
@@ -34,6 +35,28 @@ export function DashboardGate({ children }: { children: React.ReactNode }) {
           </p>
           <Button href="/connect" className="mt-6">
             Connect Wallet
+          </Button>
+        </DashboardCard>
+      </div>
+    );
+  }
+
+  if (!vault) {
+    return (
+      <div className="flex min-h-[60dvh] flex-col items-center justify-center px-6 text-center">
+        <DashboardCard className="max-w-sm">
+          <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
+            Vault Required
+          </span>
+          <h2 className="mt-3 text-xl font-black leading-snug tracking-tight text-foreground">
+            Create your vault to continue.
+          </h2>
+          <p className="mt-2 max-w-[36ch] text-sm leading-relaxed text-foreground-muted">
+            Aera gives every wallet its own isolated vault — you haven&apos;t
+            created yours yet.
+          </p>
+          <Button href="/onboarding" className="mt-6">
+            Create Your Vault
           </Button>
         </DashboardCard>
       </div>

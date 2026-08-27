@@ -1,15 +1,12 @@
 "use client";
 
-import { useAccount } from "wagmi";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { ScrambleText } from "@/components/shared/ScrambleText";
+import { CopyableAddress } from "@/components/shared/CopyableAddress";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/holdings";
 import { portfolioSummary } from "@/config/dashboard";
-
-function truncateAddress(address: string) {
-  return `${address.slice(0, 6)}…${address.slice(-4)}`;
-}
+import { useVault } from "@/hooks/useVault";
 
 function StatPill({
   label,
@@ -39,16 +36,18 @@ function StatPill({
 }
 
 export function DashboardSummary() {
-  const { address } = useAccount();
+  const { vault } = useVault();
   const isPositive = portfolioSummary.change24hPct >= 0;
   const DeltaIcon = isPositive ? ArrowUp : ArrowDown;
 
   return (
     <div className="flex flex-col gap-5">
-      <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
-        {portfolioSummary.vaultName}
-        {address ? ` · ${truncateAddress(address)}` : ""}
-      </span>
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
+          {portfolioSummary.vaultName}
+        </span>
+        {vault ? <CopyableAddress address={vault.address} /> : null}
+      </div>
 
       <div className="flex flex-wrap items-baseline gap-3">
         <ScrambleText
