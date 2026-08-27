@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Waitlist — Aera Finance",
+  title: "Waitlist — Atlas",
   description:
     "Join the waitlist for early access to Aera's autonomous on-chain portfolio agent.",
 };
@@ -32,7 +32,7 @@ export default function WaitlistPage() {
 
       <Reveal delay={80}>
         <span className="mt-8 block font-mono text-xs uppercase tracking-widest text-foreground-faint">
-          <ScrambleText value="Aera Finance · Early Access" />
+          <ScrambleText value="Atlas · Early Access" />
         </span>
       </Reveal>
 

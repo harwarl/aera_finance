@@ -85,17 +85,17 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col items-start justify-between gap-4 font-mono text-[10px] uppercase tracking-widest text-foreground-faint sm:flex-row sm:items-center">
-          <span>© 2026 Aera Finance. All rights reserved.</span>
+          <span>© 2026 Atlas. All rights reserved.</span>
           <span>[ Non-Custodial · On-Chain · Phase 0 ]</span>
         </div>
 
         <div className="mt-12 overflow-x-auto">
-          <DotMatrixText text="AERA FINANCE" />
+          <DotMatrixText text="Atlas" />
         </div>
       </Container>
     </footer>
   );
 }
 
-import { RulerDivider } from "@/components/layout/RulerDivider";import { GithubIcon } from "../shared/GithubIcon";
-
+import { RulerDivider } from "@/components/layout/RulerDivider";
+import { GithubIcon } from "../shared/GithubIcon";

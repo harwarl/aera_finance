@@ -25,13 +25,18 @@ const connectors = connectorsForWallets(
   [
     {
       groupName: "Recommended",
-      wallets: [metaMaskWallet, walletConnectWallet, rainbowWallet, injectedWallet],
+      wallets: [
+        metaMaskWallet,
+        walletConnectWallet,
+        rainbowWallet,
+        injectedWallet,
+      ],
     },
   ],
   {
-    appName: "Aera Finance",
+    appName: "Atlas",
     projectId,
-  }
+  },
 );
 
 // Robinhood Chain has no public testnet RPC yet, so this reuses Sepolia's

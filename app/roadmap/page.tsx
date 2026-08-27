@@ -7,7 +7,7 @@ import { RoadmapTimeline } from "@/components/sections/RoadmapTimeline";
 import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
-  title: "Roadmap — Aera Finance",
+  title: "Roadmap — Atlas",
   description:
     "What's shipped and what's next for Aera's autonomous on-chain portfolio agent.",
 };

@@ -25,7 +25,7 @@ import {
 // coming into range ahead); scrolling back up retraces the exact same
 // stars, since nothing about their position is randomized per frame.
 
-const STAR_COUNT = 2600;
+const STAR_COUNT = 3200;
 const TUNNEL_DEPTH = 240;
 const NEAR = 0.5;
 const FAR = 40;
@@ -89,8 +89,12 @@ export function StarfieldBackdrop() {
     function handlePointerLeave() {
       mouseWorld.active = false;
     }
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    window.addEventListener("pointerout", handlePointerLeave, { passive: true });
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
+    window.addEventListener("pointerout", handlePointerLeave, {
+      passive: true,
+    });
 
     function resize() {
       const width = window.innerWidth;
@@ -107,13 +111,27 @@ export function StarfieldBackdrop() {
     }
 
     if (reduceMotion) {
-      stepTunnelField(field, currentTravel(), 0, 0, mouseWorld, INFLUENCE_RADIUS);
+      stepTunnelField(
+        field,
+        currentTravel(),
+        0,
+        0,
+        mouseWorld,
+        INFLUENCE_RADIUS,
+      );
       renderer.render(scene, camera);
       // Reduced motion still honors scroll position (it's not an
       // animation, just where you are), so keep it in sync without a RAF
       // loop driving continuous motion.
       function handleScrollStatic() {
-        stepTunnelField(field, currentTravel(), 0, 0, mouseWorld, INFLUENCE_RADIUS);
+        stepTunnelField(
+          field,
+          currentTravel(),
+          0,
+          0,
+          mouseWorld,
+          INFLUENCE_RADIUS,
+        );
         renderer.render(scene, camera);
       }
       window.addEventListener("scroll", handleScrollStatic, { passive: true });
@@ -149,7 +167,14 @@ export function StarfieldBackdrop() {
       const t = now * 0.001;
       lastTime = now;
 
-      stepTunnelField(field, currentTravel(), dt, t, mouseWorld, INFLUENCE_RADIUS);
+      stepTunnelField(
+        field,
+        currentTravel(),
+        dt,
+        t,
+        mouseWorld,
+        INFLUENCE_RADIUS,
+      );
       renderer.render(scene, camera);
       if (!paused) frameId = requestAnimationFrame(tick);
     }

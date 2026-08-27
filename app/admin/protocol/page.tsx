@@ -7,7 +7,7 @@ import { AdminSwapTarget } from "@/components/sections/AdminSwapTarget";
 import { AdminRoles } from "@/components/sections/AdminRoles";
 
 export const metadata: Metadata = {
-  title: "Admin · Protocol — Aera Finance",
+  title: "Admin · Protocol — Atlas",
 };
 
 export default function AdminProtocolPage() {

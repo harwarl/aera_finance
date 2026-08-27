@@ -8,7 +8,7 @@ import type {
 } from "@/types";
 
 export const siteConfig = {
-  name: "Aera Finance",
+  name: "Atlas",
   tagline: "Execution. Explained. On-chain.",
   description:
     "Aera is an AI agent that manages a portfolio of tokenized real stocks and on-chain yield, built on Robinhood Chain — rebalancing, executing trades, and explaining every decision in plain language.",

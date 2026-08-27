@@ -16,7 +16,7 @@ function buildSignInMessage(address: string) {
   const nonce = crypto.randomUUID();
   const issuedAt = new Date().toISOString();
   return [
-    "Sign in to Aera Finance",
+    "Sign in to Atlas",
     "",
     "This signature verifies wallet ownership. It does not trigger a transaction or cost any gas.",
     "",

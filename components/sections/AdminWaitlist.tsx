@@ -34,7 +34,7 @@ export function AdminWaitlist() {
   const [filter, setFilter] = useState<Filter>("all");
 
   const notInvited = waitlistEntries.filter(
-    (entry) => entry.status === "not_invited"
+    (entry) => entry.status === "not_invited",
   );
 
   const counts: Record<Filter, number> = {
@@ -96,7 +96,7 @@ export function AdminWaitlist() {
                   "border px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest transition-colors",
                   active
                     ? "border-accent text-accent"
-                    : "border-border-muted text-foreground-faint hover:text-foreground-muted"
+                    : "border-border-muted text-foreground-faint hover:text-foreground-muted",
                 )}
               >
                 {item.label} · {counts[item.value]}
@@ -125,7 +125,10 @@ export function AdminWaitlist() {
             </thead>
             <tbody>
               {paginated.map((entry) => (
-                <tr key={entry.id} className="border-b border-border-muted last:border-0">
+                <tr
+                  key={entry.id}
+                  className="border-b border-border-muted last:border-0"
+                >
                   <td className="py-3 pr-4 text-sm font-bold text-foreground">
                     {entry.name}
                   </td>
@@ -136,13 +139,13 @@ export function AdminWaitlist() {
                     <span
                       className={cn(
                         "flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest",
-                        WAITLIST_STATUS_TEXT_CLASS[entry.status]
+                        WAITLIST_STATUS_TEXT_CLASS[entry.status],
                       )}
                     >
                       <span
                         className={cn(
                           "h-1.5 w-1.5 rounded-full",
-                          WAITLIST_STATUS_DOT_CLASS[entry.status]
+                          WAITLIST_STATUS_DOT_CLASS[entry.status],
                         )}
                       />
                       {WAITLIST_STATUS_LABEL[entry.status]}
@@ -163,7 +166,11 @@ export function AdminWaitlist() {
           ) : null}
         </div>
 
-        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
       </div>
 
       <Modal open={modalOpen} onClose={closeModal} title="Email Not Invited">
@@ -194,7 +201,7 @@ export function AdminWaitlist() {
                 type="text"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                placeholder="Aera Finance is opening up access"
+                placeholder="Atlas is opening up access"
                 className="mt-2 w-full border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-foreground-faint focus:border-accent focus:outline-none"
               />
             </div>

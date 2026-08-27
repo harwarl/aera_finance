@@ -8,7 +8,7 @@ import { OnChainTradeLimits } from "@/components/sections/OnChainTradeLimits";
 import { PortfolioConstraints } from "@/components/sections/PortfolioConstraints";
 
 export const metadata: Metadata = {
-  title: "Rules — Aera Finance",
+  title: "Rules — Atlas",
 };
 
 export default function RulesPage() {
@@ -23,9 +23,9 @@ export default function RulesPage() {
               </span>
               <p className="mt-2 max-w-[50ch] text-sm leading-relaxed text-foreground-muted">
                 These are your preferences for how the agent manages your
-                portfolio. Change them any time — the agent adapts on the
-                next rebalance. The preferences below aren&apos;t wired to
-                the vault contract yet; the trade limits further down are.
+                portfolio. Change them any time — the agent adapts on the next
+                rebalance. The preferences below aren&apos;t wired to the vault
+                contract yet; the trade limits further down are.
               </p>
             </div>
 

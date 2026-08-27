@@ -4,7 +4,7 @@ import { DashboardGate } from "@/components/sections/DashboardGate";
 import { DecisionLogFull } from "@/components/sections/DecisionLogFull";
 
 export const metadata: Metadata = {
-  title: "Decision Log — Aera Finance",
+  title: "Decision Log — Atlas",
 };
 
 export default function DecisionsPage() {
@@ -19,8 +19,8 @@ export default function DecisionsPage() {
               </span>
               <p className="mt-2 max-w-[50ch] text-sm leading-relaxed text-foreground-muted">
                 Every action the agent takes or declines to take, in plain
-                language, in the order it happened. Nothing here is
-                summarized after the fact.
+                language, in the order it happened. Nothing here is summarized
+                after the fact.
               </p>
             </div>
             <DecisionLogFull />

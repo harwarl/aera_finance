@@ -19,8 +19,8 @@ export default function Home() {
       <HowItWorksSteps />
       <LiveDemo />
       <DecisionStack />
-      <FlightToSafety />
       <AutonomyModes />
+      <FlightToSafety />
       <StatsBig />
       <FaqSection />
       <ManifestoSection />

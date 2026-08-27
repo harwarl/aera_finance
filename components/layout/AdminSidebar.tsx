@@ -47,7 +47,7 @@ function NavLink({
         "flex items-center gap-3 rounded-lg px-3 py-2.5 font-mono text-xs uppercase tracking-widest transition-colors",
         active
           ? "bg-danger/10 text-danger"
-          : "text-foreground-muted hover:bg-background-subtle hover:text-foreground"
+          : "text-foreground-muted hover:bg-background-subtle hover:text-foreground",
       )}
     >
       <Icon className="h-4 w-4 shrink-0" />
@@ -66,7 +66,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         <Image src="/aera.png" alt="aera" width={28} height={28} />
         <span className="flex flex-col leading-none">
           <span className="font-sans text-sm font-black tracking-tight text-foreground">
-            AERA FINANCE
+            Atlas
           </span>
           <span className="mt-1 font-mono text-[9px] uppercase tracking-widest text-danger">
             Admin
@@ -126,7 +126,7 @@ export function AdminSidebar() {
         <Link href="/" className="flex items-center gap-2.5">
           <Image src="/aera.png" alt="aera" width={26} height={26} />
           <span className="font-sans text-sm font-black tracking-tight text-foreground">
-            AERA FINANCE
+            Atlas
           </span>
         </Link>
         <button

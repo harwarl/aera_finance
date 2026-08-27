@@ -31,16 +31,17 @@ export async function generateMetadata({
   const firstBlock = page.blocks?.[0];
   const description =
     page.intro ??
-    (firstBlock?.type === "paragraph" ? firstBlock.text : whitepaperMeta.tagline);
+    (firstBlock?.type === "paragraph"
+      ? firstBlock.text
+      : whitepaperMeta.tagline);
 
   return {
-    title: `${page.title} — AERA Finance Docs`,
+    title: `${page.title} — Atlas Docs`,
     description,
   };
 }
 
-const INLINE_PATTERN =
-  /(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|`[^`]+`|\*[^*]+\*)/g;
+const INLINE_PATTERN = /(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|`[^`]+`|\*[^*]+\*)/g;
 const LINK_PATTERN = /^\[([^\]]+)\]\(([^)]+)\)$/;
 
 function renderInline(text: string): React.ReactNode[] {
@@ -51,7 +52,11 @@ function renderInline(text: string): React.ReactNode[] {
     if (linkMatch) {
       const [, label, href] = linkMatch;
       return (
-        <Link key={i} href={href} className="text-accent underline underline-offset-2 hover:no-underline">
+        <Link
+          key={i}
+          href={href}
+          className="text-accent underline underline-offset-2 hover:no-underline"
+        >
           {label}
         </Link>
       );
@@ -258,7 +263,10 @@ export default async function DocPage({
               ) : null}
 
               {page.callout ? (
-                <Callout variant={page.callout.variant} title={page.callout.title}>
+                <Callout
+                  variant={page.callout.variant}
+                  title={page.callout.title}
+                >
                   {page.callout.text}
                 </Callout>
               ) : null}

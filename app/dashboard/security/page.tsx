@@ -8,7 +8,7 @@ import { supportedAssets } from "@/config/dashboard";
 import { TYPE_LABEL } from "@/lib/holdings";
 
 export const metadata: Metadata = {
-  title: "Security & Trust — Aera Finance",
+  title: "Security & Trust — Atlas",
 };
 
 export default function SecurityPage() {
@@ -22,8 +22,8 @@ export default function SecurityPage() {
                 Security &amp; Trust
               </span>
               <p className="mt-2 max-w-[60ch] text-sm leading-relaxed text-foreground-muted">
-                What the agent is allowed to touch, the hard limits it can
-                never cross, and where things stand on independent review.
+                What the agent is allowed to touch, the hard limits it can never
+                cross, and where things stand on independent review.
               </p>
             </div>
 
@@ -32,9 +32,9 @@ export default function SecurityPage() {
                 Supported Assets
               </span>
               <p className="mt-2 max-w-[60ch] text-xs leading-relaxed text-foreground-faint">
-                The full whitelist Aera is permitted to trade. Nothing
-                outside this list can enter your vault, and the agent
-                cannot expand it on its own.
+                The full whitelist Aera is permitted to trade. Nothing outside
+                this list can enter your vault, and the agent cannot expand it
+                on its own.
               </p>
 
               <div className="mt-5 overflow-x-auto">
@@ -85,11 +85,11 @@ export default function SecurityPage() {
                 </span>
               </div>
               <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-foreground-muted">
-                We have not yet completed an independent smart contract
-                audit. This is a hard requirement before any beta involving
-                funds beyond the founder&apos;s own, and we will publish
-                the full results here once it&apos;s done — including any
-                issues found, not just a summary.
+                We have not yet completed an independent smart contract audit.
+                This is a hard requirement before any beta involving funds
+                beyond the founder&apos;s own, and we will publish the full
+                results here once it&apos;s done — including any issues found,
+                not just a summary.
               </p>
             </DashboardCard>
           </div>

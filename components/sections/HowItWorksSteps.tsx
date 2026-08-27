@@ -363,7 +363,7 @@ const STEPS = [
     time: "0:20",
     title: "Deposit into your vault",
     description:
-      "Fund once — ETH, BTC, or stablecoins land in a vault only your wallet can withdraw from.",
+      "Fund once. ETH, BTC, or stablecoins land in a vault only your wallet can withdraw from.",
     Visual: VaultVisual,
   },
   {
@@ -377,7 +377,7 @@ const STEPS = [
     time: "1:10",
     title: "The agent watches every tick",
     description:
-      "Volatility, trend, and drawdown are scored continuously — no polling, no missed moves.",
+      "Volatility, trend, and drawdown are scored continuously, with no polling and no missed moves.",
     Visual: AgentScoreVisual,
   },
   {

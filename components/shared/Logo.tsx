@@ -10,7 +10,7 @@ export function Logo({ className }: { className?: string }) {
       )}
     >
       <Image src="/aera.png" alt="aera" width={30} height={30} />
-      AERA FINANCE
+      ATLAS
     </span>
   );
 }

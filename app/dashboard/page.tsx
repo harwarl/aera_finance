@@ -8,7 +8,7 @@ import { DashboardAgentActivity } from "@/components/sections/DashboardAgentActi
 import { DashboardAgentPanel } from "@/components/sections/DashboardAgentPanel";
 
 export const metadata: Metadata = {
-  title: "Dashboard — Aera Finance",
+  title: "Dashboard — Atlas",
 };
 
 export default function DashboardPage() {

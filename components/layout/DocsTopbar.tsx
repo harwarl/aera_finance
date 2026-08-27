@@ -10,7 +10,7 @@ export function DocsTopbar() {
         <Image src="/aera.png" alt="aera" width={30} height={30} />
         <span className="flex flex-col leading-none">
           <span className="font-sans text-sm font-black tracking-tight text-foreground">
-            AERA FINANCE
+            Atlas
           </span>
           <span className="mt-1 font-mono text-[9px] uppercase tracking-widest text-foreground-faint">
             Docs · v1.0

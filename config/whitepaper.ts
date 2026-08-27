@@ -1,7 +1,7 @@
 import type { DocPage } from "@/types";
 
 export const whitepaperMeta = {
-  title: "AERA Finance",
+  title: "Atlas",
   tagline: "An Autonomous AI Portfolio Agent for Tokenized Real-World Assets",
   version: "v1.0",
   updated: "July 2026",
@@ -14,7 +14,7 @@ export const docPages: DocPage[] = [
     group: "Overview",
     title: "Introduction",
     intro:
-      "AERA Finance is an AI agent that manages a portfolio of tokenized real stocks and on-chain yield, built on Robinhood Chain. In plain terms: you give it some money, tell it how you want that money handled, and it takes care of the ongoing work of managing it — buying, selling, and shifting between stocks and yield — so you don't have to watch the market yourself.",
+      "Atlas is an AI agent that manages a portfolio of tokenized real stocks and on-chain yield, built on Robinhood Chain. In plain terms: you give it some money, tell it how you want that money handled, and it takes care of the ongoing work of managing it — buying, selling, and shifting between stocks and yield — so you don't have to watch the market yourself.",
     subsections: [
       {
         id: "why-this-needs-explaining",
@@ -88,7 +88,7 @@ export const docPages: DocPage[] = [
           },
           {
             type: "paragraph",
-            text: "This is genuinely new. It's not \"Robinhood added crypto trading\" — it's \"real stocks became composable, programmable assets for the first time.\"",
+            text: 'This is genuinely new. It\'s not "Robinhood added crypto trading" — it\'s "real stocks became composable, programmable assets for the first time."',
           },
         ],
       },
@@ -98,7 +98,7 @@ export const docPages: DocPage[] = [
         blocks: [
           {
             type: "paragraph",
-            text: "New capability doesn't automatically come with new tools to use it well. Consider what \"managing a portfolio\" actually involves:",
+            text: 'New capability doesn\'t automatically come with new tools to use it well. Consider what "managing a portfolio" actually involves:',
           },
           {
             type: "list",
@@ -159,11 +159,11 @@ export const docPages: DocPage[] = [
       },
       {
         id: "what-custody-means",
-        title: "What \"custody\" means, and why it matters",
+        title: 'What "custody" means, and why it matters',
         blocks: [
           {
             type: "paragraph",
-            text: "\"Custody\" is just a word for \"who actually holds and controls the asset.\" When you put money in a traditional brokerage account, the brokerage has custody — your account shows a balance, but the actual assets are held and controlled by the company. If that company mismanages funds, goes bankrupt, or acts in bad faith, you're exposed to that risk, because you never actually held the asset yourself.",
+            text: '"Custody" is just a word for "who actually holds and controls the asset." When you put money in a traditional brokerage account, the brokerage has custody — your account shows a balance, but the actual assets are held and controlled by the company. If that company mismanages funds, goes bankrupt, or acts in bad faith, you\'re exposed to that risk, because you never actually held the asset yourself.',
           },
           {
             type: "paragraph",
@@ -181,7 +181,7 @@ export const docPages: DocPage[] = [
           },
           {
             type: "paragraph",
-            text: "A useful way to think about it: imagine giving someone a key that only opens one specific cabinet in your house, and that cabinet only lets them swap one approved item for another approved item, in limited quantities, on a limited schedule. That's closer to what the manager role actually is than \"AERA controls your money.\"",
+            text: 'A useful way to think about it: imagine giving someone a key that only opens one specific cabinet in your house, and that cabinet only lets them swap one approved item for another approved item, in limited quantities, on a limited schedule. That\'s closer to what the manager role actually is than "AERA controls your money."',
           },
         ],
       },
@@ -230,9 +230,9 @@ export const docPages: DocPage[] = [
           {
             type: "list",
             items: [
-              "**Your current holdings**, compared against the target allocation you set (for example: \"I want roughly 60% in a mix of tech and healthcare stocks, and 40% in stable yield\").",
+              '**Your current holdings**, compared against the target allocation you set (for example: "I want roughly 60% in a mix of tech and healthcare stocks, and 40% in stable yield").',
               "**Live prices and volatility** for every Stock Token you hold, so it knows not just what things are worth right now, but how much they've been swinging.",
-              "**Available yield rates** on approved on-chain lending positions (for example, through Morpho), so it knows what the \"safe\" side of your portfolio is currently earning.",
+              '**Available yield rates** on approved on-chain lending positions (for example, through Morpho), so it knows what the "safe" side of your portfolio is currently earning.',
             ],
           },
         ],
@@ -268,7 +268,7 @@ export const docPages: DocPage[] = [
           },
           {
             type: "paragraph",
-            text: "*\"Your tech holdings grew from 30% to 47% of your portfolio after a recent price increase, above your 35% limit. Proposing to sell approximately 12% of tech holdings and move the proceeds into your approved yield position, bringing tech exposure back in line with your target.\"*",
+            text: '*"Your tech holdings grew from 30% to 47% of your portfolio after a recent price increase, above your 35% limit. Proposing to sell approximately 12% of tech holdings and move the proceeds into your approved yield position, bringing tech exposure back in line with your target."*',
           },
         ],
       },
@@ -278,11 +278,11 @@ export const docPages: DocPage[] = [
         blocks: [
           {
             type: "paragraph",
-            text: "Before the agent can act on its own proposal, the vault contract itself checks it against the rules you set — completely independent of whatever the agent \"believes\" is a good idea. This includes things like: is the asset it wants to trade into on your approved list? Is the trade size within the maximum you allowed? Would the trade's expected price impact (slippage) stay within your tolerance? Has the agent already made its allowed number of trades for this period?",
+            text: 'Before the agent can act on its own proposal, the vault contract itself checks it against the rules you set — completely independent of whatever the agent "believes" is a good idea. This includes things like: is the asset it wants to trade into on your approved list? Is the trade size within the maximum you allowed? Would the trade\'s expected price impact (slippage) stay within your tolerance? Has the agent already made its allowed number of trades for this period?',
           },
           {
             type: "paragraph",
-            text: "If the proposal fails any of these checks, it simply does not execute. There's no override, no exception, no \"trust me\" — a failed check is a hard stop.",
+            text: 'If the proposal fails any of these checks, it simply does not execute. There\'s no override, no exception, no "trust me" — a failed check is a hard stop.',
           },
         ],
       },
@@ -502,7 +502,7 @@ export const docPages: DocPage[] = [
           },
           {
             type: "paragraph",
-            text: "**What using AERA looks like for them:** they spend real time upfront setting precise rules (maximum single-position size, disallowed sectors, volatility ceilings), and then trust that those rules are mechanically enforced by the contract, not just \"kept in mind\" by a human or a model that might drift from them over time.",
+            text: '**What using AERA looks like for them:** they spend real time upfront setting precise rules (maximum single-position size, disallowed sectors, volatility ceilings), and then trust that those rules are mechanically enforced by the contract, not just "kept in mind" by a human or a model that might drift from them over time.',
           },
         ],
       },
@@ -661,7 +661,7 @@ export const docPages: DocPage[] = [
     title: "FAQ & Glossary",
     faqs: [
       {
-        question: "What is AERA Finance, in one sentence?",
+        question: "What is Atlas, in one sentence?",
         answer:
           "An AI agent that manages a portfolio of tokenized real stocks and on-chain yield on your behalf, automatically rebalancing within limits you set, and explaining every action in plain language.",
       },
@@ -687,17 +687,19 @@ export const docPages: DocPage[] = [
           "Yes, always. You can withdraw your funds, or revoke the agent's access to your vault entirely, at any time — no approval process, no waiting period.",
       },
       {
-        question: "Is using AERA the same as getting investment advice? Is it regulated?",
+        question:
+          "Is using AERA the same as getting investment advice? Is it regulated?",
         answer:
           "AERA is built so that you define your own rules and boundaries, and the agent simply executes within them mechanically, rather than making independent, discretionary judgments about your money. This structure is intended to sit outside typical investment-advisory regulation, but we're having this confirmed by securities counsel rather than assuming it ourselves — and we'll update this answer once that review is complete.",
       },
       {
-        question: "What exactly is a \"Stock Token\"?",
+        question: 'What exactly is a "Stock Token"?',
         answer:
           "A token, issued by Robinhood on Robinhood Chain, that represents economic exposure to a real underlying stock or ETF. It behaves like a normal crypto token (it can sit in a wallet, be transferred, and be used in on-chain products) but its value is tied to a real security, not a purely crypto-native asset.",
       },
       {
-        question: "Does AERA guarantee I'll make money, or at least not lose money?",
+        question:
+          "Does AERA guarantee I'll make money, or at least not lose money?",
         answer:
           "No, and be wary of anything that claims otherwise. AERA's rules and constraints control *how* the agent is allowed to act — not whether the underlying market moves in your favor. Like any investment, there is a real risk of loss.",
       },

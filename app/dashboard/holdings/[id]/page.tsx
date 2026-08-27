@@ -25,7 +25,7 @@ export async function generateMetadata({
   if (!holding) return {};
 
   return {
-    title: `${holding.symbol} — Aera Finance`,
+    title: `${holding.symbol} — Atlas`,
   };
 }
 

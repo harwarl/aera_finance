@@ -8,7 +8,7 @@ import { ScrambleText } from "@/components/shared/ScrambleText";
 import { VaultOnboardingFlow } from "@/components/sections/VaultOnboardingFlow";
 
 export const metadata: Metadata = {
-  title: "Get Started — Aera Finance",
+  title: "Get Started — Atlas",
   description:
     "Create your own isolated Aera vault — one vault per wallet, governed only by the rules you set.",
 };
@@ -59,7 +59,8 @@ export default function OnboardingPage() {
 
         <Reveal delay={140}>
           <h1 className="mt-4 text-4xl font-black leading-[1.05] tracking-tight text-foreground sm:text-5xl">
-            Every wallet gets its <span className="text-accent">own vault</span>.
+            Every wallet gets its <span className="text-accent">own vault</span>
+            .
           </h1>
         </Reveal>
 
@@ -68,18 +69,23 @@ export default function OnboardingPage() {
             Aera is an AI agent that manages tokenized real-world assets and
             on-chain yield on your behalf — rebalancing, routing yield, and
             explaining every decision in plain language. Each user gets a
-            single, isolated vault: your deposits, your rules, and your
-            agent permissions, never pooled with anyone else&apos;s.
+            single, isolated vault: your deposits, your rules, and your agent
+            permissions, never pooled with anyone else&apos;s.
           </p>
         </Reveal>
       </div>
 
-      <Reveal delay={260} className="mx-auto mt-16 grid w-full max-w-4xl grid-cols-1 gap-6 sm:grid-cols-3">
+      <Reveal
+        delay={260}
+        className="mx-auto mt-16 grid w-full max-w-4xl grid-cols-1 gap-6 sm:grid-cols-3"
+      >
         {PRINCIPLES.map((principle) => (
           <CornerBrackets key={principle.index} className="h-full">
             <div className="flex h-full flex-col gap-4 bg-background-elevated/50 px-6 py-8">
               <IndexNumber>{principle.index}</IndexNumber>
-              <h3 className="text-lg font-bold text-foreground">{principle.title}</h3>
+              <h3 className="text-lg font-bold text-foreground">
+                {principle.title}
+              </h3>
               <p className="text-sm leading-relaxed text-foreground-muted">
                 {principle.description}
               </p>

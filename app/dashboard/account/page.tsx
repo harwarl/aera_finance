@@ -7,7 +7,7 @@ import { DashboardAccountControls } from "@/components/sections/DashboardAccount
 import { DashboardFees } from "@/components/sections/DashboardFees";
 
 export const metadata: Metadata = {
-  title: "Account — Aera Finance",
+  title: "Account — Atlas",
 };
 
 export default function AccountPage() {

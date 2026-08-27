@@ -12,7 +12,7 @@ import {
 import { Container } from "@/components/layout/Container";
 import { SectionHeader } from "@/components/layout/SectionHeader";
 import { Button } from "@/components/ui/Button";
-import { DotMatrixText } from "@/components/shared/DotMatrixText";
+import { AeraDustMark } from "@/components/shared/AeraDustMark";
 import { GlowCard } from "@/components/shared/GlowCard";
 import { Reveal } from "@/components/shared/Reveal";
 
@@ -35,7 +35,7 @@ const PROBLEMS: {
 
 export function ProblemFraming() {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="-mt-3 pb-20 sm:py-28">
       <Container>
         <Reveal>
           <SectionHeader label="The Gap" />
@@ -44,14 +44,14 @@ export function ProblemFraming() {
         <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
           {PROBLEMS.map((problem, i) => (
             <Reveal key={problem.title} delay={80 + i * 80}>
-              <GlowCard className="h-full border border-border-muted bg-background-elevated/40 p-6 sm:p-8">
+              <GlowCard className="h-full border border-border-muted rounded-xl bg-background-elevated/40 p-6 sm:p-8">
                 <div className="flex gap-3">
                   {problem.icons.map((Icon, iconIndex) => (
                     <span
                       key={iconIndex}
-                      className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background-subtle text-foreground-faint transition-all duration-300 group-hover/glow:border-accent/40 group-hover/glow:bg-accent/10 group-hover/glow:text-accent"
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background-subtle transition-colors duration-300 delay-100 group-hover/glow:border-accent/40 group-hover/glow:bg-accent/10"
                     >
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-4 w-4 text-foreground-faint transition-all duration-200 group-hover/glow:scale-125 group-hover/glow:text-accent" />
                     </span>
                   ))}
                 </div>
@@ -68,9 +68,9 @@ export function ProblemFraming() {
         </div>
 
         <Reveal delay={220} className="mt-4">
-          <GlowCard className="grid grid-cols-1 items-center gap-10 border border-border-muted bg-background-elevated/40 p-8 sm:p-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <div className="mx-auto w-full max-w-[220px] opacity-90">
-              <DotMatrixText text="AERA" />
+          <GlowCard className="grid grid-cols-1 items-center gap-10 border border-border-muted rounded-xl bg-background-elevated/40 p-8 sm:p-10 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="mx-auto aspect-square w-full max-w-[220px] opacity-90">
+              <AeraDustMark />
             </div>
             <div>
               <h3 className="max-w-lg text-2xl font-black leading-[1.05] tracking-tight text-foreground sm:text-4xl">

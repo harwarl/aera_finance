@@ -21,7 +21,7 @@ export function LiveDemo() {
         </Reveal>
 
         <Reveal delay={160}>
-          <div className="mt-12 border border-border-muted bg-background-elevated/30">
+          <div className="mt-12 border border-border-muted rounded-xl bg-background-elevated/30">
             <div className="flex items-center justify-between border-b border-border-muted px-4 py-3 sm:px-6">
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-danger/60" />

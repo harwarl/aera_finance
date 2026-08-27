@@ -1,5 +1,5 @@
 // A minimal 5x7 dot-matrix glyph set, just enough coverage for brand
-// wordmarks like "AERA FINANCE". Each glyph is 7 rows of a 5-bit string.
+// wordmarks like "Atlas". Each glyph is 7 rows of a 5-bit string.
 const GLYPHS: Record<string, string[]> = {
   A: ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
   C: ["01111", "10000", "10000", "10000", "10000", "10000", "01111"],
