@@ -15,7 +15,7 @@
 
   --accent-100: #f2ffd1;
   --accent-300: #e9ffa0;
-  --accent: #dffc5a; /* Robin lime — the single locked accent */
+  --accent: #d5fd51; /* Robin lime — the single locked accent */
   --accent-600: #b8d248;
   --accent-700: #9cb03d;
   --accent-900: #5c6b1f;
@@ -275,4 +275,46 @@ body {
   .animate-caret-blink {
     animation: none;
   }
+}
+
+/* Autonomy control slider (the "Control" section) — native range input
+   with the default track/thumb stripped so the fill can be driven by an
+   inline gradient computed from the current value in JS. */
+.autonomy-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  outline: none;
+}
+
+.autonomy-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 9999px;
+  background: var(--foreground);
+  cursor: pointer;
+  box-shadow:
+    0 0 0 4px var(--background),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.autonomy-slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 9999px;
+  border: none;
+  background: var(--foreground);
+  cursor: pointer;
+  box-shadow:
+    0 0 0 4px var(--background),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.autonomy-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: transparent;
 }

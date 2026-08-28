@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
+import { IntegrationStrip } from "@/components/sections/IntegrationStrip";
 import { ProtocolMetrics } from "@/components/sections/ProtocolMetrics";
 import { ProblemFraming } from "@/components/sections/ProblemFraming";
 import { HowItWorksSteps } from "@/components/sections/HowItWorksSteps";
@@ -13,6 +14,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <IntegrationStrip />
       <ProblemFraming />
       <HowItWorksSteps />
       <LiveDemo />
