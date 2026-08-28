@@ -28,7 +28,7 @@ export function DashboardAgentActivity() {
           Agent Activity
         </span>
         <Link
-          href="/dashboard/decisions"
+          href="/connect"
           className="group flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-foreground-faint transition-colors hover:text-accent"
         >
           View Full Log
@@ -40,11 +40,14 @@ export function DashboardAgentActivity() {
         {preview.map((entry) => {
           const Icon = ACTION_ICON[entry.action];
           return (
-            <div key={entry.id} className="flex gap-3 py-3.5 first:pt-0 last:pb-0">
+            <div
+              key={entry.id}
+              className="flex gap-3 py-3.5 first:pt-0 last:pb-0"
+            >
               <span
                 className={cn(
                   "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border",
-                  STATUS_ICON_CLASS[entry.status]
+                  STATUS_ICON_CLASS[entry.status],
                 )}
               >
                 {Icon ? <Icon className="h-3.5 w-3.5" /> : null}
@@ -57,7 +60,8 @@ export function DashboardAgentActivity() {
                   : {entry.detail}
                 </p>
                 <p className="mt-1.5 font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
-                  {formatRelativeTime(entry.timestamp)} · {STATUS_LABEL[entry.status]}
+                  {formatRelativeTime(entry.timestamp)} ·{" "}
+                  {STATUS_LABEL[entry.status]}
                 </p>
               </div>
             </div>

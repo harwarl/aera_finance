@@ -11,7 +11,7 @@ export const siteConfig = {
   name: "Atlas",
   tagline: "Execution. Explained. On-chain.",
   description:
-    "Aera is an AI agent that manages a portfolio of tokenized real stocks and on-chain yield, built on Robinhood Chain — rebalancing, executing trades, and explaining every decision in plain language.",
+    "Atlas is an AI agent that manages a portfolio of tokenized real stocks and on-chain yield, built on Robinhood Chain — rebalancing, executing trades, and explaining every decision in plain language.",
 };
 
 export const navLinks: NavLink[] = [
@@ -43,7 +43,7 @@ export const steps: StepItem[] = [
     index: "01",
     title: "Analyze",
     description:
-      "Aera reads your vault's holdings, Stock Token prices, and available yield rates, continuously and in real time.",
+      "Atlas reads your vault's holdings, Stock Token prices, and available yield rates, continuously and in real time.",
   },
   {
     index: "02",
@@ -74,7 +74,7 @@ export const securityBadges: SecurityBadge[] = [
   {
     title: "Non-custodial vault",
     description:
-      "Funds sit in a smart contract only you can withdraw from. It is never held by Aera the company.",
+      "Funds sit in a smart contract only you can withdraw from. It is never held by Atlas the company.",
   },
   {
     title: "Hard on-chain constraints",
@@ -90,34 +90,34 @@ export const securityBadges: SecurityBadge[] = [
 
 export const faqs: FaqItem[] = [
   {
-    question: "Does Aera ever take custody of my funds?",
+    question: "Does Atlas ever take custody of my funds?",
     answer:
-      "No. Your funds stay in a smart contract vault that only you can withdraw from. Aera's agent holds a narrow manager role that can only call a constrained rebalance function within limits you've set.",
+      "No. Your funds stay in a smart contract vault that only you can withdraw from. Atlas's agent holds a narrow manager role that can only call a constrained rebalance function within limits you've set.",
   },
   {
-    question: "Which assets does Aera support?",
+    question: "Which assets does Atlas support?",
     answer:
-      "Aera manages Stock Tokens, tokenized real stocks and ETFs issued on Robinhood Chain, alongside a small number of approved on-chain yield positions, such as Morpho-based stablecoin markets.",
+      "Atlas manages Stock Tokens, tokenized real stocks and ETFs issued on Robinhood Chain, alongside a small number of approved on-chain yield positions, such as Morpho-based stablecoin markets.",
   },
   {
-    question: "How does Aera decide when to rebalance?",
+    question: "How does Atlas decide when to rebalance?",
     answer:
-      "Aera continuously compares your live allocation against your target. When drift, or a meaningful shift in yield and risk conditions, crosses a threshold you've set, it proposes a rebalance, checks it against your on-chain limits, and logs the reasoning.",
+      "Atlas continuously compares your live allocation against your target. When drift, or a meaningful shift in yield and risk conditions, crosses a threshold you've set, it proposes a rebalance, checks it against your on-chain limits, and logs the reasoning.",
   },
   {
     question: "Can I override or pause the agent?",
     answer:
-      "Yes. You can revoke the agent's access to your vault, or tighten its limits, at any time — no approval process, no waiting period. Nothing executes outside the boundaries you've set.",
+      "Yes. You can revoke the agent's access to your vault, or tighten its limits, at any time. No approval process, no waiting period. Nothing executes outside the boundaries you've set.",
   },
   {
-    question: "What does Aera cost?",
+    question: "What does Atlas cost?",
     answer:
-      "Aera charges a management fee based on assets under management, the same model traditional robo-advisors use. There's no performance fee; gas and normal trade execution costs are separate from the fee itself.",
+      "Atlas charges a management fee based on assets under management, the same model traditional robo-advisors use. There's no performance fee; gas and normal trade execution costs are separate from the fee itself.",
   },
   {
-    question: "Is Aera live today?",
+    question: "Is Atlas live today?",
     answer:
-      "Not yet. Aera is currently in Phase 0 (Validation). See the Roadmap for the full phased path to a founder-run trial and, eventually, public launch.",
+      "Not yet. Atlas is currently in Phase 0 (Validation). See the Roadmap for the full phased path to a founder-run trial and, eventually, public launch.",
   },
 ];
 

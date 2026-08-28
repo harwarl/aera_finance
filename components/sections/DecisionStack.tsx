@@ -24,7 +24,7 @@ export function DecisionStack() {
                 ledger the instant they happen, with the reasoning behind them
                 in plain language. Nothing executes off the record.
               </p>
-              <Button href="/dashboard/decisions" className="mt-8">
+              <Button href="/connect" className="mt-8">
                 View Full Log
               </Button>
             </div>

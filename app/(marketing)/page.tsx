@@ -13,13 +13,13 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <ProtocolMetrics />
       <ProblemFraming />
       <HowItWorksSteps />
       <LiveDemo />
       <DecisionStack />
       <AutonomyModes />
       <FlightToSafety />
+      <ProtocolMetrics />
       <FaqSection />
       <ManifestoSection />
     </>
