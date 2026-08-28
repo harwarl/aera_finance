@@ -86,7 +86,7 @@ export default function RoadmapPage() {
           <Reveal delay={120}>
             <div className="flex flex-wrap gap-8">
               <CornerBrackets>
-                <Button href="/connect">Connect</Button>
+                <Button href="/waitlist">Connect</Button>
               </CornerBrackets>
               <Button href="/whitepaper" variant="secondary">
                 Read the Whitepaper

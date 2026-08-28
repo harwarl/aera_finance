@@ -65,7 +65,8 @@ export type DocGroup =
   | "Architecture"
   | "Product"
   | "Assets & Fees"
-  | "Protocol";
+  | "Protocol"
+  | "Platform";
 
 export type DocPage = {
   slug: string;

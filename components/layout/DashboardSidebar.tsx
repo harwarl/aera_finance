@@ -133,10 +133,10 @@ function SidebarContent({
           </button>
         ) : (
           <Link
-            href="/connect"
+            href="/waitlist"
             className="rounded-full border border-accent px-3 py-1.5 text-center font-mono text-xs uppercase tracking-widest text-accent"
           >
-            Connect
+            Join Waitlist
           </Link>
         )}
       </div>

@@ -44,7 +44,7 @@ export function LiveDemo() {
 
         <Reveal delay={220}>
           <div className="mt-8 flex justify-center">
-            <Button href="/connect">Create Your Own Vault</Button>
+            <Button href="/waitlist">Create Your Own Vault</Button>
           </div>
         </Reveal>
       </Container>

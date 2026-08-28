@@ -1,19 +1,18 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 
-// Icon slots are placeholders — a plain initial in a bordered square — until
-// real partner/model SVGs are dropped in. Swap each entry's rendered badge
-// for an actual <Image>/SVG once those arrive; nothing else about the
-// layout needs to change.
+// Real partner logos from /public/logos — swap `src` values if filenames
+// change. Height is fixed per logo via `h-*` so mixed aspect ratios
+// (wordmarks vs. square marks) still sit on a common baseline.
 const PARTNERS = [
-  { name: "Robinhood Chain" },
-  { name: "1inch" },
-  { name: "0x" },
-  { name: "Morpho" },
-  { name: "Claude" },
-  { name: "Codex" },
+  { name: "Robinhood", src: "/logos/Robinhood.svg" },
+  { name: "1inch", src: "/logos/1inch.png" },
+  { name: "Morpho", src: "/logos/Morpho.svg" },
+  { name: "Anthropic", src: "/logos/Anthropic.svg" },
+  { name: "OpenZeppelin", src: "/logos/OpenZeppelin.svg" },
 ];
 
 export function IntegrationStrip() {
@@ -51,22 +50,23 @@ export function IntegrationStrip() {
               className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover/strip:opacity-100"
               style={{
                 background:
-                  "radial-gradient(160px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%)",
+                  "radial-gradient(10px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), color-mix(in srgb, var(--accent) 2%, transparent), transparent 70%)",
               }}
             />
 
-            <div className="flex w-max animate-marquee gap-8 group-hover/strip:[animation-play-state:paused]">
+            <div className="flex w-max animate-marquee items-center gap-10 group-hover/strip:[animation-play-state:paused]">
               {loop.map((partner, i) => (
                 <div
                   key={`${partner.name}-${i}`}
-                  className="flex shrink-0 items-center gap-2.5"
+                  className="flex h-6 shrink-0 items-center opacity-70 transition-all duration-200 hover:opacity-100 [&_img]:brightness-0 [&_img]:invert [&_img]:transition-all [&_img]:duration-200 hover:[&_img]:brightness-100 hover:[&_img]:invert-0"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-background-subtle text-[10px] font-bold uppercase tracking-widest text-foreground-faint">
-                    {partner.name.slice(0, 1)}
-                  </span>
-                  <span className="whitespace-nowrap text-sm text-foreground-muted">
-                    {partner.name}
-                  </span>
+                  <Image
+                    src={partner.src}
+                    alt={partner.name}
+                    width={96}
+                    height={24}
+                    className="h-6 w-auto object-contain"
+                  />
                 </div>
               ))}
             </div>

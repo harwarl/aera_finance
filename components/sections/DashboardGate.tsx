@@ -55,7 +55,7 @@ export function DashboardGate({ children }: { children: React.ReactNode }) {
             Aera gives every wallet its own isolated vault — you haven&apos;t
             created yours yet.
           </p>
-          <Button href="/onboarding" className="mt-6">
+          <Button href="/Wwaitlist" className="mt-6">
             Create Your Vault
           </Button>
         </DashboardCard>

@@ -32,8 +32,8 @@ export function Navbar() {
             <span className="h-1.5 w-1.5 animate-ticker-blink bg-accent" />
             Agent Status · Active
           </span>
-          <Button href="/connect" size="sm">
-            Connect Wallet
+          <Button href="/waitlist" size="sm">
+            Join Waitlist
           </Button>
         </div>
 
@@ -82,8 +82,8 @@ export function Navbar() {
                 </a>
               ))}
             </nav>
-            <Button href="/connect" size="sm" className="w-full">
-              Connect Wallet
+            <Button href="/waitlist" size="sm" className="w-full">
+              Join Waitlist
             </Button>
           </Container>
         </div>
