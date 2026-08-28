@@ -10,17 +10,17 @@ export function ManifestoSection() {
         <Reveal>
           <p className="mx-auto max-w-3xl text-3xl font-black leading-[1.15] tracking-tight sm:text-5xl">
             <span className="text-foreground">
-              Your portfolio doesn&apos;t need you watching it. It needs
-              boundaries you set once, and an agent that{" "}
+              Your portfolio doesn&apos;t need you watching it. Your build
+              doesn&apos;t need to start from zero. One platform,{" "}
             </span>
-            <span className="text-accent">explains itself every time.</span>
+            <span className="text-accent">an agent for each.</span>
           </p>
         </Reveal>
 
         <Reveal delay={200}>
           <div className="mt-12">
             <CornerBrackets>
-              <Button href="/waitlist">Join Waitlist</Button>
+              <Button href="/waitlist">Get Early Access</Button>
             </CornerBrackets>
           </div>
         </Reveal>

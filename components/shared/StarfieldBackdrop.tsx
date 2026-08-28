@@ -25,7 +25,7 @@ import {
 // coming into range ahead); scrolling back up retraces the exact same
 // stars, since nothing about their position is randomized per frame.
 
-const STAR_COUNT = 3200;
+const STAR_COUNT = 1200;
 const TUNNEL_DEPTH = 240;
 const NEAR = 0.5;
 const FAR = 40;

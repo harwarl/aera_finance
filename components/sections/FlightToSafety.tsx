@@ -103,7 +103,7 @@ export function FlightToSafety() {
     <section ref={sectionRef} id="safety" className="py-20 sm:py-28">
       <Container>
         <Reveal>
-          <SectionHeader label="Safety" />
+          <SectionHeader label="Safety, In The Vault" />
         </Reveal>
 
         <Reveal delay={80}>
@@ -112,8 +112,9 @@ export function FlightToSafety() {
             <span className="text-accent">bad afternoon.</span>
           </h2>
           <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-foreground-muted sm:text-base">
-            A real example: how the agent reasoned through a sharp move in ETH,
-            step by step.
+            A real example from the vault: how the same reasoning engine that
+            powers the rest of the platform handled a sharp move in ETH, step by
+            step.
           </p>
         </Reveal>
         <Reveal delay={140}>

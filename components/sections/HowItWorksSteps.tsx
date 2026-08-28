@@ -7,6 +7,14 @@ import { Container } from "@/components/layout/Container";
 import { SectionHeader } from "@/components/layout/SectionHeader";
 import { GlowCard } from "@/components/shared/GlowCard";
 import { Reveal } from "@/components/shared/Reveal";
+import {
+  AgentScoreVisual,
+  BLUE,
+  reduceMotion,
+  VaultVisual,
+  type VisualProps,
+  YieldVisual,
+} from "@/components/shared/PlatformStepVisuals";
 import { cn } from "@/lib/utils";
 
 // Four cards, each mostly visual (roughly a 70/30 icon-to-text split) with
@@ -32,225 +40,11 @@ import { cn } from "@/lib/utils";
 const STEP_DURATION_MS = 3600;
 const ACTIVE_WEIGHT = 1.7;
 const DESKTOP_QUERY = "(min-width: 1024px)";
-const REDUCE_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
-// A restrained second and third hue alongside the locked teal accent, used
-// only here to distinguish content (assets, partners, risk factors) — same
-// pattern already used for BTC's amber in the performance chart. Newer,
-// smaller holdings stay neutral rather than reaching for a fourth or fifth
-// hue — restraint over a rainbow of asset colors.
-const AMBER = "#e0a94a"; // BTC / warmth
-const BLUE = "#6d8cf7"; // external chain & stablecoin partners
-const NEUTRAL = "var(--foreground-faint)";
-
-const VAULT_ASSETS = [
-  { symbol: "ETH", name: "Ethereum", color: "var(--accent)" },
-  { symbol: "BTC", name: "Bitcoin", color: AMBER },
-  { symbol: "USDC", name: "USD Coin", color: BLUE },
-  { symbol: "ATLAS", name: "Atlas Protocol", color: NEUTRAL },
-  { symbol: "AAPLx", name: "Tokenized Apple", color: NEUTRAL },
-];
-
-const YIELD_TAGS = [
-  { label: "Protocol · Morpho", color: BLUE },
-  { label: "Target · 6.8% APY", color: "var(--accent)" },
-  { label: "Asset · USDC", color: BLUE },
-  { label: "Sleeve · Base Yield", color: null },
-];
-
-const RISK_FACTORS = [
-  { label: "Volatility", value: 22, color: "var(--accent)" },
-  { label: "Trend", value: 18, color: "var(--accent)" },
-  { label: "Drawdown", value: 52, color: "var(--foreground-faint)" },
-];
 
 const EXECUTION_NODES = [
   { name: "Vault Contract", color: "var(--accent)" },
   { name: "Robinhood Chain", color: BLUE },
 ];
-
-function reduceMotion() {
-  return typeof window !== "undefined" && window.matchMedia(REDUCE_MOTION_QUERY).matches;
-}
-
-type VisualProps = { active: boolean };
-
-function VaultVisual({ active }: VisualProps) {
-  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  useEffect(() => {
-    if (!active || reduceMotion()) return;
-    const rows = rowRefs.current.filter(Boolean) as HTMLDivElement[];
-    const dots = dotRefs.current.filter(Boolean) as HTMLSpanElement[];
-    const tl = gsap.timeline();
-    tl.set(rows, { opacity: 0, x: -8 })
-      .set(dots, { scale: 0 })
-      .to(rows, { opacity: 1, x: 0, duration: 0.45, ease: "power2.out", stagger: 0.22 }, 0)
-      .to(dots, { scale: 1, duration: 0.4, ease: "back.out(2.4)", stagger: 0.22 }, 0.08);
-    return () => {
-      tl.kill();
-    };
-  }, [active]);
-
-  return (
-    <div className="flex w-full flex-col gap-2">
-      {VAULT_ASSETS.map((asset, i) => (
-        <div
-          key={asset.symbol}
-          ref={(el) => {
-            rowRefs.current[i] = el;
-          }}
-          className="flex items-center justify-between rounded-lg border px-3.5 py-2"
-          style={{
-            borderColor: `color-mix(in srgb, ${asset.color} 30%, transparent)`,
-            backgroundColor: `color-mix(in srgb, ${asset.color} 7%, transparent)`,
-          }}
-        >
-          <span className="flex items-center gap-2">
-            <span
-              ref={(el) => {
-                dotRefs.current[i] = el;
-              }}
-              className="h-1.5 w-1.5 shrink-0 animate-ticker-blink rounded-full"
-              style={{ backgroundColor: asset.color }}
-            />
-            <span className="font-mono text-xs font-bold text-foreground">
-              {asset.symbol}
-            </span>
-          </span>
-          <span
-            className="font-mono text-[9px] uppercase tracking-widest"
-            style={{ color: asset.color }}
-          >
-            Deposited
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function YieldVisual({ active }: VisualProps) {
-  const tagRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  useEffect(() => {
-    if (!active || reduceMotion()) return;
-    const tags = tagRefs.current.filter(Boolean) as HTMLSpanElement[];
-    const tl = gsap.timeline();
-    tl.set(tags, { opacity: 0, scale: 0.85, y: 4 }).to(tags, {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 0.4,
-      ease: "back.out(1.8)",
-      stagger: 0.14,
-    });
-    return () => {
-      tl.kill();
-    };
-  }, [active]);
-
-  return (
-    <div className="w-full rounded-xl border border-accent/30 bg-accent/5 p-5">
-      <span className="flex items-center gap-2 font-mono text-xs font-bold text-foreground">
-        <span className="h-1.5 w-1.5 animate-ticker-blink rounded-full bg-accent" />
-        Yield Position
-      </span>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {YIELD_TAGS.map((tag, i) =>
-          tag.color ? (
-            <span
-              key={tag.label}
-              ref={(el) => {
-                tagRefs.current[i] = el;
-              }}
-              className="rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest"
-              style={{
-                borderColor: `color-mix(in srgb, ${tag.color} 35%, transparent)`,
-                backgroundColor: `color-mix(in srgb, ${tag.color} 10%, transparent)`,
-                color: tag.color,
-              }}
-            >
-              {tag.label}
-            </span>
-          ) : (
-            <span
-              key={tag.label}
-              ref={(el) => {
-                tagRefs.current[i] = el;
-              }}
-              className="rounded-full border border-border bg-background-subtle px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-foreground-muted"
-            >
-              {tag.label}
-            </span>
-          ),
-        )}
-      </div>
-    </div>
-  );
-}
-
-function AgentScoreVisual({ active }: VisualProps) {
-  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const barRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  useEffect(() => {
-    if (!active || reduceMotion()) return;
-    const rows = rowRefs.current.filter(Boolean) as HTMLDivElement[];
-    const bars = barRefs.current.filter(Boolean) as HTMLSpanElement[];
-    const tl = gsap.timeline();
-    tl.set(rows, { opacity: 0, x: -6 })
-      .set(bars, { scaleX: 0 })
-      .to(rows, { opacity: 1, x: 0, duration: 0.35, ease: "power2.out", stagger: 0.15 }, 0)
-      .to(bars, { scaleX: 1, duration: 0.9, ease: "power2.out", stagger: 0.15 }, 0.1);
-    return () => {
-      tl.kill();
-    };
-  }, [active]);
-
-  return (
-    <div className="w-full rounded-xl border border-border-muted bg-background-subtle p-5">
-      <div className="flex items-center justify-between">
-        <span className="font-mono text-[9px] uppercase tracking-widest text-foreground-faint">
-          Agent · Risk Score
-        </span>
-        <span className="flex items-center gap-1 font-mono text-[9px] uppercase tracking-widest text-accent">
-          <span className="h-1.5 w-1.5 animate-ticker-blink rounded-full bg-accent" />
-          Live
-        </span>
-      </div>
-      <div className="mt-2 flex items-end gap-1.5">
-        <span className="text-2xl font-black leading-none text-foreground">32</span>
-        <span className="pb-0.5 font-mono text-[9px] text-foreground-faint">/ 100</span>
-      </div>
-      <div className="mt-4 flex flex-col gap-2">
-        {RISK_FACTORS.map((factor, i) => (
-          <div
-            key={factor.label}
-            ref={(el) => {
-              rowRefs.current[i] = el;
-            }}
-            className="flex items-center gap-2"
-          >
-            <span className="w-16 shrink-0 font-mono text-[8px] uppercase tracking-widest text-foreground-faint">
-              {factor.label}
-            </span>
-            <span className="h-1 flex-1 overflow-hidden rounded-full bg-background">
-              <span
-                ref={(el) => {
-                  barRefs.current[i] = el;
-                }}
-                className="block h-full origin-left"
-                style={{ width: `${factor.value}%`, backgroundColor: factor.color }}
-              />
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function ExecutionVisual({ active }: VisualProps) {
   const pulseRefs = useRef<(SVGCircleElement | null)[]>([]);

@@ -1,63 +1,68 @@
 import { Badge } from "@/components/ui/Badge";
 import { cn } from "@/lib/utils";
-import { agentScore } from "@/config/dashboard";
+import { agentScore, holdings } from "@/config/dashboard";
 
-function factorToneClass(value: number) {
-  if (value >= 60) return "bg-danger";
-  if (value >= 35) return "bg-foreground-faint";
-  return "bg-accent";
+// Replaces the old abstract "risk score + factor bars" readout with what
+// the agent is actually doing right now, per holding — a status word
+// people can act on, not a number they have to interpret. Status is
+// derived from 24h change as a stand-in for a real per-asset signal
+// (nothing in config/dashboard.ts tracks "is the agent trimming this"
+// yet); swap for the real field once the agent exposes one.
+const TRIM_THRESHOLD_PCT = 1;
+
+function statusFor(change24hPct: number): "holding" | "trimming" {
+  return Math.abs(change24hPct) > TRIM_THRESHOLD_PCT ? "trimming" : "holding";
 }
 
+const STATUS_CLASS = {
+  holding: "text-accent",
+  trimming: "text-[#e0a94a]",
+};
+
+const DOT_CLASS = {
+  holding: "bg-accent",
+  trimming: "bg-[#e0a94a]",
+};
+
 export function DashboardAgentPanel() {
-  const scorePct = (agentScore.value / agentScore.max) * 100;
+  const shown = holdings.slice(0, 4);
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-border bg-background-elevated p-6 lg:sticky lg:top-6">
       <div className="flex items-center justify-between gap-3">
         <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
-          Agent · Risk Score
+          Agent · Watching
         </span>
         <Badge className="border-accent/40 text-accent">Copilot</Badge>
       </div>
 
-      <div>
-        <div className="flex items-end gap-2">
-          <span className="text-5xl font-black tracking-tighter text-foreground">
-            {agentScore.value}
-          </span>
-          <span className="mb-1.5 font-mono text-sm text-foreground-faint">
-            / {agentScore.max}
-          </span>
-        </div>
-        <span className="mt-1 block font-mono text-[10px] uppercase tracking-widest text-accent">
-          {agentScore.tier}
-        </span>
-      </div>
-
-      <div className="relative h-2 w-full overflow-hidden rounded-full bg-background">
-        <div className="absolute inset-y-0 left-0 w-[40%] bg-accent" />
-        <div className="absolute inset-y-0 left-[40%] w-[30%] bg-border" />
-        <div className="absolute inset-y-0 left-[70%] w-[30%] bg-danger/70" />
-        <div
-          className="absolute top-1/2 h-3 w-0.5 -translate-y-1/2 rounded-full bg-foreground"
-          style={{ left: `${Math.min(Math.max(scorePct, 1), 99)}%` }}
-        />
-      </div>
-
-      <div className="flex flex-col gap-3">
-        {agentScore.factors.map((factor) => (
-          <div key={factor.label} className="flex items-center justify-between gap-3">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-foreground-faint">
-              {factor.label}
-            </span>
-            <span className="h-1.5 w-28 overflow-hidden rounded-full bg-background">
+      <div className="flex flex-col divide-y divide-border-muted">
+        {shown.map((holding) => {
+          const status = statusFor(holding.change24hPct);
+          return (
+            <div
+              key={holding.id}
+              className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+            >
+              <span className="flex items-center gap-2.5">
+                <span
+                  className={cn("h-2 w-2 shrink-0 rounded-full", DOT_CLASS[status])}
+                />
+                <span className="text-sm font-bold text-foreground">
+                  {holding.symbol}
+                </span>
+              </span>
               <span
-                className={cn("block h-full", factorToneClass(factor.value))}
-                style={{ width: `${factor.value}%` }}
-              />
-            </span>
-          </div>
-        ))}
+                className={cn(
+                  "font-mono text-xs uppercase tracking-widest",
+                  STATUS_CLASS[status],
+                )}
+              >
+                {status}
+              </span>
+            </div>
+          );
+        })}
       </div>
 
       <div className="rounded-xl border border-accent/30 bg-accent/5 p-4">

@@ -18,6 +18,7 @@ export const navLinks: NavLink[] = [
   { label: "Product", href: "#solution" },
   { label: "How It Works", href: "#how-it-works" },
   { label: "Security", href: "#security" },
+  { label: "Platform", href: "#platform" },
   { label: "FAQ", href: "#faq" },
   { label: "Whitepaper", href: "/whitepaper" },
   { label: "Waitlist", href: "/waitlist" },
@@ -90,19 +91,24 @@ export const securityBadges: SecurityBadge[] = [
 
 export const faqs: FaqItem[] = [
   {
+    question: "What is Atlas?",
+    answer:
+      "Atlas is a platform for AI-managed on-chain portfolios: a vault product, the infrastructure behind it, a live market signal feed, and a marketplace for shared strategies. The vault is the first piece live today; the rest is built on the same engine.",
+  },
+  {
     question: "Does Atlas ever take custody of my funds?",
     answer:
-      "No. Your funds stay in a smart contract vault that only you can withdraw from. Atlas's agent holds a narrow manager role that can only call a constrained rebalance function within limits you've set.",
+      "No. Funds stay in a smart contract vault that only you can withdraw from. The agent managing your vault holds a narrow manager role that can only call a constrained rebalance function within limits you've set. This holds regardless of which Atlas product you're using.",
   },
   {
-    question: "Which assets does Atlas support?",
+    question: "Which assets does the Atlas vault support?",
     answer:
-      "Atlas manages Stock Tokens, tokenized real stocks and ETFs issued on Robinhood Chain, alongside a small number of approved on-chain yield positions, such as Morpho-based stablecoin markets.",
+      "The Atlas vault manages Stock Tokens, tokenized real stocks and ETFs issued on Robinhood Chain, alongside a small number of approved on-chain yield positions, such as Morpho-based stablecoin markets.",
   },
   {
-    question: "How does Atlas decide when to rebalance?",
+    question: "How does the vault decide when to rebalance?",
     answer:
-      "Atlas continuously compares your live allocation against your target. When drift, or a meaningful shift in yield and risk conditions, crosses a threshold you've set, it proposes a rebalance, checks it against your on-chain limits, and logs the reasoning.",
+      "It continuously compares your live allocation against your target. When drift, or a meaningful shift in yield and risk conditions, crosses a threshold you've set, it proposes a rebalance, checks it against your on-chain limits, and logs the reasoning.",
   },
   {
     question: "Can I override or pause the agent?",
@@ -110,14 +116,19 @@ export const faqs: FaqItem[] = [
       "Yes. You can revoke the agent's access to your vault, or tighten its limits, at any time. No approval process, no waiting period. Nothing executes outside the boundaries you've set.",
   },
   {
-    question: "What does Atlas cost?",
+    question: "Can I build on Atlas instead of just using the vault?",
     answer:
-      "Atlas charges a management fee based on assets under management, the same model traditional robo-advisors use. There's no performance fee; gas and normal trade execution costs are separate from the fee itself.",
+      "That's the direction the platform is built for. The vault factory and decision engine are designed to be licensed so other teams can launch their own AI-managed vault product on the same rails, the market signal feed is designed to be queried by other agents and researchers, and the strategy layer is designed to let anyone publish and share an allocation approach. See the Roadmap for how each is sequenced.",
+  },
+  {
+    question: "What does the vault cost?",
+    answer:
+      "The vault charges a management fee based on assets under management, the same model traditional robo-advisors use. There's no performance fee; gas and normal trade execution costs are separate from the fee itself.",
   },
   {
     question: "Is Atlas live today?",
     answer:
-      "Not yet. Atlas is currently in Phase 0 (Validation). See the Roadmap for the full phased path to a founder-run trial and, eventually, public launch.",
+      "The vault is currently in Phase 0 (Validation), not yet live. The rest of the platform, infrastructure, signal feed, and strategy marketplace, ships in later phases. See the Roadmap for the full sequence.",
   },
 ];
 
@@ -127,6 +138,7 @@ export const footerLinks = {
     { label: "Yield Routing", href: "#solution" },
     { label: "Decision Log", href: "#solution" },
     { label: "Security", href: "#security" },
+    { label: "Platform (All Products)", href: "#platform" },
     { label: "Whitepaper", href: "/whitepaper" },
     { label: "Roadmap", href: "/roadmap" },
   ],

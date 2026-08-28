@@ -14,17 +14,15 @@ import {
   stepTunnelField,
 } from "@/components/shared/starfieldCore";
 
-// PRESERVED — this is the original hero scene (dense dust-shell sphere with a
-// traveling ripple wave + agent-message pop cycle), kept around unused after
-// HeroScene.tsx was swapped to the wireframe-mesh scene. Not deleted, only
-// renamed, per instruction. See HeroScene.tsx for the current hero visual.
-//
-// A dense particle sphere offset to the right as the hero's centerpiece —
-// one single dust shell (no separate wireframe/band mesh) that a ripple of
-// light sweeps through every cycle, bulging and brightening whichever dust
-// it passes, meant to read as an AI thinking hard. Two point lights orbit
-// the sphere continuously. Rendered with a chromatic-aberration + bloom
-// post pass. Tilts toward the cursor.
+// A dense particle sphere offset to the right as the hero's centerpiece.
+// Rather than a wave sweeping through the whole shell, a small pool of up
+// to MAX_CONCURRENT_MOVERS individual dust motes peel off one at a time —
+// each one is a specific particle that actually relocates from its start
+// coordinate to a new one, with an in-scene label tracking it the whole
+// way. That's meant to read as "the agent is doing something to this
+// specific position," not an ambient effect washing over the sphere.
+// Two point lights orbit the sphere continuously. Rendered with a
+// chromatic-aberration + bloom post pass. Tilts toward the cursor.
 //
 // Also embeds its own copy of the sitewide traveling star tunnel (see
 // starfieldCore) rather than just relying on StarfieldBackdrop showing
@@ -38,25 +36,37 @@ import {
 // like StarfieldBackdrop) since that's roughly how much of the page the
 // hero itself occupies before it's scrolled out of view.
 //
-// Timing is a single repeating cycle — WAVE (ripple sweeps pole to pole),
-// then POP (agent message card shows), then REST (idle) — driven off
-// `now` each frame rather than component state, so HeroScene never needs
-// to re-render. AgentPulseFeed mirrors the same three durations with its
-// own setTimeout chain to stay in step without any prop wiring between them.
+// Each mover runs through three stages on its own clock:
+//   drift  — sits at its start position, brightening toward the accent
+//            color; label shows "[DRIFT] {ticker} {pct}% over target
+//            weight."
+//   move   — eases from start to target position over MOVE_DURATION_MS;
+//            label switches to "[ACTION] rebalancing to target weight."
+//   settle — holds at the target position; label fades out over
+//            SETTLE_HOLD_MS, and once it's fully faded the mover is
+//            retired and its slot freed for a new one.
+// A settled particle simply stays wherever it landed — nothing resets it
+// back to its original spot, and nothing keeps touching its buffer entry
+// once its mover is retired, so the per-frame cost only ever scales with
+// how many movers are active (at most 6), not the full 4200-point shell.
+//
+// All ticker names, drift/action percentages, and label copy here are
+// placeholders standing in for a real per-position signal — not wired to
+// anything live yet.
 
-const SPHERE_POINT_COUNT = 4200;
-const SPHERE_RADIUS = 2.7;
+const SPHERE_POINT_COUNT = 4000;
+const SPHERE_RADIUS = 2.2;
 const CENTERPIECE_OFFSET_X = 2.2;
 const CENTERPIECE_SCALE = 0.75;
 
-const RIPPLE_THICKNESS = 0.4; // radians of arc that's lit at any instant
-const RIPPLE_BULGE = 0.16; // extra radial displacement at full intensity
+const MAX_CONCURRENT_MOVERS = 6;
+export const DRIFT_HOLD_MS = 1200;
+export const MOVE_DURATION_MS = 1400;
+export const SETTLE_HOLD_MS = 900;
+const SPAWN_INTERVAL_MIN_MS = 700;
+const SPAWN_INTERVAL_MAX_MS = 1600;
 
-export const DUST_WAVE_DURATION_MS = 1900;
-export const DUST_CARD_HOLD_MS = 2400;
-export const DUST_REST_DURATION_MS = 1300;
-const CYCLE_MS =
-  DUST_WAVE_DURATION_MS + DUST_CARD_HOLD_MS + DUST_REST_DURATION_MS;
+const TICKERS = ["AAPLx", "TSLAx", "NVDAx", "MSFTx", "ETH", "BTC", "GOOGLx"];
 
 function fibonacciDirections(count: number) {
   const dirs: [number, number, number][] = [];
@@ -78,6 +88,27 @@ function randomDirection(): [number, number, number] {
   return [r * Math.cos(theta), u, r * Math.sin(theta)];
 }
 
+function randomBetween(min: number, max: number) {
+  return min + Math.random() * (max - min);
+}
+
+function easeOutCubic(t: number) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+type Stage = "drift" | "move" | "settle";
+
+type Mover = {
+  particleIndex: number;
+  labelIndex: number;
+  startPos: THREE.Vector3;
+  targetPos: THREE.Vector3;
+  ticker: string;
+  pct: number;
+  stage: Stage;
+  stageStart: number;
+};
+
 const STAR_COUNT = 700;
 const STAR_TUNNEL_DEPTH = 26;
 const STAR_NEAR_SEED = 1;
@@ -88,6 +119,10 @@ const STAR_INFLUENCE_RADIUS = 2.5; // world units — scaled to this camera, not
 
 export function HeroSceneDust() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const labelDotRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const labelTagRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const labelMsgRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -114,9 +149,8 @@ export function HeroSceneDust() {
     centerpiece.scale.setScalar(CENTERPIECE_SCALE);
     scene.add(centerpiece);
 
-    // A single dense dust shell — no separate wireframe/band mesh. Each
-    // particle's base direction + radius jitter is kept around so the wave
-    // pass below can displace/brighten it and settle it back afterward.
+    // Each particle's base direction + radius jitter is kept around so a
+    // mover can compute a start/target position at that same shell radius.
     const directions = fibonacciDirections(SPHERE_POINT_COUNT);
     const baseJitters = new Float32Array(SPHERE_POINT_COUNT);
     const dustPositions = new Float32Array(SPHERE_POINT_COUNT * 3);
@@ -215,7 +249,9 @@ export function HeroSceneDust() {
     window.addEventListener("pointermove", handlePointerMove, {
       passive: true,
     });
-    window.addEventListener("pointerout", handlePointerLeave, { passive: true });
+    window.addEventListener("pointerout", handlePointerLeave, {
+      passive: true,
+    });
 
     let frameId = 0;
     let paused = document.visibilityState === "hidden";
@@ -226,57 +262,177 @@ export function HeroSceneDust() {
     }
     document.addEventListener("visibilitychange", handleVisibility);
 
-    let waveOrigin = randomDirection();
-    let cycleIndex = -1;
+    // --- Mover pool -----------------------------------------------------
+    const movers: Mover[] = [];
+    const usedParticleIndices = new Set<number>();
+    const usedLabelIndices = new Set<number>();
+    let nextSpawnAt = 0; // set once the clock starts, in tick()
+    const posAttr = dustGeometry.attributes.position as THREE.BufferAttribute;
+    const colorAttr = dustGeometry.attributes.color as THREE.BufferAttribute;
     const tmpColor = new THREE.Color();
+    const worldPos = new THREE.Vector3();
+
+    function freeLabelIndex(): number | null {
+      for (let i = 0; i < MAX_CONCURRENT_MOVERS; i++) {
+        if (!usedLabelIndices.has(i)) return i;
+      }
+      return null;
+    }
+
+    function spawnMover(now: number) {
+      const labelIndex = freeLabelIndex();
+      if (labelIndex === null) return;
+
+      let particleIndex: number;
+      let attempts = 0;
+      do {
+        particleIndex = Math.floor(Math.random() * SPHERE_POINT_COUNT);
+        attempts += 1;
+      } while (usedParticleIndices.has(particleIndex) && attempts < 50);
+
+      let ticker: string;
+      attempts = 0;
+      do {
+        ticker = TICKERS[Math.floor(Math.random() * TICKERS.length)];
+        attempts += 1;
+      } while (movers.some((m) => m.ticker === ticker) && attempts < 50);
+
+      const [dx, dy, dz] = directions[particleIndex];
+      const radius = SPHERE_RADIUS * baseJitters[particleIndex];
+      const startPos = new THREE.Vector3(dx, dy, dz).multiplyScalar(radius);
+
+      const [tx, ty, tz] = randomDirection();
+      const targetPos = new THREE.Vector3(tx, ty, tz).multiplyScalar(radius);
+
+      const pct = Math.round(randomBetween(-6, 6) * 10) / 10;
+
+      usedParticleIndices.add(particleIndex);
+      usedLabelIndices.add(labelIndex);
+      movers.push({
+        particleIndex,
+        labelIndex,
+        startPos,
+        targetPos,
+        ticker,
+        pct,
+        stage: "drift",
+        stageStart: now,
+      });
+    }
+
+    function retireMover(mover: Mover) {
+      usedParticleIndices.delete(mover.particleIndex);
+      usedLabelIndices.delete(mover.labelIndex);
+      const label = labelRefs.current[mover.labelIndex];
+      if (label) label.style.opacity = "0";
+    }
+
+    function driftLabel(mover: Mover) {
+      return `${mover.ticker} ${mover.pct > 0 ? "+" : ""}${mover.pct}% over target weight`;
+    }
+
+    function updateMoversAndLabels(now: number) {
+      if (now >= nextSpawnAt && movers.length < MAX_CONCURRENT_MOVERS) {
+        spawnMover(now);
+        nextSpawnAt =
+          now + randomBetween(SPAWN_INTERVAL_MIN_MS, SPAWN_INTERVAL_MAX_MS);
+      }
+
+      for (let m = movers.length - 1; m >= 0; m--) {
+        const mover = movers[m];
+        const elapsed = now - mover.stageStart;
+        const label = labelRefs.current[mover.labelIndex];
+        const dot = labelDotRefs.current[mover.labelIndex];
+        const tag = labelTagRefs.current[mover.labelIndex];
+        const msg = labelMsgRefs.current[mover.labelIndex];
+
+        let pos = mover.startPos;
+        let opacity = 1;
+
+        if (mover.stage === "drift") {
+          const t = Math.min(elapsed / DRIFT_HOLD_MS, 1);
+          tmpColor.copy(dustColor).lerp(accent, t);
+          colorAttr.setXYZ(
+            mover.particleIndex,
+            tmpColor.r,
+            tmpColor.g,
+            tmpColor.b,
+          );
+          pos = mover.startPos;
+          if (tag) tag.textContent = "[DRIFT]";
+          if (msg) msg.textContent = driftLabel(mover);
+          if (dot) dot.style.backgroundColor = "var(--accent)";
+          if (elapsed >= DRIFT_HOLD_MS) {
+            mover.stage = "move";
+            mover.stageStart = now;
+          }
+        } else if (mover.stage === "move") {
+          const t = easeOutCubic(Math.min(elapsed / MOVE_DURATION_MS, 1));
+          pos = mover.startPos.clone().lerp(mover.targetPos, t);
+          colorAttr.setXYZ(mover.particleIndex, accent.r, accent.g, accent.b);
+          if (tag) tag.textContent = "[ACTION]";
+          if (msg) msg.textContent = "rebalancing to target weight";
+          if (elapsed >= MOVE_DURATION_MS) {
+            mover.stage = "settle";
+            mover.stageStart = now;
+            pos = mover.targetPos;
+          }
+        } else {
+          const t = Math.min(elapsed / SETTLE_HOLD_MS, 1);
+          pos = mover.targetPos;
+          tmpColor.copy(accent).lerp(dustColor, t);
+          colorAttr.setXYZ(
+            mover.particleIndex,
+            tmpColor.r,
+            tmpColor.g,
+            tmpColor.b,
+          );
+          opacity = 1 - t;
+          if (elapsed >= SETTLE_HOLD_MS) {
+            retireMover(mover);
+            movers.splice(m, 1);
+            continue;
+          }
+        }
+
+        posAttr.setXYZ(mover.particleIndex, pos.x, pos.y, pos.z);
+
+        if (label) {
+          worldPos
+            .set(pos.x, pos.y, pos.z)
+            .applyMatrix4(centerpiece.matrixWorld);
+          const projected = worldPos.clone().project(camera);
+          if (projected.z > 1) {
+            label.style.opacity = "0";
+          } else {
+            const rect = container.getBoundingClientRect();
+            const x = (projected.x * 0.5 + 0.5) * rect.width;
+            const y = (-projected.y * 0.5 + 0.5) * rect.height;
+            // Offset up and left of the exact point so the pill reads as
+            // pointing at the particle rather than centering on top of it.
+            label.style.transform = `translate(${x - 14}px, ${y - 46}px)`;
+            label.style.opacity = String(opacity);
+          }
+        }
+      }
+
+      posAttr.needsUpdate = true;
+      colorAttr.needsUpdate = true;
+    }
+
+    function hideAllLabels() {
+      labelRefs.current.forEach((label) => {
+        if (label) label.style.opacity = "0";
+      });
+    }
 
     function tick(now: number) {
       const t = now * 0.001;
 
-      const currentCycle = Math.floor(now / CYCLE_MS);
-      if (currentCycle !== cycleIndex) {
-        cycleIndex = currentCycle;
-        waveOrigin = randomDirection();
+      if (nextSpawnAt === 0) {
+        nextSpawnAt =
+          now + randomBetween(SPAWN_INTERVAL_MIN_MS, SPAWN_INTERVAL_MAX_MS);
       }
-      const cycleT = now - cycleIndex * CYCLE_MS;
-      const inWave = cycleT < DUST_WAVE_DURATION_MS;
-      const rippleAngle = inWave
-        ? (cycleT / DUST_WAVE_DURATION_MS) * Math.PI
-        : -1;
-
-      const posAttr = dustGeometry.attributes.position as THREE.BufferAttribute;
-      const colorAttr = dustGeometry.attributes.color as THREE.BufferAttribute;
-
-      for (let i = 0; i < SPHERE_POINT_COUNT; i++) {
-        const [dx, dy, dz] = directions[i];
-        let intensity = 0;
-        if (inWave) {
-          const cosAngle =
-            dx * waveOrigin[0] + dy * waveOrigin[1] + dz * waveOrigin[2];
-          const angDist = Math.acos(Math.min(1, Math.max(-1, cosAngle)));
-          const delta = Math.abs(angDist - rippleAngle);
-          if (delta < RIPPLE_THICKNESS) {
-            intensity = 1 - delta / RIPPLE_THICKNESS;
-          }
-        }
-
-        const radius =
-          SPHERE_RADIUS * (baseJitters[i] + RIPPLE_BULGE * intensity);
-        posAttr.setXYZ(i, dx * radius, dy * radius, dz * radius);
-
-        if (intensity > 0) {
-          tmpColor.copy(dustColor).lerp(accent, intensity);
-          colorAttr.setXYZ(i, tmpColor.r, tmpColor.g, tmpColor.b);
-        } else {
-          colorAttr.setXYZ(i, dustColor.r, dustColor.g, dustColor.b);
-        }
-      }
-      posAttr.needsUpdate = true;
-      colorAttr.needsUpdate = true;
-
-      const heroTravel =
-        Math.min(1, Math.max(0, window.scrollY / window.innerHeight)) * STAR_MAX_TRAVEL;
-      stepTunnelField(starField, heroTravel, 1 / 60, t, mouseWorld, STAR_INFLUENCE_RADIUS);
 
       // Gentle tilt toward the cursor, layered on top of the idle spin —
       // the "moving part" reacting to input.
@@ -284,6 +440,21 @@ export function HeroSceneDust() {
       const tiltY = pointer.x * 0.45;
       centerpiece.rotation.y = t * 0.18 + tiltY;
       centerpiece.rotation.x = Math.sin(t * 0.25) * 0.15 + tiltX;
+      centerpiece.updateMatrixWorld(true);
+
+      updateMoversAndLabels(now);
+
+      const heroTravel =
+        Math.min(1, Math.max(0, window.scrollY / window.innerHeight)) *
+        STAR_MAX_TRAVEL;
+      stepTunnelField(
+        starField,
+        heroTravel,
+        1 / 60,
+        t,
+        mouseWorld,
+        STAR_INFLUENCE_RADIUS,
+      );
 
       // Lights revolve around the centerpiece continuously.
       keyLight.position.set(
@@ -306,15 +477,33 @@ export function HeroSceneDust() {
     }
 
     function reduceMotionHeroTravel() {
-      return Math.min(1, Math.max(0, window.scrollY / window.innerHeight)) * STAR_MAX_TRAVEL;
+      return (
+        Math.min(1, Math.max(0, window.scrollY / window.innerHeight)) *
+        STAR_MAX_TRAVEL
+      );
     }
     function handleScrollStatic() {
-      stepTunnelField(starField, reduceMotionHeroTravel(), 0, 0, mouseWorld, STAR_INFLUENCE_RADIUS);
+      stepTunnelField(
+        starField,
+        reduceMotionHeroTravel(),
+        0,
+        0,
+        mouseWorld,
+        STAR_INFLUENCE_RADIUS,
+      );
       composer.render();
     }
 
     if (reduceMotion) {
-      stepTunnelField(starField, reduceMotionHeroTravel(), 0, 0, mouseWorld, STAR_INFLUENCE_RADIUS);
+      hideAllLabels();
+      stepTunnelField(
+        starField,
+        reduceMotionHeroTravel(),
+        0,
+        0,
+        mouseWorld,
+        STAR_INFLUENCE_RADIUS,
+      );
       composer.render();
       window.addEventListener("scroll", handleScrollStatic, { passive: true });
     } else {
@@ -344,7 +533,37 @@ export function HeroSceneDust() {
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="pointer-events-none h-full w-full"
-    />
+      className="pointer-events-none relative h-full w-full"
+    >
+      {Array.from({ length: MAX_CONCURRENT_MOVERS }).map((_, i) => (
+        <div
+          key={i}
+          ref={(el) => {
+            labelRefs.current[i] = el;
+          }}
+          className="pointer-events-none absolute left-0 top-0 z-10 flex items-center gap-2.5 whitespace-nowrap rounded-lg border border-border-muted bg-background-elevated/80 px-3.5 py-2.5 opacity-0 backdrop-blur-sm"
+          style={{ willChange: "transform, opacity" }}
+        >
+          <span
+            ref={(el) => {
+              labelDotRefs.current[i] = el;
+            }}
+            className="h-1.5 w-1.5 shrink-0 rounded-full"
+          />
+          <span
+            ref={(el) => {
+              labelTagRefs.current[i] = el;
+            }}
+            className="font-mono text-[10px] uppercase tracking-widest text-accent"
+          />
+          <span
+            ref={(el) => {
+              labelMsgRefs.current[i] = el;
+            }}
+            className="font-mono text-xs text-foreground-muted"
+          />
+        </div>
+      ))}
+    </div>
   );
 }

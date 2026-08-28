@@ -16,7 +16,6 @@ export function DecisionStack() {
           <Reveal delay={80}>
             <div>
               <h2 className="max-w-lg text-3xl font-black leading-[1.05] tracking-tight text-foreground sm:text-5xl">
-                One agent.{" "}
                 <span className="text-accent">Every decision on record.</span>
               </h2>
               <p className="mt-6 max-w-[46ch] text-sm leading-relaxed text-foreground-muted sm:text-base">

@@ -50,7 +50,10 @@ function buildPerformanceSeries(days: number) {
   for (let i = 0; i < days; i++) {
     const t = i / days;
     const shock = Math.exp(-(((i - SHOCK_INDEX) / 9) ** 2));
-    const noiseVault = Math.sin(i * 0.35) * 0.6 + Math.sin(i * 0.09) * 1.1;
+    const noiseVault =
+      Math.sin(i * 0.35) * 0.6 +
+      Math.sin(i * 0.09) * 1.1 +
+      Math.sin(i * 1.7) * 0.5; // higher-frequency term for day-to-day jaggedness
     const noiseBtc = Math.sin(i * 0.28) * 1.8 + Math.sin(i * 0.05) * 2.6;
     vault.push(Number((100 + t * 22 + noiseVault - shock * 3).toFixed(2)));
     btc.push(Number((100 + t * 5 + noiseBtc - shock * 16).toFixed(2)));

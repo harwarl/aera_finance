@@ -2,8 +2,12 @@ import {
   AlertTriangle,
   CircleDollarSign,
   Clock,
+  Cpu,
+  Code2,
   Layers,
+  Puzzle,
   RefreshCw,
+  Server,
   Timer,
   TrendingUp,
   Wallet,
@@ -22,14 +26,19 @@ const PROBLEMS: {
   icons: LucideIcon[];
 }[] = [
   {
-    title: "Your portfolio drifts while you sleep",
-    body: "Target allocations decay the moment markets move. By the time you check, the drift has already cost you.",
+    title: "Drift doesn't wait for you to check",
+    body: "Target allocations decay the moment markets move. By the time you notice, the drift has already cost you.",
     icons: [TrendingUp, Clock, RefreshCw, AlertTriangle],
   },
   {
-    title: "Idle cash earns nothing between decisions",
-    body: "Stablecoin balances sit uninvested waiting on your next move. Every undecided day is a day unearned.",
+    title: "Idle isn't neutral. It's a position that's losing",
+    body: "Every dollar not deployed is a decision made by default, and it's the only one earning nothing.",
     icons: [Wallet, Timer, Layers, CircleDollarSign],
+  },
+  {
+    title: "Every team rebuilds the same agent from zero",
+    body: "Vault contracts, signal pipelines, decision engines. The infrastructure behind an AI-managed portfolio gets built from scratch, again and again, by every team that wants one.",
+    icons: [Server, Cpu, Puzzle, Code2],
   },
 ];
 
@@ -41,7 +50,7 @@ export function ProblemFraming() {
           <SectionHeader label="The Gap" />
         </Reveal>
 
-        <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-3">
           {PROBLEMS.map((problem, i) => (
             <Reveal key={problem.title} delay={80 + i * 80}>
               <GlowCard className="h-full border border-border-muted rounded-xl bg-background-elevated/40 p-6 sm:p-8">
@@ -67,17 +76,18 @@ export function ProblemFraming() {
           ))}
         </div>
 
-        <Reveal delay={220} className="mt-4">
+        <Reveal delay={260} className="mt-4">
           <GlowCard className="grid grid-cols-1 items-center gap-10 border border-border-muted rounded-xl bg-background-elevated/40 p-8 sm:p-10 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="mx-auto aspect-square w-full max-w-[220px]">
               <AeraDustMark />
             </div>
             <div>
               <h3 className="max-w-lg text-2xl font-black leading-[1.05] tracking-tight text-foreground sm:text-4xl">
-                Your capital moves every second.{" "}
+                One person can&apos;t watch every position.{" "}
                 <span className="text-foreground-faint">
-                  Your attention can&apos;t.
-                </span>
+                  One team can&apos;t build every layer.
+                </span>{" "}
+                Atlas does both.
               </h3>
               <Button href="#how-it-works" className="mt-8">
                 See How It Works

@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { DashboardCard } from "@/components/shared/DashboardCard";
 import { PerformanceChart } from "@/components/shared/PerformanceChart";
 import { SegmentedToggle } from "@/components/shared/SegmentedToggle";
-import { cn } from "@/lib/utils";
 import {
   allocation,
   performanceCallout,
@@ -12,7 +11,10 @@ import {
   performanceTimeframes,
 } from "@/config/dashboard";
 
-const SEGMENT_COLORS = ["bg-accent", "bg-accent-600", "bg-border"];
+// Same three hues as the chart above it (accent, blue, amber) — two
+// near-identical lime shades read as one color at a glance, which
+// defeats the point of an allocation breakdown.
+const SEGMENT_COLORS = ["var(--accent)", "#6d8cf7", "#e0a94a"];
 
 type Timeframe = (typeof performanceTimeframes)[number]["value"];
 
@@ -30,7 +32,7 @@ export function DashboardPerformance() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs uppercase tracking-widest text-foreground-faint">
-            Performance · vs BTC
+            Vault Performance
           </span>
           <span className="flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-accent">
             <span className="h-1.5 w-1.5 animate-ticker-blink rounded-full bg-accent" />
@@ -61,8 +63,10 @@ export function DashboardPerformance() {
           {allocation.map((slice, i) => (
             <div
               key={slice.label}
-              className={SEGMENT_COLORS[i % SEGMENT_COLORS.length]}
-              style={{ width: `${slice.pct}%` }}
+              style={{
+                width: `${slice.pct}%`,
+                backgroundColor: SEGMENT_COLORS[i % SEGMENT_COLORS.length],
+              }}
             />
           ))}
         </div>
@@ -73,10 +77,8 @@ export function DashboardPerformance() {
               className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-foreground-muted"
             >
               <span
-                className={cn(
-                  "h-1.5 w-1.5 rounded-full",
-                  SEGMENT_COLORS[i % SEGMENT_COLORS.length]
-                )}
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: SEGMENT_COLORS[i % SEGMENT_COLORS.length] }}
               />
               {slice.label} · {slice.pct}%
             </span>
