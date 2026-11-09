@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { sx } from "../sx";
-import { TITLES, anchor, href, type DocId } from "./data";
+import { TITLES, TOCS, anchor, href, type DocId } from "./data";
+import { MobileSearchField, MobileToc } from "./Toc";
 
 const H2 = "margin: 8px 0 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em; scroll-margin-top: 24px";
 const P = "margin: 0; font-size: 15px; line-height: 1.7; color: #AEBBBA";
@@ -37,15 +38,53 @@ const QUICK: [string, string, string][] = [
   ["04", "Choose autonomy", "Suggest, Approve or Autopilot. Change it any time."],
 ];
 
+const QUICK_TO: DocId[] = ["home", "vault", "targets", "autonomy"];
+
+function MobileHome() {
+  return (
+    <div className="mo-only" style={sx("display: flex; flex-direction: column; gap: 22px")}>
+      <div id="start-here" style={sx("display: flex; flex-direction: column; gap: 12px")}>
+        <h1 style={sx("margin: 0; font-size: 38px; font-weight: 500; letter-spacing: -0.04em; line-height: 1.04")}>Aera <span style={{ color: "var(--accent)" }}>Docs</span></h1>
+        <p style={sx("margin: 0; font-size: 15px; line-height: 1.6; color: #AEBBBA")}>Everything about your vault, the agent that manages it and the rules it can&apos;t break.</p>
+      </div>
+      <MobileSearchField />
+      <div style={sx("display: flex; flex-direction: column")}>
+        <h2 id="quick-start" style={sx("margin: 0 0 6px; font-size: 18px; font-weight: 600; letter-spacing: -0.02em")}>Quick start</h2>
+        {QUICK.map(([n, t, d], i) => (
+          <Link key={n} href={href(QUICK_TO[i])} style={sx("min-height: 64px; display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid #121A1D; text-decoration: none; color: #E6EEEC")}>
+            <span style={sx("width: 22px; font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--accent)")}>{n}</span>
+            <span style={sx("flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px")}>
+              <b style={sx("font-size: 15px; font-weight: 600")}>{t}</b>
+              <span style={sx("font-size: 13px; color: #85939A")}>{d}</span>
+            </span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5B686D" strokeWidth="2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </Link>
+        ))}
+      </div>
+      <div id="sections" style={sx("display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px")}>
+        {TILES.map(([n, title, , cta, page]) => (
+          <Link key={n} href={href(page)} className="dx-tile" style={sx("border-radius: 16px; border: 1px solid #1A2326; background: #080C0F; padding: 14px; display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: #E6EEEC")}>
+            <span style={sx("width: 30px; height: 30px; border-radius: 9px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600")}>{n}</span>
+            <b style={sx("font-size: 14px; font-weight: 600; line-height: 1.25")}>{title}</b>
+            <span style={sx("font-size: 12px; color: var(--accent)")}>{cta} →</span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function DocsHome() {
   return (
-    <div style={sx("display: flex; flex-direction: column; gap: 30px")}>
-      <div id="start-here" style={sx("display: flex; flex-direction: column; gap: 16px")}>
+    <>
+    <MobileHome />
+    <div className="desk-only" style={sx("display: flex; flex-direction: column; gap: 30px")}>
+      <div style={sx("display: flex; flex-direction: column; gap: 16px")}>
         <span className="aera-mark" aria-hidden="true" style={sx("width: 48px; height: 48px; background: var(--accent); animation: dx-breathe 4s ease-in-out infinite")} />
         <h1 style={sx("margin: 0; font-size: 46px; font-weight: 500; letter-spacing: -0.04em; line-height: 1.04")}>Aera Docs</h1>
         <p style={sx("margin: 0; font-size: 17px; line-height: 1.6; color: #AEBBBA; max-width: 560px")}>Everything about your vault, the agent that manages it and the rules it can&apos;t break.</p>
       </div>
-      <div id="sections" className="dx-tiles" style={sx("display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px")}>
+      <div className="dx-tiles" style={sx("display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px")}>
         {TILES.map(([n, title, desc, cta, page]) => (
           <Link key={n} href={href(page)} className="dx-tile" style={sx("border-radius: 20px; border: 1px solid #1A2326; background: #080C0F; padding: 20px; display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: #E6EEEC; transition: border-color .2s")}>
             <span style={sx("width: 36px; height: 36px; border-radius: 11px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600")}>{n}</span>
@@ -56,7 +95,7 @@ export function DocsHome() {
         ))}
       </div>
       <div style={sx("display: flex; flex-direction: column; gap: 14px")}>
-        <h2 id="quick-start" style={sx("margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.02em")}>Quick start</h2>
+        <h2 style={sx("margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.02em")}>Quick start</h2>
         <div style={sx("display: flex; flex-direction: column; border-top: 1px solid #121A1D")}>
           {QUICK.map(([n, t, d]) => (
             <div key={n} className="dx-quick" style={sx("display: flex; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #121A1D")}>
@@ -68,6 +107,7 @@ export function DocsHome() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
@@ -77,9 +117,10 @@ export function DocsVault() {
     <div style={sx("display: flex; flex-direction: column; gap: 26px")}>
       <div style={sx("display: flex; flex-direction: column; gap: 12px")}>
         <span style={sx(CRUMB)}>Getting started <span style={{ color: "#263034" }}>/</span> Create your vault</span>
-        <h1 style={sx(H1)}>Create your vault</h1>
-        <p style={sx(LEAD)}>Each Aera user gets their own vault contract. Creating it takes one transaction, and from then on only your wallet can withdraw or change its rules.</p>
+        <h1 className="dx-h1" style={sx(H1)}>Create your vault</h1>
+        <p className="dx-lead" style={sx(LEAD)}>Each Aera user gets their own vault contract. Creating it takes one transaction, and from then on only your wallet can withdraw or change its rules.</p>
       </div>
+      <MobileToc toc={TOCS.vault} />
       <div style={sx("display: flex; gap: 12px; padding: 16px 18px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); background: color-mix(in srgb, var(--accent) 6%, transparent)")}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2EE6D6" strokeWidth="2" aria-hidden="true" style={sx("flex: none; margin-top: 2px")}><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z" /></svg>
         <span style={sx("font-size: 14px; line-height: 1.55; color: #AEBBBA")}><b style={sx("color: #E6EEEC; font-weight: 600")}>Your vault, your keys.</b> Aera never pools deposits. The agent can only call the rebalance function, and only inside the rules you set.</span>
@@ -130,12 +171,13 @@ export function DocsGuard() {
     <div style={sx("display: flex; flex-direction: column; gap: 26px")}>
       <div style={sx("display: flex; flex-direction: column; gap: 12px")}>
         <span style={sx(CRUMB)}>Core concepts <span style={{ color: "#263034" }}>/</span> Guardrails</span>
-        <h1 style={sx(H1)}>Guardrails</h1>
-        <p style={sx(LEAD)}>Guardrails are the rules stored in your vault contract. Every action the agent proposes is checked against them on-chain. If a rule fails, the transaction reverts.</p>
+        <h1 className="dx-h1" style={sx(H1)}>Guardrails</h1>
+        <p className="dx-lead" style={sx(LEAD)}>Guardrails are the rules stored in your vault contract. Every action the agent proposes is checked against them on-chain. If a rule fails, the transaction reverts.</p>
       </div>
 
+      <MobileToc toc={TOCS.guard} />
       {/* animated diagram */}
-      <div aria-hidden="true" style={sx("position: relative; height: 230px; border-radius: 20px; border: 1px solid #1A2326; background: #070B0E; overflow: hidden")}>
+      <div aria-hidden="true" className="dx-diagram" style={sx("position: relative; height: 230px; border-radius: 20px; border: 1px solid #1A2326; background: #070B0E; overflow: hidden")}>
         <div style={sx("position: absolute; left: 58%; top: 16px; bottom: 16px; width: 2px; margin-left: -1px; background: linear-gradient(180deg, rgba(0,0,0,0), #DFFFFB 20%, var(--accent) 50%, #DFFFFB 80%, rgba(0,0,0,0)); box-shadow: 0 0 18px var(--accent); overflow: hidden")}>
           <span style={sx("position: absolute; left: 0; width: 2px; height: 80px; background: linear-gradient(180deg, rgba(255,255,255,0), #FFFFFF, rgba(255,255,255,0)); animation: dx-shimmer 2.4s linear infinite")} />
         </div>
@@ -161,11 +203,11 @@ export function DocsGuard() {
 
       <H>Rule parameters</H>
       <div className="dx-table" style={sx("border-radius: 16px; border: 1px solid #1A2326; overflow: hidden")}>
-        <div style={sx(GRID + " padding: 12px 16px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #5B686D; background: #070B0E; border-bottom: 1px solid #121A1D")}>
+        <div className="dx-thead" style={sx(GRID + " padding: 12px 16px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #5B686D; background: #070B0E; border-bottom: 1px solid #121A1D")}>
           <span>Parameter</span><span>Example</span><span>What it does</span>
         </div>
         {PARAMS.map(([p, ex, d], i) => (
-          <div key={p} style={sx(GRID + " padding: 14px 16px; font-size: 14px" + (i < PARAMS.length - 1 ? "; border-bottom: 1px solid #121A1D" : ""))}>
+          <div key={p} className="dx-trow" style={sx(GRID + " padding: 14px 16px; font-size: 14px" + (i < PARAMS.length - 1 ? "; border-bottom: 1px solid #121A1D" : ""))}>
             <code style={sx("font-family: ui-monospace, Menlo, monospace; color: var(--accent)")}>{p}</code>
             <span>{ex}</span>
             <span style={{ color: "#AEBBBA" }}>{d}</span>
@@ -195,7 +237,7 @@ export function DocsStub({ id }: { id: DocId }) {
   return (
     <div id="overview" style={sx("display: flex; flex-direction: column; gap: 14px")}>
       <span style={sx(CRUMB)}>{group} <span style={{ color: "#263034" }}>/</span> {title}</span>
-      <h1 style={sx(H1)}>{title}</h1>
+      <h1 className="dx-h1" style={sx(H1)}>{title}</h1>
       <p style={sx("margin: 0; font-size: 16px; line-height: 1.6; color: #85939A")}>[CONTENT FOR THIS PAGE]</p>
     </div>
   );

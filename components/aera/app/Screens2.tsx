@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import { shortAddr } from "@/lib/vaultStore";
 import { sx } from "../sx";
-import { MODE_DEFS, useAppState } from "./AppShell";
+import { MODE_DEFS, PinnedBar, useAppState } from "./AppShell";
 
 const A = "var(--accent)";
 const PANEL = "border-radius: 22px; border: 1px solid #1A2326; background: #080C0F;";
@@ -31,10 +31,31 @@ export function Agent() {
   const { mode } = useAppState();
   const [label, hint] = MODE_DEFS[mode];
   return (
-    <div className="ax-grid2 ax-agent" style={sx("display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; height: calc(100vh - 68px - 56px); min-height: 560px")}>
+    <>
+    <div className="mo-only" style={sx("display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 13px; color: #85939A")}>
+      <span style={sx("width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent)")} />
+      Mode · <span style={{ color: "#E6EEEC" }}>{label}</span>
+      <Link href="/app/rules" style={sx("margin-left: auto; text-decoration: none")}>Change →</Link>
+    </div>
+    <PinnedBar>
+      <div style={sx("display: flex; flex-direction: column; gap: 10px")}>
+        <div style={sx("display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none")}>
+          {["What did you do this week?", "Show my yield", "Tighten my band"].map((s) => (
+            <button key={s} type="button" style={sx(`flex: none; font: 400 12px ${FONT}; padding: 7px 12px; border-radius: 999px; border: 1px solid #1A2326; background: rgba(0,0,0,0); color: #AEBBBA; cursor: pointer; white-space: nowrap`)}>{s}</button>
+          ))}
+        </div>
+        <label style={sx("display: flex; align-items: center; gap: 10px; height: 50px; box-sizing: border-box; padding: 0 5px 0 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14); background: #05090C")}>
+          <input type="text" placeholder="Ask Aera about your vault" aria-label="Message the agent" style={sx(`flex: 1; min-width: 0; border: 0; background: rgba(0,0,0,0); color: #E6EEEC; font: 400 15px ${FONT}; outline: none`)} />
+          <button type="button" aria-label="Send" style={sx("width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--accent); color: #04070A; display: inline-flex; align-items: center; justify-content: center; cursor: pointer")}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </button>
+        </label>
+      </div>
+    </PinnedBar>
+    <div className="ax-grid2 ax-agent ax-has-bar ax-has-bar-tall" style={sx("display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; height: calc(100vh - 68px - 56px); min-height: 560px")}>
       <div style={sx(PANEL + "display: flex; flex-direction: column; overflow: hidden")}>
         <div className="ax-scroll" role="log" aria-label="Conversation with the agent" style={sx("flex: 1; min-height: 0; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 18px")}>
-          <div style={sx(USER_BUBBLE)}>Why is TSLA out of band?</div>
+          <div className="ax-ububble" style={sx(USER_BUBBLE)}>Why is TSLA out of band?</div>
           <div style={sx("display: flex; gap: 12px; max-width: 82%")}>
             {AVATAR}
             <div style={sx(AGENT_BODY)}>
@@ -50,7 +71,7 @@ export function Agent() {
               </div>
             </div>
           </div>
-          <div style={sx(USER_BUBBLE)}>Fix it, and move any spare cash into yield.</div>
+          <div className="ax-ububble" style={sx(USER_BUBBLE)}>Fix it, and move any spare cash into yield.</div>
           <div style={sx("display: flex; gap: 12px; max-width: 82%")}>
             {AVATAR}
             <div style={sx("flex: 1; " + AGENT_BODY)}>
@@ -71,7 +92,7 @@ export function Agent() {
             </span>
           </div>
         </div>
-        <div style={sx("padding: 14px 18px 18px; border-top: 1px solid #121A1D; display: flex; flex-direction: column; gap: 10px")}>
+        <div className="desk-only" style={sx("padding: 14px 18px 18px; border-top: 1px solid #121A1D; display: flex; flex-direction: column; gap: 10px")}>
           <div style={sx("display: flex; gap: 8px; flex-wrap: wrap")}>
             {["What did you do this week?", "Show my yield", "Tighten my band"].map((s) => (
               <button key={s} type="button" style={sx(`font: 400 12px ${FONT}; padding: 6px 12px; border-radius: 999px; border: 1px solid #1A2326; background: rgba(0,0,0,0); color: #AEBBBA; cursor: pointer`)}>{s}</button>
@@ -85,7 +106,7 @@ export function Agent() {
           </label>
         </div>
       </div>
-      <div style={sx("display: flex; flex-direction: column; gap: 18px")}>
+      <div className="desk-only" style={sx("display: flex; flex-direction: column; gap: 18px")}>
         <div style={sx(PANEL + "padding: 20px; display: flex; flex-direction: column; gap: 12px")}>
           <b style={sx("font-size: 14px; font-weight: 600")}>What the agent can do</b>
           {CAN(true, "Read your vault and prices")}
@@ -101,6 +122,7 @@ export function Agent() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
@@ -122,7 +144,7 @@ const LOG: [string, [keyof typeof IC, Cat, string, string, string, string][]][] 
 const FILTERS: ["all" | Cat, string][] = [["all", "All"], ["r", "Rebalances"], ["y", "Yield"], ["g", "Guardrails"], ["d", "Deposits & withdrawals"]];
 const amtColor = (amt: string) => (amt.startsWith("+") ? A : amt === "Rejected" ? "#FF7A88" : amt === "Held" || amt === "Flagged" ? "#FFBA5C" : "#E6EEEC");
 
-function exportCsv() {
+export function exportCsv() {
   const rows = [["day", "title", "detail", "amount", "tx"], ...LOG.flatMap(([day, items]) => items.map(([, , t, m, amt, tx]) => [day, t, m, amt, tx]))];
   const csv = rows.map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(",")).join("\n");
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
@@ -139,7 +161,7 @@ export function Activity() {
   return (
     <div className="ax-grid2" style={sx("display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start")}>
       <div style={sx(PANEL + "padding: 20px 24px; display: flex; flex-direction: column; gap: 14px")}>
-        <div role="group" aria-label="Filter activity" style={sx("display: flex; align-items: center; gap: 8px; flex-wrap: wrap")}>
+        <div role="group" aria-label="Filter activity" className="ax-filters" style={sx("display: flex; align-items: center; gap: 8px; flex-wrap: wrap")}>
           {FILTERS.map(([id, label]) => (
             <button
               key={id}
@@ -151,7 +173,7 @@ export function Activity() {
               {label}
             </button>
           ))}
-          <button type="button" onClick={exportCsv} style={sx(`margin-left: auto; height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid #1A2326; background: rgba(0,0,0,0); color: #AEBBBA; font: 500 13px ${FONT}; display: inline-flex; align-items: center; gap: 8px; cursor: pointer`)}>
+          <button type="button" onClick={exportCsv} className="desk-only" style={sx(`margin-left: auto; height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid #1A2326; background: rgba(0,0,0,0); color: #AEBBBA; font: 500 13px ${FONT}; display: inline-flex; align-items: center; gap: 8px; cursor: pointer`)}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>Export CSV
           </button>
         </div>
@@ -172,7 +194,7 @@ export function Activity() {
         ))}
         {days.length === 0 && <span style={sx("padding: 30px 0; text-align: center; font-size: 14px; color: #5B686D")}>Nothing of this type yet.</span>}
       </div>
-      <div style={sx("display: flex; flex-direction: column; gap: 18px")}>
+      <div className="desk-only" style={sx("display: flex; flex-direction: column; gap: 18px")}>
         <div style={sx(PANEL + "padding: 20px 22px; display: flex; flex-direction: column; gap: 14px")}>
           <b style={sx("font-size: 14px; font-weight: 600")}>This month</b>
           <div style={sx("display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px")}>
@@ -243,7 +265,7 @@ export function Settings() {
 
   return (
     <div className="ax-settings" style={sx("display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 24px; align-items: start")}>
-      <nav aria-label="Settings sections" className="ax-setnav" style={sx("display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0")}>
+      <nav aria-label="Settings sections" className="ax-setnav desk-only" style={sx("display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0")}>
         {SECS.map(([id, l]) => (
           <button
             key={id}
@@ -302,7 +324,7 @@ export function Settings() {
           </section>
         )}
         {show("display") && (
-          <section style={sx(PANEL + "padding: 22px 24px; display: flex; flex-direction: column")}>
+          <section className="desk-only" style={sx(PANEL + "padding: 22px 24px; display: flex; flex-direction: column")}>
             <h2 style={sx("margin: 0; font-size: 16px; font-weight: 600; padding-bottom: 12px")}>Display</h2>
             <div style={sx(S_ROW)}><b style={sx("font-size: 14px; font-weight: 500")}>Currency</b><Seg label="Currency" opts={["USD", "ETH"]} /></div>
             <div style={sx(S_LAST)}><b style={sx("font-size: 14px; font-weight: 500")}>Weights shown as</b><Seg label="Weights shown as" opts={["Percent", "Value"]} /></div>

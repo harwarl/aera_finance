@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import { useAccount } from "wagmi";
 import { shortAddr, useVault } from "@/lib/vaultStore";
+import { exportCsv } from "./Screens2";
 import { sx } from "../sx";
 
 /* Shared sample state for every /app screen (BUILD.md §8):
@@ -55,7 +56,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <AppState.Provider value={{ mode, setMode, approved, approve: () => setApproved(true), band, setBand }}>
       <div className="ax-root" style={sx("position: relative; height: 100vh; overflow: hidden; background: #04070A; color: #E6EEEC; display: flex")}>
         {/* SIDEBAR */}
-        <aside className="ax-side" style={sx("width: 248px; flex: none; box-sizing: border-box; padding: 20px 14px; border-right: 1px solid #121A1D; background: #05090C; display: flex; flex-direction: column; gap: 18px")}>
+        <aside className="ax-side desk-only" style={sx("width: 248px; flex: none; box-sizing: border-box; padding: 20px 14px; border-right: 1px solid #121A1D; background: #05090C; display: flex; flex-direction: column; gap: 18px")}>
           <Link href="/" style={sx("display: flex; align-items: center; gap: 10px; padding: 4px 8px; color: #E6EEEC; text-decoration: none")}>
             <span className="aera-mark" aria-hidden="true" style={sx("width: 24px; height: 24px; background: var(--accent); filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 45%, transparent))")} />
             <b style={sx("font-size: 16px; font-weight: 600; letter-spacing: -0.01em")}>Aera</b>
@@ -119,7 +120,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* MAIN */}
         <div style={sx("flex: 1; min-width: 0; display: flex; flex-direction: column")}>
-          <header className="ax-top" style={sx("height: 68px; flex: none; box-sizing: border-box; padding: 0 28px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #121A1D")}>
+          <header className="ax-top desk-only" style={sx("height: 68px; flex: none; box-sizing: border-box; padding: 0 28px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #121A1D")}>
             <h1 style={sx("margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -0.02em")}>{title}</h1>
             {/* Remove once wired to real data (BUILD.md §8). */}
             <span style={sx("font-size: 11px; padding: 4px 9px; border-radius: 999px; border: 1px solid #263034; color: #85939A; white-space: nowrap")}>Sample data</span>
@@ -132,11 +133,89 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <button type="button" className="ax-btn-w" style={sx("height: 40px; padding: 0 20px; border-radius: 999px; border: 0; background: #FFFFFF; color: #04070A; font: 600 14px var(--font-geist), Geist, sans-serif; cursor: pointer")}>Deposit</button>
             </div>
           </header>
+          <MobileTop path={path} title={title} approved={approved} vault={vault?.vault} />
           <main className="ax-scroll ax-main" style={sx("flex: 1; min-height: 0; overflow-y: auto; padding: 24px 28px 32px; box-sizing: border-box")}>
+            {path !== "/app/settings" && (
+              <div className="mo-only" style={sx("display: flex; align-items: center; gap: 10px; margin-bottom: 16px")}>
+                <h1 style={sx("margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.03em")}>{title}</h1>
+                <span style={sx("font-size: 11px; padding: 4px 9px; border-radius: 999px; border: 1px dashed #263034; color: #85939A; white-space: nowrap")}>Sample data</span>
+                {path === "/app/activity" && (
+                  <button type="button" aria-label="Export CSV" onClick={exportCsv} style={sx("margin-left: auto; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #1A2326; background: rgba(0,0,0,0); color: #AEBBBA; display: inline-flex; align-items: center; justify-content: center; cursor: pointer")}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
+                  </button>
+                )}
+              </div>
+            )}
             {children}
           </main>
         </div>
       </div>
+      <TabBar path={path} approved={approved} />
     </AppState.Provider>
+  );
+}
+
+/* ---------------- phones (design.md §10 App) ---------------- */
+const ICON_BTN = "width: 38px; height: 38px; flex: none; border-radius: 50%; border: 1px solid #1A2326; background: rgba(0,0,0,0); color: #AEBBBA; display: inline-flex; align-items: center; justify-content: center; position: relative; cursor: pointer; text-decoration: none";
+const GEAR = "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2";
+
+function MobileTop({ path, title, approved, vault }: { path: string; title: string; approved: boolean; vault?: string }) {
+  const settings = path === "/app/settings";
+  return (
+    <header className="mo-only" style={sx("height: 64px; flex: none; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #121A1D; position: sticky; top: 0; z-index: 20; background: rgba(4,7,10,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px)")}>
+      {settings ? (
+        <>
+          <Link href="/app" aria-label="Back" style={sx(ICON_BTN)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+          </Link>
+          <h1 style={sx("margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; margin-right: auto")}>{title}</h1>
+        </>
+      ) : (
+        <button type="button" style={sx("display: flex; align-items: center; gap: 9px; margin-right: auto; padding: 0; border: 0; background: rgba(0,0,0,0); color: #E6EEEC; font: 400 13px var(--font-geist), Geist, sans-serif; text-align: left; cursor: pointer")}>
+          <span className="aera-mark" aria-hidden="true" style={sx("width: 24px; height: 24px; background: var(--accent)")} />
+          <span style={sx("display: flex; flex-direction: column")}>
+            <b style={sx("font-size: 14px; font-weight: 600")}>My vault</b>
+            <span style={sx("font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #5B686D")}>{vault ?? "—"} ▾</span>
+          </span>
+        </button>
+      )}
+      <button type="button" aria-label={approved ? "Notifications" : "Notifications, 1 waiting"} style={sx(ICON_BTN)}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" /><path d="M10 20a2 2 0 0 0 4 0" /></svg>
+        {!approved && <span style={sx("position: absolute; top: 8px; right: 9px; width: 7px; height: 7px; border-radius: 50%; background: #FF5A6A")} />}
+      </button>
+      <Link href="/app/settings" aria-label="Settings" aria-current={settings ? "page" : undefined} style={sx(ICON_BTN + (settings ? "; color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 10%, transparent)" : ""))}>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d={GEAR} /></svg>
+      </Link>
+    </header>
+  );
+}
+
+function TabBar({ path, approved }: { path: string; approved: boolean }) {
+  return (
+    <nav aria-label="App" className="mo-only" style={sx("position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; height: 82px; box-sizing: border-box; padding: 6px 6px 22px; display: flex; background: rgba(5,9,12,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid #121A1D")}>
+      {NAV.slice(0, 5).map(([to, label, d]) => {
+        const on = to === path;
+        return (
+          <Link key={to} href={to} aria-current={on ? "page" : undefined} style={sx("flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; position: relative; color: " + (on ? "#E6EEEC" : "#85939A"))}>
+            <span style={sx("width: 44px; height: 28px; border-radius: 999px; display: flex; align-items: center; justify-content: center; background: " + (on ? "color-mix(in srgb, var(--accent) 12%, transparent)" : "rgba(0,0,0,0)"))}>
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke={on ? "var(--accent)" : "#5B686D"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d} /></svg>
+            </span>
+            <span style={sx("font-size: 11px")}>{label}</span>
+            {to === "/app/proposals" && !approved && (
+              <span aria-label="1 waiting" style={sx("position: absolute; top: 2px; left: calc(50% + 10px); min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 999px; background: #FFBA5C; color: #04070A; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center")}>1</span>
+            )}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
+/** Bar pinned above the tab bar on phones (Proposals, Rules, Agent). */
+export function PinnedBar({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mo-only" style={sx("position: fixed; left: 0; right: 0; bottom: 82px; z-index: 25; padding: 12px 16px; box-sizing: border-box; background: rgba(4,7,10,0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid #121A1D")}>
+      {children}
+    </div>
   );
 }

@@ -15,17 +15,35 @@
 
 /* Phone: the references are 1440×900 boards; stack the copy and drop the
    decorative right-hand column so nothing overflows (BUILD.md §12). */
+/* Phones (design.md §10 Waitlist): queue in the top 330px, everything else
+   pinned to the bottom; joined puts the position at top 104 and the referral
+   block at the bottom. */
 @media (max-width:860px){
-.aera .wl-head,.aera .nf-head{padding:0 20px !important}
-.aera .wl-queue{display:none}
-.aera .wl-left{left:20px !important;right:20px !important;width:auto !important;padding:96px 0 48px;position:relative !important;min-height:100vh}
-.aera .wl-h1{font-size:48px !important}
-.aera .wl-pos{font-size:88px !important}
-.aera .wl-ref{flex-wrap:wrap}
+.aera .wl-head{height:64px !important;padding:0 20px !important}
+.aera .wl-root{display:flex;flex-direction:column;min-height:100svh !important}
+.aera .wl-queue{left:0 !important;right:0 !important;top:64px !important;bottom:auto !important;width:auto !important;height:266px;-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,0),#000 22%,#000 60%,rgba(0,0,0,0)) !important;mask-image:linear-gradient(180deg,rgba(0,0,0,0),#000 22%,#000 60%,rgba(0,0,0,0)) !important}
+.aera .wl-queue > div:first-child{width:320px !important;height:320px !important;margin:-160px 0 0 -160px !important}
+.aera .wl-qmark{width:230px !important;height:230px !important;margin:-115px 0 0 -115px !important}
+.aera .wl-qlist{left:20px !important;right:20px !important;animation:mo-up 30s linear infinite !important}
+.aera .wl-qrow{height:44px !important}
+.aera .is-joined .wl-queue{display:none}
+.aera .wl-left{position:relative !important;left:auto !important;top:auto !important;bottom:auto !important;width:auto !important;flex:1;justify-content:flex-end !important;padding:330px 20px 24px;gap:14px !important}
+.aera .wl-head{background:#04070A}
+.aera .is-joined .wl-left{padding-top:104px}
+.aera .wl-join,.aera .wl-done{gap:16px !important;animation-name:mo-rise !important}
+.aera .wl-done{flex:1}
+.aera .wl-refblock{margin-top:auto;padding-top:20px !important}
+.aera .wl-h1{font-size:46px !important}
+.aera .wl-join p{font-size:15px !important}
+.aera .wl-submit{flex-direction:column;align-items:stretch !important;gap:10px !important;text-align:center}
+.aera .wl-submit button{width:100%}
+.aera .wl-foot{text-align:center;max-width:none !important}
+.aera .wl-pos{font-size:100px !important;animation-name:mo-pop !important}
+.aera .wl-ref{flex-direction:column;align-items:stretch !important}
+.aera .wl-ref > .wl-in{height:54px;box-sizing:border-box}
 .aera .wl-ref code{font-size:13px !important}
-.aera .nf-wall{transform:scale(.6);transform-origin:72% 35%}
-.aera .nf-copy{left:20px !important;right:20px !important;width:auto !important;bottom:48px !important}
-.aera .nf-copy h1{font-size:44px !important}
+.aera .wl-ref > a{width:100%;justify-content:center;height:50px !important}
+.aera .wl-bar{width:30px !important}
 }
 
 /* Connect · Layout C (design.md §8, animations.md §15). */
@@ -43,11 +61,30 @@
 @media (max-width:1100px){
 .aera .cx-stage{transform:scale(.8);transform-origin:80% 40%}
 }
+/* Phones: layout C (design.md §10 Connect). Top bar 64, ring 260 at top 74,
+   content pinned to the bottom, full-width stacked actions. */
 @media (max-width:860px){
-.aera .cx-head{padding:0 20px !important}
-.aera .cx-stage{position:relative !important;height:380px;margin-top:76px;transform:none}
-.aera .cx-stage > div:first-child,.aera .cx-ring,.aera .cx-centre{left:50% !important}
-.aera .cx-ring{width:560px !important;height:560px !important;transform:translate(-50%,-50%) scale(.6) !important}
-.aera .cx-panel{position:relative !important;left:auto !important;bottom:auto !important;width:auto !important;padding:0 20px 56px}
-.aera .cx-h1{font-size:48px !important}
+.aera .cx-root{display:flex;flex-direction:column;min-height:100svh !important}
+.aera .cx-head{height:64px !important;padding:0 20px !important}
+.aera .cx-panel{position:relative !important;left:auto !important;bottom:auto !important;width:auto !important;margin-top:auto;padding:24px 20px 28px}
+.aera .cx-block{gap:14px !important;animation-name:mo-rise !important}
+.aera .cx-h1{font-size:40px !important}
+.aera .cx-body{font-size:14px !important}
+.aera .cx-row{height:62px !important;padding:0 14px !important;gap:12px !important}
+.aera .cx-row > span:first-child{width:36px !important;height:36px !important;font-size:14px !important}
+.aera .cx-actions{flex-direction:column;align-items:stretch !important}
+.aera .cx-actions > a,.aera .cx-actions > button{width:100%;justify-content:center}
+}
+
+/* 404 on phones (design.md §10, animations.md §17): horizontal wall. */
+@keyframes mo-hit{0%{transform:translateY(-220px);opacity:0}10%{opacity:1}38%{transform:translateY(0)}48%{transform:translateY(-30px) rotate(-4deg)}70%,100%{transform:translateY(-70px) rotate(-7deg);opacity:0}}
+@keyframes mo-shimx{0%{left:-90px}100%{left:100%}}
+@media (max-width:860px){
+.aera .nf-root{min-height:100svh !important}
+.aera .nf-head{height:64px !important;padding:0 20px !important}
+.aera .nf-copy{left:20px !important;right:20px !important;width:auto !important;bottom:28px !important;gap:16px !important;animation-name:mo-rise !important}
+.aera .nf-copy h1{font-size:44px !important}
+.aera .nf-copy p{font-size:15px !important}
+.aera .nf-actions{flex-direction:column}
+.aera .nf-actions > a{width:100%;justify-content:center}
 }

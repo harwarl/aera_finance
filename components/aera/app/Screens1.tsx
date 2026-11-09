@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { sx } from "../sx";
-import { MODE_DEFS, useAppState, type Mode } from "./AppShell";
+import { MODE_DEFS, PinnedBar, useAppState, type Mode } from "./AppShell";
 
 const A = "var(--accent)";
 const PANEL = "border-radius: 22px; border: 1px solid #1A2326; background: #080C0F;";
@@ -58,7 +58,18 @@ export function Overview() {
   const [main, cents] = useLiveValue();
   return (
     <div style={sx("display: flex; flex-direction: column; gap: 18px")}>
-      <div className="ax-banner" style={sx("display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 18px; border: 1px solid rgba(255,122,136,0.35); background: linear-gradient(90deg, rgba(255,90,106,0.10), rgba(255,90,106,0.02))")}>
+      <div className="mo-only" style={sx("display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(255,122,136,0.35); background: linear-gradient(90deg, rgba(255,90,106,0.10), rgba(255,90,106,0.02))")}>
+        <span style={sx("position: relative; width: 10px; height: 10px; flex: none")}>
+          <span style={sx("position: absolute; inset: 0; border-radius: 50%; background: #FF5A6A")} />
+          <span style={sx("position: absolute; inset: 0; border-radius: 50%; border: 2px solid #FF5A6A; animation: mo-ping 1.6s ease-out infinite")} />
+        </span>
+        <span style={sx("flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px")}>
+          <b style={sx("font-size: 14px; font-weight: 600")}>TSLA drifted out of band.</b>
+          <span style={sx("font-size: 12px; color: #AEBBBA")}>Proposal #014 is ready</span>
+        </span>
+        <Link href="/app/proposals" style={sx("height: 32px; padding: 0 13px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 12px; font-weight: 600; text-decoration: none")}>Review</Link>
+      </div>
+      <div className="ax-banner desk-only" style={sx("display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 18px; border: 1px solid rgba(255,122,136,0.35); background: linear-gradient(90deg, rgba(255,90,106,0.10), rgba(255,90,106,0.02))")}>
         <span style={sx("position: relative; width: 10px; height: 10px; flex: none")}>
           <span style={sx("position: absolute; inset: 0; border-radius: 50%; background: #FF5A6A")} />
           <span style={sx("position: absolute; inset: 0; border-radius: 50%; border: 2px solid #FF5A6A; animation: ax-ping 1.6s ease-out infinite")} />
@@ -68,14 +79,14 @@ export function Overview() {
       </div>
 
       <div className="ax-grid2" style={sx("display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 18px")}>
-        <div style={sx(PANEL + "padding: 22px 24px; display: flex; flex-direction: column; gap: 14px")}>
+        <div className="ax-valpanel" style={sx(PANEL + "padding: 22px 24px; display: flex; flex-direction: column; gap: 14px")}>
           <div style={sx("display: flex; justify-content: space-between; align-items: flex-start; gap: 12px")}>
             <div style={sx("display: flex; flex-direction: column; gap: 6px")}>
               <span style={sx("font-size: 13px; color: #85939A")}>Vault value</span>
-              <span style={sx("font-size: 44px; font-weight: 500; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums")}>{main}<span style={{ color: "#5B686D" }}>{cents}</span></span>
+              <span className="ax-value" style={sx("font-size: 44px; font-weight: 500; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums")}>{main}<span style={{ color: "#5B686D" }}>{cents}</span></span>
               <span style={sx("font-size: 13px; color: var(--accent)")}>+1.8% · 7 days</span>
             </div>
-            <div style={sx(SEG)}>
+            <div className="ax-range" style={sx(SEG)}>
               <span style={sx("padding: 6px 12px; color: #85939A")}>24h</span>
               <span style={sx("padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.08)")}>7d</span>
               <span style={sx("padding: 6px 12px; color: #85939A")}>30d</span>
@@ -89,13 +100,22 @@ export function Overview() {
           </svg>
         </div>
         <div style={sx("display: flex; flex-direction: column; gap: 18px")}>
-          <div style={sx(PANEL + "padding: 20px 22px; display: flex; flex-direction: column; gap: 12px")}>
+          <div className="mo-only" style={sx(PANEL + "padding: 16px 18px; display: flex; align-items: center; gap: 14px")}>
+            <span style={sx("display: flex; flex-direction: column; gap: 2px")}>
+              <span style={sx("font-size: 12px; color: #85939A")}>Idle USDG · earning</span>
+              <b style={sx("font-size: 20px; font-weight: 500; letter-spacing: -0.02em")}>$2,496.06</b>
+            </span>
+            <span aria-hidden="true" style={sx("margin-left: auto; display: flex; gap: 3px")}>
+              {Array.from({ length: 12 }, (_, i) => <span key={i} style={sx("width: 4px; height: 18px; border-radius: 2px; background: #B4A6FF; box-shadow: 0 0 8px rgba(180,166,255,.35)")} />)}
+            </span>
+          </div>
+          <div className="desk-only" style={sx(PANEL + "padding: 20px 22px; display: flex; flex-direction: column; gap: 12px")}>
             <div style={sx("display: flex; justify-content: space-between; font-size: 13px; color: #85939A")}><span>Idle cash · USDG</span><span style={{ color: "#B4A6FF" }}>Earning</span></div>
             <span style={sx("font-size: 30px; font-weight: 500; letter-spacing: -0.03em")}>$2,496.06</span>
             <div style={sx("height: 10px; background: repeating-linear-gradient(90deg, #B4A6FF 0 6px, rgba(0,0,0,0) 6px 8px); box-shadow: 0 0 16px rgba(180,166,255,0.3)")} />
             <span style={sx("font-size: 12px; color: #5B686D")}>Routed to on-chain yield · [RATE] APY · pulled back for rebalances</span>
           </div>
-          <div style={sx(PANEL + "padding: 20px 22px; display: flex; flex-direction: column; gap: 12px")}>
+          <div className="desk-only" style={sx(PANEL + "padding: 20px 22px; display: flex; flex-direction: column; gap: 12px")}>
             <div style={sx("display: flex; justify-content: space-between; font-size: 13px; color: #85939A")}><span>Guardrails</span><Link href="/app/rules" style={{ textDecoration: "none" }}>Edit</Link></div>
             <div style={sx("display: flex; flex-wrap: wrap; gap: 8px")}>
               {["Max trade 10%", "4 assets", "Slippage 0.5%", "Cooldown 2h"].map((c) => <span key={c} style={sx(GUARD_CHIP)}>{c}</span>)}
@@ -107,7 +127,7 @@ export function Overview() {
       <div className="ax-grid2" style={sx("display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 18px")}>
         <div style={sx(PANEL + "padding: 20px 24px; display: flex; flex-direction: column; gap: 4px")}>
           <div style={sx("display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 8px")}><b style={sx("font-size: 15px; font-weight: 600")}>Allocation vs target</b><span style={sx("font-size: 12px; color: #5B686D")}>Band ±3%</span></div>
-          <div className="ax-alloc" style={sx("display: grid; grid-template-columns: 120px 70px 70px minmax(0, 1fr); gap: 16px; padding: 6px 0; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #5B686D")}><span>Asset</span><span>Now</span><span>Target</span><span>Position in band</span></div>
+          <div className="ax-alloc ax-allochead" style={sx("display: grid; grid-template-columns: 120px 70px 70px minmax(0, 1fr); gap: 16px; padding: 6px 0; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #5B686D")}><span>Asset</span><span>Now</span><span>Target</span><span>Position in band</span></div>
           {ASSETS.map((a) => (
             <div key={a.t} className="ax-row ax-alloc" style={sx("display: grid; grid-template-columns: 120px 70px 70px minmax(0, 1fr); gap: 16px; align-items: center; padding: 12px 0; border-top: 1px solid #121A1D")}>
               <span style={sx("display: flex; align-items: center; gap: 10px")}>
@@ -123,7 +143,7 @@ export function Overview() {
             </div>
           ))}
         </div>
-        <div style={sx(PANEL + "padding: 20px 22px; display: flex; flex-direction: column; gap: 4px")}>
+        <div className="desk-only" style={sx(PANEL + "padding: 20px 22px; display: flex; flex-direction: column; gap: 4px")}>
           <div style={sx("display: flex; justify-content: space-between; padding-bottom: 8px")}>
             <b style={sx("font-size: 15px; font-weight: 600")}>Recent activity</b>
             <span style={sx("display: flex; align-items: center; gap: 6px; font-size: 12px; color: #5B686D")}><span style={sx("width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: ax-pulse 2s ease-in-out infinite")} />Live</span>
@@ -164,12 +184,26 @@ const BAR = (parts: [string, number][]) => (
 export function Proposals() {
   const { approved, approve } = useAppState();
   return (
-    <div className="ax-grid2" style={sx("display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start")}>
+    <>
+    <PinnedBar>
+      {!approved ? (
+        <div style={sx("display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px")}>
+          <button type="button" onClick={approve} style={sx("height: 50px; border: 0; border-radius: 999px; background: #FFFFFF; color: #04070A; font: 600 15px var(--font-geist), Geist, sans-serif; cursor: pointer")}>Approve and sign</button>
+          <button type="button" style={sx("height: 50px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.22); background: rgba(0,0,0,0.5); color: #E6EEEC; font: 500 15px var(--font-geist), Geist, sans-serif; cursor: pointer")}>Decline</button>
+        </div>
+      ) : (
+        <div role="status" style={sx("display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 16px; border-radius: 14px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); font-size: 13px; animation: mo-pop .6s cubic-bezier(.22,1,.36,1) both")}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M5 12l4 4 10-10" /></svg>
+          Signed and submitted · tx 0x91…4e
+        </div>
+      )}
+    </PinnedBar>
+    <div className="ax-grid2 ax-has-bar" style={sx("display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start")}>
       <div style={sx("border-radius: 24px; border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 7%, transparent), rgba(255,255,255,0.01)), #080C0F; padding: 24px 26px; display: flex; flex-direction: column; gap: 20px; animation: ax-glow 4s ease-in-out infinite")}>
         <div style={sx("display: flex; justify-content: space-between; align-items: flex-start; gap: 12px")}>
           <div style={sx("display: flex; flex-direction: column; gap: 6px")}>
             <span style={sx("font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #85939A")}>Proposal #014 · by agent · 4 min ago</span>
-            <b style={sx("font-size: 26px; font-weight: 600; letter-spacing: -0.03em")}>Bring TSLA back to 25%</b>
+            <b className="ax-ptitle" style={sx("font-size: 26px; font-weight: 600; letter-spacing: -0.03em")}>Bring TSLA back to 25%</b>
           </div>
           {approved
             ? <span style={sx("font-size: 12px; padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); white-space: nowrap")}>Executed</span>
@@ -201,13 +235,13 @@ export function Proposals() {
           </div>
         </div>
         {!approved ? (
-          <div style={sx("display: flex; align-items: center; gap: 10px; padding-top: 4px; flex-wrap: wrap")}>
+          <div className="desk-only" style={sx("display: flex; align-items: center; gap: 10px; padding-top: 4px; flex-wrap: wrap")}>
             <button type="button" className="ax-btn-w" onClick={approve} style={sx("height: 46px; padding: 0 24px; border-radius: 999px; border: 0; background: #FFFFFF; color: #04070A; font: 600 15px var(--font-geist), Geist, sans-serif; cursor: pointer; box-shadow: 0 0 30px rgba(255,255,255,0.16)")}>Approve and sign</button>
             <button type="button" style={sx("height: 46px; padding: 0 22px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.22); background: rgba(0,0,0,0.5); color: #E6EEEC; font: 500 15px var(--font-geist), Geist, sans-serif; cursor: pointer")}>Decline</button>
             <span style={sx("margin-left: auto; font-size: 12px; color: #5B686D")}>Est. gas [GAS] · executes in one transaction</span>
           </div>
         ) : (
-          <div role="status" style={sx("display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 14px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); font-size: 14px")}>
+          <div role="status" className="desk-only" style={sx("display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 14px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); font-size: 14px")}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M5 12l4 4 10-10" /></svg>
             Signed and submitted · tx 0x91…4e · vault back on target
           </div>
@@ -218,7 +252,7 @@ export function Proposals() {
           <span style={sx("display: flex; align-items: center; gap: 8px; font-size: 13px; color: #85939A")}><span className="aera-mark" aria-hidden="true" style={sx("width: 14px; height: 14px; background: var(--accent)")} />Why the agent proposed this</span>
           <p style={sx("margin: 0; font-size: 14px; line-height: 1.6; color: #AEBBBA")}>TSLA rose faster than the rest of the vault and passed the top of its ±3% band. Selling the excess and spreading it across the underweight assets returns every weight to target in one trade.</p>
         </div>
-        <div style={sx(PANEL + "padding: 20px 22px; display: flex; flex-direction: column")}>
+        <div className="desk-only" style={sx(PANEL + "padding: 20px 22px; display: flex; flex-direction: column")}>
           <b style={sx("font-size: 15px; font-weight: 600; padding-bottom: 8px")}>Earlier proposals</b>
           {EARLIER.map(([t, s, c]) => (
             <div key={t} style={sx("display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid #121A1D; font-size: 13px")}><span>{t}</span><span style={{ color: c }}>{s}</span></div>
@@ -226,6 +260,7 @@ export function Proposals() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
@@ -234,11 +269,11 @@ const PCT_BOX = "display: flex; align-items: center; gap: 4px; padding: 0 10px; 
 const PCT_INPUT = "width: 32px; border: 0; background: rgba(0,0,0,0); color: #E6EEEC; font: 500 14px var(--font-geist), Geist, sans-serif; text-align: right; outline: none";
 const ROW = "display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid #121A1D";
 
-function NumField({ label, value, unit }: { label: string; value: string; unit: string }) {
+function NumField({ label, value, unit, onEdit }: { label: string; value: string; unit: string; onEdit?: () => void }) {
   const [v, setV] = useState(value);
   return (
     <label style={sx(PCT_BOX)}>
-      <input type="text" inputMode="decimal" value={v} onChange={(e) => setV(e.target.value)} aria-label={label} style={sx(PCT_INPUT)} />
+      <input type="text" inputMode="decimal" value={v} onChange={(e) => { setV(e.target.value); onEdit?.(); }} aria-label={label} style={sx(PCT_INPUT)} />
       <span style={{ color: "#5B686D" }}>{unit}</span>
     </label>
   );
@@ -246,8 +281,18 @@ function NumField({ label, value, unit }: { label: string; value: string; unit: 
 
 export function Rules() {
   const { mode, setMode, band, setBand } = useAppState();
+  const [dirty, setDirty] = useState(false);
+  const edit = () => setDirty(true);
   return (
-    <div style={sx("display: flex; flex-direction: column; gap: 18px")}>
+    <div className={dirty ? "ax-has-bar" : undefined} style={sx("display: flex; flex-direction: column; gap: 18px")}>
+      {dirty && (
+        <PinnedBar>
+          <div style={sx("display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 14px; border-radius: 16px; border: 1px solid rgba(255,186,92,0.4); background: rgba(255,186,92,0.08)")}>
+            <span style={sx("flex: 1; font-size: 13px; color: #FFBA5C")}>Unsaved changes</span>
+            <button type="button" onClick={() => setDirty(false)} style={sx("height: 40px; padding: 0 18px; border: 0; border-radius: 999px; background: #FFFFFF; color: #04070A; font: 600 14px var(--font-geist), Geist, sans-serif; cursor: pointer")}>Save and sign</button>
+          </div>
+        </PinnedBar>
+      )}
       <div style={sx(PANEL + "padding: 22px 24px; display: flex; flex-direction: column; gap: 14px")}>
         <div style={sx("display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap")}><b style={sx("font-size: 15px; font-weight: 600")}>Autonomy</b><span style={sx("font-size: 12px; color: #5B686D")}>How much the agent decides on its own</span></div>
         <div role="radiogroup" aria-label="Autonomy" className="ax-grid3" style={sx("display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px")}>
@@ -259,7 +304,7 @@ export function Rules() {
                 type="button"
                 role="radio"
                 aria-checked={on}
-                onClick={() => setMode(id)}
+                onClick={() => { setMode(id); edit(); }}
                 style={sx("display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 16px; text-align: left; cursor: pointer; font-family: var(--font-geist), Geist, sans-serif; color: #E6EEEC; background: " + (on ? "color-mix(in srgb, var(--accent) 8%, #080C0F)" : "#05090C") + "; border: 1px solid " + (on ? "color-mix(in srgb, var(--accent) 55%, transparent); box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 14%, transparent)" : "#1A2326"))}
               >
                 <b style={sx("font-size: 15px; font-weight: 600")}>{label}</b>
@@ -277,12 +322,12 @@ export function Rules() {
               <span style={sx(a.chip)}>{a.ab}</span>
               <b style={sx("width: 64px; font-size: 14px; font-weight: 600")}>{a.t}</b>
               <span style={sx("flex: 1; height: 6px; border-radius: 3px; background: #121A1D; position: relative")}><span style={sx(a.fill)} /></span>
-              <NumField label={`${a.t} target`} value={String(a.target)} unit="%" />
+              <NumField label={`${a.t} target`} value={String(a.target)} unit="%" onEdit={edit} />
             </div>
           ))}
           <div style={sx("display: flex; flex-direction: column; gap: 10px; padding-top: 6px; border-top: 1px solid #121A1D")}>
             <div style={sx("display: flex; justify-content: space-between; font-size: 14px; padding-top: 10px")}><span style={{ color: "#85939A" }}>Drift band</span><b style={sx("font-weight: 600; color: var(--accent)")}>±{band}%</b></div>
-            <input type="range" min={1} max={10} value={band} onChange={(e) => setBand(Number(e.target.value))} aria-label="Drift band" aria-valuetext={`plus or minus ${band} percent`} style={sx("width: 100%; accent-color: #2EE6D6")} />
+            <input type="range" min={1} max={10} value={band} onChange={(e) => { setBand(Number(e.target.value)); edit(); }} aria-label="Drift band" aria-valuetext={`plus or minus ${band} percent`} style={sx("width: 100%; accent-color: #2EE6D6")} />
             <span style={sx("font-size: 12px; color: #5B686D")}>Rebalances trigger when any asset leaves its band.</span>
           </div>
         </div>
@@ -294,7 +339,7 @@ export function Rules() {
           {([["Max trade size", "Share of vault per trade", "10", "%"], ["Max slippage", "Worst price impact accepted", "0.5", "%"], ["Cooldown", "Time between rebalances", "2", "h"]] as const).map(([t, d, v, u]) => (
             <div key={t} style={sx(ROW)}>
               <span style={sx("display: flex; flex-direction: column; gap: 2px")}><b style={sx("font-size: 14px; font-weight: 500")}>{t}</b><span style={sx("font-size: 12px; color: #5B686D")}>{d}</span></span>
-              <NumField label={t === "Cooldown" ? "Cooldown hours" : t} value={v} unit={u} />
+              <NumField label={t === "Cooldown" ? "Cooldown hours" : t} value={v} unit={u} onEdit={edit} />
             </div>
           ))}
           <div style={sx("display: flex; flex-direction: column; gap: 10px; padding: 14px 0 0; border-top: 1px solid #121A1D")}>
@@ -306,10 +351,10 @@ export function Rules() {
           </div>
         </div>
       </div>
-      <div className="ax-savebar" style={sx("display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 18px; border: 1px solid #1A2326; background: #080C0F")}>
+      <div className="ax-savebar desk-only" style={sx("display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 18px; border: 1px solid #1A2326; background: #080C0F")}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFBA5C" strokeWidth="2" aria-hidden="true" style={{ flex: "none" }}><path d="M12 3l9 16H3z" /><path d="M12 10v4M12 17h.01" /></svg>
         <span style={sx("flex: 1; font-size: 14px; color: #AEBBBA")}>Rule changes are written to your vault and need your wallet signature. The agent can&apos;t change them.</span>
-        <button type="button" className="ax-btn-w" style={sx("height: 42px; padding: 0 22px; border-radius: 999px; border: 0; background: #FFFFFF; color: #04070A; font: 600 14px var(--font-geist), Geist, sans-serif; cursor: pointer; white-space: nowrap")}>Save and sign</button>
+        <button type="button" onClick={() => setDirty(false)} className="ax-btn-w" style={sx("height: 42px; padding: 0 22px; border-radius: 999px; border: 0; background: #FFFFFF; color: #04070A; font: 600 14px var(--font-geist), Geist, sans-serif; cursor: pointer; white-space: nowrap")}>Save and sign</button>
       </div>
     </div>
   );

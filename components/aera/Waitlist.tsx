@@ -60,7 +60,7 @@ export function Waitlist() {
   }
 
   return (
-    <div style={sx("position: relative; width: 100%; min-height: 100vh; overflow: hidden; background: radial-gradient(50% 60% at 78% 50%, color-mix(in srgb, var(--accent) 9%, transparent), rgba(0,0,0,0) 70%), #04070A; color: #E6EEEC")}>
+    <div className={`wl-root${joined ? " is-joined" : ""}`} style={sx("position: relative; width: 100%; min-height: 100vh; overflow: hidden; background: radial-gradient(50% 60% at 78% 50%, color-mix(in srgb, var(--accent) 9%, transparent), rgba(0,0,0,0) 70%), #04070A; color: #E6EEEC")}>
       <header className="wl-head" style={sx("position: absolute; left: 0; right: 0; top: 0; height: 76px; padding: 0 56px; display: flex; align-items: center; justify-content: space-between; z-index: 3")}>
         <Link href="/" style={sx("display: flex; align-items: center; gap: 10px; color: #E6EEEC; text-decoration: none")}>
           <span className="aera-mark" aria-hidden="true" style={sx("width: 24px; height: 24px; background: var(--accent)")} />
@@ -75,10 +75,10 @@ export function Waitlist() {
       {/* right: the queue */}
       <div aria-hidden="true" className="wl-queue" style={sx("position: absolute; right: 0; top: 0; bottom: 0; width: 44%; -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0), #000 20%, #000 80%, rgba(0,0,0,0)); mask-image: linear-gradient(180deg, rgba(0,0,0,0), #000 20%, #000 80%, rgba(0,0,0,0))")}>
         <div style={sx("position: absolute; left: 50%; top: 50%; width: 520px; height: 520px; margin: -260px 0 0 -260px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent), rgba(0,0,0,0) 62%); animation: wl-breathe 7s ease-in-out infinite")} />
-        <span className="aera-mark" style={sx("position: absolute; left: 50%; top: 50%; width: 380px; height: 380px; margin: -190px 0 0 -190px; background: color-mix(in srgb, var(--accent) 9%, transparent)")} />
-        <div style={sx("position: absolute; left: 22%; right: 14%; top: 0; animation: wl-queue 40s linear infinite")}>
+        <span className="aera-mark wl-qmark" style={sx("position: absolute; left: 50%; top: 50%; width: 380px; height: 380px; margin: -190px 0 0 -190px; background: color-mix(in srgb, var(--accent) 9%, transparent)")} />
+        <div className="wl-qlist" style={sx("position: absolute; left: 22%; right: 14%; top: 0; animation: wl-queue 40s linear infinite")}>
           {QUEUE.map((q, i) => (
-            <div key={i} style={sx("display: flex; align-items: center; gap: 14px; height: 58px; border-bottom: 1px solid #121A1D")}>
+            <div key={i} className="wl-qrow" style={sx("display: flex; align-items: center; gap: 14px; height: 58px; border-bottom: 1px solid #121A1D")}>
               <span style={sx("width: 64px; font-size: 13px; color: #5B686D; font-variant-numeric: tabular-nums")}>#{q.n}</span>
               <span style={sx("flex: 1; font-size: 15px; color: #AEBBBA")}>{q.h}</span>
               <span style={sx("font-size: 12px; color: #5B686D")}>{q.t}</span>
@@ -90,7 +90,7 @@ export function Waitlist() {
       {/* left: form / joined */}
       <div className="wl-left" style={sx("position: absolute; left: 56px; top: 0; bottom: 0; width: 600px; display: flex; flex-direction: column; justify-content: center; gap: 22px; z-index: 2")}>
         {!joined ? (
-          <div style={sx("display: flex; flex-direction: column; gap: 22px; animation: wl-rise .9s cubic-bezier(.22,1,.36,1) .1s both")}>
+          <div className="wl-join" style={sx("display: flex; flex-direction: column; gap: 22px; animation: wl-rise .9s cubic-bezier(.22,1,.36,1) .1s both")}>
             <div style={sx("display: flex; flex-direction: column; gap: 16px")}>
               <span style={sx("font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #85939A")}>Waitlist</span>
               <h1 className="wl-h1" style={sx("margin: 0; font-size: 72px; font-weight: 500; letter-spacing: -0.045em; line-height: 0.98")}>
@@ -132,17 +132,17 @@ export function Waitlist() {
                   />
                 </span>
               </label>
-              <div style={sx("display: flex; align-items: center; gap: 16px; padding-top: 4px; flex-wrap: wrap")}>
+              <div className="wl-submit" style={sx("display: flex; align-items: center; gap: 16px; padding-top: 4px; flex-wrap: wrap")}>
                 <button type="submit" disabled={busy} className="wl-btn" style={sx("height: 52px; padding: 0 28px; border: 0; border-radius: 999px; background: #FFFFFF; color: #04070A; font: 600 16px var(--font-geist), Geist, sans-serif; cursor: pointer; box-shadow: 0 0 30px rgba(255,255,255,.14); transition: box-shadow .2s")}>
                   Join the waitlist
                 </button>
                 <span style={sx("font-size: 14px; color: #85939A")}>{COUNT} people ahead of you</span>
               </div>
             </form>
-            <span style={sx("font-size: 13px; color: #5B686D; max-width: 460px; line-height: 1.6")}>One email when your spot opens, nothing else. No wallet needed to join.</span>
+            <span className="wl-foot" style={sx("font-size: 13px; color: #5B686D; max-width: 460px; line-height: 1.6")}>One email when your spot opens, nothing else. No wallet needed to join.</span>
           </div>
         ) : (
-          <div style={sx("display: flex; flex-direction: column; gap: 22px; animation: wl-rise .9s cubic-bezier(.22,1,.36,1) .1s both")}>
+          <div className="wl-done" style={sx("display: flex; flex-direction: column; gap: 22px; animation: wl-rise .9s cubic-bezier(.22,1,.36,1) .1s both")}>
             <div style={sx("display: flex; flex-direction: column; gap: 10px")}>
               <span style={sx("font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent)")}>You&apos;re in</span>
               <span style={sx("font-size: 18px; color: #AEBBBA")}>Your spot in line</span>
@@ -151,7 +151,7 @@ export function Waitlist() {
               </span>
               <span style={sx("font-size: 15px; color: #85939A")}>We&apos;ll email {email || "you"} when your wave opens.</span>
             </div>
-            <div style={sx("display: flex; flex-direction: column; gap: 12px; max-width: 540px; border-top: 1px solid #121A1D; padding-top: 26px")}>
+            <div className="wl-refblock" style={sx("display: flex; flex-direction: column; gap: 12px; max-width: 540px; border-top: 1px solid #121A1D; padding-top: 26px")}>
               <b style={sx("font-size: 18px; font-weight: 500")}>Move up the line</b>
               <span style={sx("font-size: 15px; line-height: 1.6; color: #AEBBBA")}>Every friend who joins with your link moves you up 100 spots.</span>
               <div className="wl-ref" style={sx("display: flex; align-items: center; gap: 10px")}>
@@ -174,7 +174,7 @@ export function Waitlist() {
               <div style={sx("display: flex; align-items: center; gap: 14px; padding-top: 6px")}>
                 <div style={sx("display: flex; gap: 6px")}>
                   {[0, 1, 2].map((k) => (
-                    <span key={k} style={sx("width: 34px; height: 6px; border-radius: 3px; background: " + (k < REFS_DONE ? "var(--accent); box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 50%, transparent)" : "#1A2326"))} />
+                    <span key={k} className="wl-bar" style={sx("width: 34px; height: 6px; border-radius: 3px; background: " + (k < REFS_DONE ? "var(--accent); box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 50%, transparent)" : "#1A2326"))} />
                   ))}
                 </div>
                 <span style={sx("font-size: 13px; color: #85939A")}>{REFS_DONE} of 3 friends joined · next jump at 2</span>

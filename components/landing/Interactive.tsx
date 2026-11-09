@@ -4,7 +4,7 @@ import { useState } from "react";
 import { sx } from "@/components/aera/sx";
 
 /* ---------------- SCENE 05 · AUTONOMY ---------------- */
-const DEFS = [
+export const DEFS = [
   { id: "suggest", label: "Suggest", tag: "Suggest only", desc: "Aera spots the drift and shows you the fix. You make the trade yourself, or ignore it." },
   { id: "approve", label: "Approve", tag: "Needs your OK", desc: "Aera prepares the trade inside your rules and waits. One tap and your wallet signs." },
   { id: "auto", label: "Autopilot", tag: "Autopilot", desc: "Aera rebalances on its own, but only within the guardrails in your vault. You get a receipt for every move." },
@@ -79,7 +79,7 @@ export function SceneAutonomy() {
 }
 
 /* ---------------- FAQ ---------------- */
-const QA: [string, string][] = [
+export const QA: [string, string][] = [
   ["What is Aera Finance?", "A portfolio manager on Robinhood Chain. You get your own vault for tokenized stocks, crypto and cash, set target weights and rules, and an agent keeps it on target."],
   ["Who holds my funds?", "You do. Every user gets their own vault contract. Aera never pools deposits, and there is no central account holding user money."],
   ["What can the agent actually do?", "Only rebalance inside the rules stored in your vault: allowed assets, max trade size, slippage cap and cooldown. Anything outside them is rejected on-chain."],

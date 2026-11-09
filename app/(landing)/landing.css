@@ -112,15 +112,39 @@
 @media (max-width:860px){.ae-navlinks{display:none !important}.ae-hide-sm{display:none !important}.cin-scene{height:auto !important}.cin-frame{position:relative !important;height:auto !important;padding:96px 0}.cin-num{display:none}.cin-stripwrap{height:auto !important}.cin-stripframe{position:relative !important;height:auto !important}.cin-track{flex-direction:column !important;width:100% !important;animation:none !important}.ae-faqside{position:relative !important;top:0 !important}.cin-hero{height:auto !important}.cin-hero > div{position:relative !important;height:760px !important}.cin-full{height:760px !important;padding:0 !important}}
 @media (prefers-reduced-motion:reduce){.aera *,.aera *::before,.aera *::after{animation:none !important;transition:none !important}}
 
-/* Phone fixes on top of the reference (BUILD.md §12: nothing broken ≤860px).
-   Unpinned, the hero's scroll-out timeline is already complete at load and
-   blacks the frame out, so skip it; and give unpinned scenes a mid-screen
-   timeline band so their scroll animations play over a full frame. */
+/* ================= MOBILE LANDING (design.md §10, animations.md §17) ================= */
+/* Phones drop scroll timelines; every scene runs a time loop. */
 @media (max-width:860px){
-.cin-black,.cin-titleout,.cin-monopush{animation:none !important}
-.hm-anchor{left:50% !important;top:38% !important;scale:.55}
-.hero-copy{max-width:100%}
-.hero-copy h1{font-size:clamp(38px,11vw,46px) !important}
-.hero-readout{flex-wrap:wrap;white-space:normal !important;row-gap:6px}
-@supports (animation-timeline: view()){.cin-scene{view-timeline-inset:40% 40%}}
+  .aera .cin-vignette-d{display:none}
+  .aera .cin-grain-l{opacity:.12 !important}
 }
+@keyframes mo-blur{0%{opacity:0;filter:blur(14px);transform:translateY(.3em);text-shadow:-.06em 0 rgba(255,70,90,.7),.06em 0 rgba(70,140,255,.7)}60%{text-shadow:-.015em 0 rgba(255,70,90,.35),.015em 0 rgba(70,140,255,.35)}100%{opacity:1;filter:none;transform:none}}
+@keyframes mo-sheen{0%{background-position:150% 0}100%{background-position:-50% 0}}
+@keyframes mo-stream{0%{opacity:0;transform:translate(var(--x0),0) scale(1)}12%{opacity:1}80%{opacity:.9}100%{opacity:0;transform:translate(0,var(--y1)) scale(.35)}}
+@keyframes mo-seg{0%{stroke:#121A1D;transform:scale(1.12)}10%,84%{stroke:#2EE6D6;transform:scale(1)}94%,100%{stroke:#121A1D;transform:scale(1.12)}}
+@keyframes mo-orbit{to{transform:rotate(360deg)}}
+@keyframes mo-orbitr{to{transform:rotate(-360deg)}}
+@keyframes mo-dash{to{stroke-dashoffset:-60}}
+@keyframes mo-draw{0%{stroke-dashoffset:900}55%,85%{stroke-dashoffset:0}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes mo-fadeearly{0%,30%{opacity:0}36%,52%{opacity:1}58%,100%{opacity:0}}
+@keyframes mo-fadein{0%,56%{opacity:0;transform:translateY(6px)}62%,92%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes mo-swap0{0%,32%{opacity:1}36%,100%{opacity:0}}
+@keyframes mo-swapa{0%,32%{opacity:0}36%,54%{opacity:1}58%,100%{opacity:0}}
+@keyframes mo-swapb{0%,54%{opacity:0}58%,96%{opacity:1}100%{opacity:0}}
+@keyframes mo-rej{0%{transform:translateX(-260px);opacity:0}8%{opacity:1}36%{transform:translateX(0)}46%{transform:translateX(-26px) rotate(-5deg)}70%,100%{transform:translateX(-60px) rotate(-8deg);opacity:0}}
+@keyframes mo-hold{0%{transform:translateX(-260px);opacity:0}8%{opacity:1}36%,80%{transform:translateX(-18px);opacity:1}100%{transform:translateX(-18px);opacity:0}}
+@keyframes mo-pass{0%{transform:translateX(-260px);opacity:0}8%{opacity:1}36%{transform:translateX(0)}70%{transform:translateX(150px);opacity:1}100%{transform:translateX(150px);opacity:0}}
+@keyframes mo-colr{0%,34%{color:#E6EEEC;border-color:rgba(255,255,255,.18);box-shadow:none}38%,100%{color:#FF7A88;border-color:rgba(255,122,136,.55);box-shadow:0 0 24px rgba(255,90,106,.35)}}
+@keyframes mo-cola{0%,34%{color:#E6EEEC;border-color:rgba(255,255,255,.18);box-shadow:none}38%,100%{color:#FFBA5C;border-color:rgba(255,186,92,.5);box-shadow:0 0 24px rgba(255,186,92,.3)}}
+@keyframes mo-colp{0%,34%{color:#E6EEEC;border-color:rgba(255,255,255,.18);box-shadow:none}38%,100%{color:#2EE6D6;border-color:rgba(46,230,214,.55);box-shadow:0 0 26px rgba(46,230,214,.35)}}
+@keyframes mo-tag{0%,38%{opacity:0;transform:translateY(6px)}44%,86%{opacity:1;transform:none}96%,100%{opacity:0}}
+@keyframes mo-ripple{0%,33%{opacity:0;transform:scale(.2)}38%{opacity:1}62%,100%{opacity:0;transform:scale(2.4)}}
+@keyframes mo-shimmer{0%{top:100%}100%{top:-100px}}
+@keyframes mo-type{0%{width:0}45%,100%{width:100%}}
+@keyframes mo-reply{0%,48%{opacity:0;transform:translateY(10px)}56%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes mo-morph{0%,100%{border-radius:48% 52% 60% 40%/50% 42% 58% 50%;filter:blur(10px) saturate(1.5) hue-rotate(0)}50%{border-radius:58% 42% 44% 56%/42% 58% 42% 58%;filter:blur(10px) saturate(1.5) hue-rotate(40deg)}}
+@keyframes mo-scan{0%,8%{top:0}46%,58%{top:100%}96%,100%{top:0}}
+@keyframes mo-reveal{0%,8%{clip-path:inset(0 0 100% 0)}46%,58%{clip-path:inset(0)}96%,100%{clip-path:inset(0 0 100% 0)}}
+.aera .m-reels{scrollbar-width:none}
+.aera .m-reels::-webkit-scrollbar{display:none}
+.aera .m-menu-link:active{background:rgba(255,255,255,.03)}

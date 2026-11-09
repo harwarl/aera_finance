@@ -107,6 +107,41 @@ function Ring({ state }: { state: State }) {
   );
 }
 
+/* ---------- mobile ring (260px) ---------- */
+const M_C = 2 * Math.PI * 100;
+const M_DASH = `${(M_C / 12 - 3).toFixed(1)} ${(M_C - M_C / 12 + 3).toFixed(1)}`;
+function MobileRing({ state }: { state: State }) {
+  const lit = LIT[state];
+  const col = state === "network" ? AMBER : A;
+  const assembled = lit >= 8;
+  return (
+    <svg viewBox="0 0 260 260" width="260" height="260" aria-hidden="true" style={{ overflow: "visible" }}>
+      <circle cx="130" cy="130" r="122" fill="none" stroke="#1A2326" strokeDasharray="2 6" />
+      {Array.from({ length: 60 }, (_, i) => {
+        const a = (i * 6 * Math.PI) / 180, l = i % 5 === 0 ? 7 : 4;
+        return <line key={i} x1={130 + 84 * Math.cos(a)} y1={130 + 84 * Math.sin(a)} x2={130 + (84 - l) * Math.cos(a)} y2={130 + (84 - l) * Math.sin(a)} stroke="#263034" />;
+      })}
+      <g style={sx("transform-origin: 130px 130px; animation: mo-spin 40s linear infinite; animation-play-state: " + (assembled ? "paused" : "running"))}>
+        {Array.from({ length: 12 }, (_, i) => {
+          const on = i < lit;
+          const scale = assembled ? 1 : on ? 1.04 : 1.14;
+          return (
+            <g key={i} transform={`rotate(${i * 30 - 90} 130 130)`}>
+              <circle
+                cx="130" cy="130" r="100" fill="none" strokeWidth="22" strokeDasharray={M_DASH}
+                style={sx(
+                  `transform-origin: 130px 130px; transform: scale(${scale}); stroke: ${on ? col : "#121A1D"}; opacity: ${on ? 1 : 0.7}; filter: ${on ? `drop-shadow(0 0 8px ${col})` : "none"}; ` +
+                    `transition: stroke .6s ${i * 60}ms, opacity .6s ${i * 60}ms, filter .6s ${i * 60}ms, transform .9s cubic-bezier(.22,1,.36,1) ${i * 60}ms`,
+                )}
+              />
+            </g>
+          );
+        })}
+      </g>
+    </svg>
+  );
+}
+
 /* ---------- page ---------- */
 export function ConnectPage() {
   const { address, isConnected, chainId, chain, connector: active } = useAccount();
@@ -221,20 +256,33 @@ export function ConnectPage() {
   const [cEye, cVal, cLine, cCol] = centre[state];
 
   return (
-    <div style={sx(`position: relative; width: 100%; min-height: 100vh; overflow: hidden; color: #E6EEEC; transition: background .8s; background: radial-gradient(45% 60% at 66% 50%, color-mix(in srgb, ${ringCol} ${glow > 16 ? 12 : 8}%, transparent), rgba(0,0,0,0) 70%), #04070A`)}>
+    <div className="cx-root" style={sx(`position: relative; width: 100%; min-height: 100vh; overflow: hidden; color: #E6EEEC; transition: background .8s; background: radial-gradient(45% 60% at 66% 50%, color-mix(in srgb, ${ringCol} ${glow > 16 ? 12 : 8}%, transparent), rgba(0,0,0,0) 70%), #04070A`)}>
       <header className="cx-head" style={sx("position: absolute; left: 0; right: 0; top: 0; height: 76px; padding: 0 56px; display: flex; align-items: center; justify-content: space-between; z-index: 3")}>
         <Link href="/" style={sx("display: flex; align-items: center; gap: 10px; color: #E6EEEC; text-decoration: none")}>
           <span className="aera-mark" aria-hidden="true" style={sx("width: 24px; height: 24px; background: var(--accent)")} />
           <b style={sx("font-size: 15px; font-weight: 600")}>Aera Finance</b>
         </Link>
-        <nav style={sx("display: flex; align-items: center; gap: 24px; font-size: 14px")}>
+        <nav className="desk-only" style={sx("display: flex; align-items: center; gap: 24px; font-size: 14px")}>
           <Link href="/docs" style={sx("color: #85939A; text-decoration: none")}>Docs</Link>
           <Link href="/" style={sx("color: #85939A; text-decoration: none")}>Home</Link>
         </nav>
+        <Link href="/" aria-label="Close" className="mo-only" style={sx("width: 36px; height: 36px; border-radius: 50%; border: 1px solid #1A2326; color: #AEBBBA; display: inline-flex; align-items: center; justify-content: center")}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </Link>
       </header>
 
       {/* ring */}
-      <div className="cx-stage" aria-hidden="true" style={sx("position: absolute; inset: 0")}>
+      <div className="mo-only cx-mring" aria-hidden="true" style={sx("position: relative; height: 260px; margin-top: 74px; display: flex; justify-content: center")}>
+        <div style={sx(`position: absolute; left: 50%; top: 50%; width: 320px; height: 320px; margin: -160px 0 0 -160px; border-radius: 50%; transition: background .8s; background: radial-gradient(circle, color-mix(in srgb, ${ringCol} ${glow}%, transparent), rgba(0,0,0,0) 62%); animation: cx-breathe 6s ease-in-out infinite`)} />
+        <MobileRing state={state} />
+        <div style={sx("position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center")}>
+          <span style={sx("font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #5B686D")}>{cEye}</span>
+          <span style={sx(`font-size: 26px; font-weight: 500; letter-spacing: -0.04em; line-height: 1; transition: color .6s; color: ${cCol ?? "#E6EEEC"}`)}>{cVal}</span>
+          <span style={sx(`font-family: ${MONO}; font-size: 10px; color: #85939A`)}>{cLine}</span>
+        </div>
+      </div>
+
+      <div className="cx-stage desk-only" aria-hidden="true" style={sx("position: absolute; inset: 0")}>
         <div style={sx(`position: absolute; left: 66%; top: 50%; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; transition: background .8s; background: radial-gradient(circle, color-mix(in srgb, ${ringCol} ${glow}%, transparent), rgba(0,0,0,0) 62%); animation: cx-breathe 6s ease-in-out infinite`)} />
         <Ring state={state} />
         <div className="cx-centre" style={sx("position: absolute; left: 66%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center")}>
@@ -245,11 +293,11 @@ export function ConnectPage() {
       </div>
       <span className="sr-only">{lit} of 12 vault segments ready</span>
 
-      <div aria-hidden="true" style={sx("position: absolute; left: 0; right: 0; bottom: 0; height: 50%; background: linear-gradient(180deg, rgba(4,7,10,0), rgba(4,7,10,.8)); pointer-events: none")} />
+      <div aria-hidden="true" className="desk-only" style={sx("position: absolute; left: 0; right: 0; bottom: 0; height: 50%; background: linear-gradient(180deg, rgba(4,7,10,0), rgba(4,7,10,.8)); pointer-events: none")} />
 
       {/* panel */}
       <div className="cx-panel" style={sx("position: absolute; left: 56px; bottom: 72px; width: 520px; z-index: 2")}>
-        <div key={state} style={sx("display: flex; flex-direction: column; gap: 22px; animation: cx-in .6s cubic-bezier(.22,1,.36,1) both")}>
+        <div key={state} className="cx-block" style={sx("display: flex; flex-direction: column; gap: 22px; animation: cx-in .6s cubic-bezier(.22,1,.36,1) both")}>
           {state === "vault" ? (
             <span style={sx("display: flex; align-items: center; gap: 12px")}>
               <Tile w={walletDef} size={34} />
@@ -273,7 +321,7 @@ export function ConnectPage() {
             {state === "done" && <>Your vault<br /><span style={{ color: A }}>is live.</span></>}
           </h1>
 
-          <p style={sx(BODY)}>
+          <p className="cx-body" style={sx(BODY)}>
             {state === "pick" && "Your wallet owns your vault. Aera never holds your keys or your funds."}
             {state === "connecting" && `Open ${walletName} and approve the connection request. It only shares your address.`}
             {state === "network" && `${walletName} is on ${chain?.name ?? "another network"}. Aera vaults live on Robinhood Chain, so your wallet needs to switch first.`}
@@ -285,7 +333,7 @@ export function ConnectPage() {
           {state === "pick" && (
             <div style={sx("display: flex; flex-direction: column; gap: 10px")}>
               {WALLETS.map((w) => (
-                <button key={w.key} type="button" className="cx-wallet" aria-label={`Connect ${w.name}`} onClick={() => pick(w)} style={sx(`height: 70px; border-radius: 16px; background: #080C0F; border: 1px solid #1A2326; padding: 0 18px; display: flex; align-items: center; gap: 14px; color: #E6EEEC; font-family: ${FONT}; text-align: left; cursor: pointer`)}>
+                <button key={w.key} type="button" className="cx-wallet cx-row" aria-label={`Connect ${w.name}`} onClick={() => pick(w)} style={sx(`height: 70px; border-radius: 16px; background: #080C0F; border: 1px solid #1A2326; padding: 0 18px; display: flex; align-items: center; gap: 14px; color: #E6EEEC; font-family: ${FONT}; text-align: left; cursor: pointer`)}>
                   <Tile w={w} />
                   <span style={sx("flex: 1; display: flex; flex-direction: column; gap: 2px")}>
                     <span style={sx("font-size: 16px; font-weight: 500")}>{w.name}</span>
@@ -305,9 +353,10 @@ export function ConnectPage() {
                 <span style={sx("position: absolute; inset: 0")}><Spinner size={72} /></span>
                 <Tile w={walletDef} size={52} />
               </span>
-              <div style={sx("display: flex; align-items: center; gap: 16px; flex-wrap: wrap")}>
+              <div className="cx-actions" style={sx("display: flex; align-items: center; gap: 16px; flex-wrap: wrap")}>
                 <button type="button" onClick={cancel} className="ae-btn-g" style={sx(BTN_G)}>Cancel</button>
-                <span style={sx("font-size: 13px; color: #5B686D")}>No popup? Click the {walletName} icon in your browser bar.</span>
+                <span className="desk-only" style={sx("font-size: 13px; color: #5B686D")}>No popup? Click the {walletName} icon in your browser bar.</span>
+                <span className="mo-only" style={sx("font-size: 13px; line-height: 1.5; color: #5B686D")}>On mobile, {walletName} opens in its own app. Come back here after approving.</span>
               </div>
             </div>
           )}
@@ -319,7 +368,7 @@ export function ConnectPage() {
                 <span aria-hidden="true" style={{ color: "#5B686D" }}>→</span>
                 <span style={sx("padding: 7px 12px; border-radius: 999px; color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent)")}>Robinhood Chain</span>
               </span>
-              <div style={sx("display: flex; gap: 10px; flex-wrap: wrap")}>
+              <div className="cx-actions" style={sx("display: flex; gap: 10px; flex-wrap: wrap")}>
                 <button type="button" onClick={switchNetwork} disabled={switching} className="ae-btn-w" style={sx(BTN_W + (switching ? "; opacity: .85; cursor: default" : ""))}>
                   {switching ? <><Spinner />Approve in {walletName}</> : "Switch network"}
                 </button>
@@ -337,7 +386,7 @@ export function ConnectPage() {
                   </div>
                 ))}
               </div>
-              <div style={sx("display: flex; gap: 10px; flex-wrap: wrap")}>
+              <div className="cx-actions" style={sx("display: flex; gap: 10px; flex-wrap: wrap")}>
                 <button type="button" onClick={runDeploy} className="ae-btn-w" style={sx(BTN_W)}>Create vault</button>
                 <button type="button" onClick={leave} className="ae-btn-g" style={sx(BTN_G)}>Disconnect</button>
               </div>
@@ -370,7 +419,7 @@ export function ConnectPage() {
                 <span>vault 0x7a…c3</span>
                 <a href="#" style={{ textDecoration: "none" }}>tx 0x91…4e ↗</a>
               </span>
-              <div style={sx("display: flex; gap: 10px; flex-wrap: wrap")}>
+              <div className="cx-actions" style={sx("display: flex; gap: 10px; flex-wrap: wrap")}>
                 <Link href="/app/rules" className="ae-btn-w" style={sx(BTN_W)}>Set your rules</Link>
                 <Link href={next} className="ae-btn-g" style={sx(BTN_G)}>Open app</Link>
               </div>

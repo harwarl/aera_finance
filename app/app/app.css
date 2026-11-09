@@ -18,24 +18,37 @@
 .aera .ax-agent{height:auto !important}
 .aera .ax-agent > div:first-child{height:calc(100vh - 160px);min-height:520px}
 }
+/* Phones (design.md §10 App): top bar + page head + bottom tab bar, with
+   action bars pinned above the tabs. */
 @media (max-width:860px){
-.aera .ax-root{flex-direction:column !important;height:auto !important;min-height:100vh;overflow:visible !important}
-.aera .ax-side{width:auto !important;flex-direction:row !important;align-items:center;gap:8px !important;padding:10px 12px !important;border-right:0 !important;border-bottom:1px solid #121A1D;overflow-x:auto}
-.aera .ax-vault,.aera .ax-side-foot{display:none !important}
-.aera .ax-navlist{flex-direction:row !important}
-.aera .ax-top{padding:0 16px !important;gap:10px !important}
-.aera .ax-hide-sm{display:none !important}
-.aera .ax-main{padding:16px !important;overflow:visible !important}
-.aera .ax-banner{flex-wrap:wrap}
-.aera .ax-grid3{grid-template-columns:minmax(0,1fr) !important}
-.aera .ax-main [style*="justify-content: space-between"],.aera .ax-main [style*="justify-content:space-between"]{flex-wrap:wrap}
-.aera .ax-alloc{grid-template-columns:110px 44px 44px minmax(0,1fr) !important;gap:10px !important}
-.aera .ax-logrow{grid-template-columns:36px minmax(0,1fr) auto !important}
+.aera .ax-root{display:block !important;height:auto !important;min-height:100svh;overflow:visible !important}
+.aera .ax-root > div{display:block !important}
+.aera .ax-main{padding:16px 16px 106px !important;overflow:visible !important}
+.aera .ax-has-bar{margin-bottom:84px}
+.aera .ax-has-bar-tall{margin-bottom:126px}
+.aera .ax-grid2,.aera .ax-grid3{grid-template-columns:minmax(0,1fr) !important;gap:12px !important}
+.aera .ax-main [style*="justify-content:space-between"]{flex-wrap:wrap}
+.aera .ax-value{font-size:38px !important}
+.aera .ax-valpanel > div:first-child{display:contents !important}
+.aera .ax-valpanel > svg{order:2;height:120px !important}
+.aera .ax-range{order:3;align-self:flex-start}
+.aera .ax-allochead{display:none !important}
+.aera .ax-main code{white-space:nowrap}
+.aera .ax-value > span{color:#85939A !important}
+.aera .ax-ptitle{font-size:24px !important}
+.aera .ax-alloc{grid-template-columns:96px 40px 40px minmax(0,1fr) !important;gap:10px !important}
+.aera .ax-logrow{grid-template-columns:34px minmax(0,1fr) auto !important;min-height:58px;padding:10px 4px !important}
+.aera .ax-logrow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .aera .ax-tx{display:none}
+.aera .ax-filters{flex-wrap:nowrap !important;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.aera .ax-filters > button{flex:none}
 .aera .ax-xscroll{overflow-x:auto !important}
-.aera .ax-xscroll > div{min-width:440px}
-.aera .ax-settings{grid-template-columns:1fr !important}
-.aera .ax-setnav{flex-direction:row !important;overflow-x:auto;position:static !important}
-.aera .ax-savebar{flex-wrap:wrap}
+.aera .ax-xscroll > div{min-width:420px}
+.aera .ax-settings{grid-template-columns:minmax(0,1fr) !important}
+.aera .ax-agent{height:auto !important;display:block !important}
+.aera .ax-agent > div:first-child{height:auto;border:0 !important;background:none !important}
+.aera .ax-agent [role=log]{padding:0 !important;overflow:visible !important}
+.aera .ax-ububble{background:#E6EEEC !important;color:#04070A}
+.aera .ax-main section > div,.aera .ax-main section > b{min-width:0}
 }
 @keyframes ax-gate{0%,100%{opacity:.5;filter:drop-shadow(0 0 6px rgba(46,230,214,.3))}50%{opacity:1;filter:drop-shadow(0 0 18px rgba(46,230,214,.7))}}
