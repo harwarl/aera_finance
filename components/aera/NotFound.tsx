@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { sx } from "./sx";
+import { LaunchApp } from "@/components/aera/LaunchApp";
 
 /** 404 from reference/Aera-404.dc.html; the bouncing pill shows the real path. */
 export function NotFoundPage() {
@@ -18,7 +19,7 @@ export function NotFoundPage() {
         </Link>
         <nav style={sx("display: flex; align-items: center; gap: 24px; font-size: 14px")}>
           <Link href="/docs" style={sx("color: #85939A; text-decoration: none")}>Docs</Link>
-          <Link href="/app" style={sx("height: 38px; padding: 0 18px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-weight: 600; text-decoration: none")}>Launch app</Link>
+          <LaunchApp style={sx("height: 38px; padding: 0 18px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-weight: 600; text-decoration: none")}>Launch app</LaunchApp>
         </nav>
       </header>
 

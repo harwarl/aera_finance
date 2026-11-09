@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { sx } from "@/components/aera/sx";
+import { LaunchApp } from "@/components/aera/LaunchApp";
 
 /* Mobile landing scenes (design.md §10, animations.md §17). Fixed-height
    sections; each acts its idea out on a time loop instead of scroll. IDs are
@@ -320,9 +321,9 @@ export function MFooter() {
   return (
     <footer style={SECTION(720, "background: #000; padding: 64px 20px 0; box-sizing: border-box; display: flex; flex-direction: column")}>
       <span style={sx("font-size: 42px; font-weight: 500; letter-spacing: -0.045em; line-height: 1; text-shadow: -0.012em 0 rgba(255,70,90,0.3), 0.012em 0 rgba(70,140,255,0.3)")}>Stocks, crypto, yield.<br /><span style={{ color: A }}>One vault.</span></span>
-      <Link href="/app" className="ae-btn-w" style={sx("margin-top: 26px; width: 100%; height: 50px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 16px; font-weight: 600; text-decoration: none")}>Launch app</Link>
+      <LaunchApp className="ae-btn-w" style={sx("margin-top: 26px; width: 100%; height: 50px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 16px; font-weight: 600; text-decoration: none")}>Launch app</LaunchApp>
       <div style={sx("margin-top: 48px; display: flex; flex-direction: column; gap: 18px")}>
-        <Credit role="Product"><Link href="/app">Launch app</Link><a href="#m-how">How it works</a><Link href="/docs">Docs</Link></Credit>
+        <Credit role="Product"><LaunchApp>Launch app</LaunchApp><a href="#m-how">How it works</a><Link href="/docs">Docs</Link></Credit>
         <Credit role="Community"><a href="#">X</a><a href="#">Telegram</a></Credit>
         <Credit role="Network">Robinhood Chain</Credit>
         <Credit role="Audit"><a href="#">[AUDITOR NAME]</a></Credit>

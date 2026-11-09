@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { sx } from "@/components/aera/sx";
 import { BlockNumber, MonumentTilt } from "./HeroClient";
+import { LaunchApp } from "@/components/aera/LaunchApp";
 
 const S_COL = { s: "var(--accent)", c: "#6FB8FF", u: "#B4A6FF" } as const;
 const STREAM = (
@@ -72,9 +72,9 @@ export function Hero() {
             </h1>
           </div>
           <div style={sx("display: flex; gap: 10px; flex-wrap: wrap; animation: ae-rise 1.2s cubic-bezier(.22,1,.36,1) 2.4s both")}>
-            <Link href="/app" className="ae-btn-w" style={sx("height: 50px; padding: 0 28px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 16px; font-weight: 600; text-decoration: none; box-shadow: 0 0 40px rgba(255,255,255,0.18)")}>
+            <LaunchApp className="ae-btn-w" style={sx("height: 50px; padding: 0 28px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 16px; font-weight: 600; text-decoration: none; box-shadow: 0 0 40px rgba(255,255,255,0.18)")}>
               Launch app
-            </Link>
+            </LaunchApp>
             <a href="#how" className="ae-btn-g" style={sx("height: 50px; padding: 0 26px; display: inline-flex; align-items: center; border-radius: 999px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.22); color: #E6EEEC; font-size: 16px; text-decoration: none")}>
               How it works
             </a>

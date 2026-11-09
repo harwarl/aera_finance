@@ -47,6 +47,11 @@ export function useVault(owner?: string): VaultRecord | null | undefined {
   }
 }
 
+/** Non-hook check, for event handlers (e.g. Launch app deciding where to go). */
+export function hasVault(owner?: string) {
+  return !!read(owner);
+}
+
 /** Sample vault address from the design, until the factory returns a real one. */
 export const SAMPLE_VAULT = "0x7a…c3";
 

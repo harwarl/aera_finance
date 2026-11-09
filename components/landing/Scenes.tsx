@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { sx } from "@/components/aera/sx";
+import { LaunchApp } from "@/components/aera/LaunchApp";
 
 const A = "var(--accent)";
 const EYEBROW = "font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #85939A";
@@ -27,7 +28,7 @@ export function Nav() {
         </nav>
         <div style={sx("display: flex; align-items: center; gap: 14px")}>
           <Link href="/docs" className="ae-hide-sm" style={sx("font-size: 14px; font-weight: 500; color: #85939A; text-decoration: none")}>Docs</Link>
-          <Link href="/app" className="ae-btn-w" style={sx("height: 40px; padding: 0 18px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 14px; font-weight: 600; text-decoration: none")}>Launch app</Link>
+          <LaunchApp className="ae-btn-w" style={sx("height: 40px; padding: 0 18px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 14px; font-weight: 600; text-decoration: none")}>Launch app</LaunchApp>
         </div>
       </header>
     </div>

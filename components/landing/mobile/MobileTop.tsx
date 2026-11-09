@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { sx } from "@/components/aera/sx";
 import { BlockNumber } from "../HeroClient";
+import { LaunchApp } from "@/components/aera/LaunchApp";
 
 /* ---------------- NAV + MENU (design.md §10 Landing) ---------------- */
 const LINKS: [string, string][] = [
@@ -36,7 +36,7 @@ export function MobileNav() {
           <span className="aera-mark" aria-hidden="true" style={sx("width: 22px; height: 22px; background: var(--accent); filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 45%, transparent))")} />
           <span style={sx("font-size: 15px; font-weight: 600; letter-spacing: -0.01em")}>Aera Finance</span>
         </a>
-        <Link href="/app" className="ae-btn-w" style={sx("height: 38px; padding: 0 15px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap")}>Launch app</Link>
+        <LaunchApp className="ae-btn-w" style={sx("height: 38px; padding: 0 15px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap")}>Launch app</LaunchApp>
         <button
           type="button"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -68,7 +68,7 @@ export function MobileNav() {
             ))}
           </nav>
           <div style={sx("margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 16px")}>
-            <Link href="/app" onClick={() => setOpen(false)} className="ae-btn-w" style={sx("width: 100%; height: 50px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 16px; font-weight: 600; text-decoration: none")}>Launch app</Link>
+            <LaunchApp onClick={() => setOpen(false)} className="ae-btn-w" style={sx("width: 100%; height: 50px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 16px; font-weight: 600; text-decoration: none")}>Launch app</LaunchApp>
             <span style={sx("font-size: 12px; color: #5B686D")}>
               <a href="#" style={sx("color: #85939A; text-decoration: none")}>X</a> · <a href="#" style={sx("color: #85939A; text-decoration: none")}>Telegram</a>
             </span>
@@ -128,7 +128,7 @@ export function MobileHero() {
           ))}
         </h1>
         <div style={sx("display: grid; grid-template-columns: 1fr 1fr; gap: 10px; animation: mo-rise .9s cubic-bezier(.22,1,.36,1) 2.3s both")}>
-          <Link href="/app" className="ae-btn-w" style={sx("height: 50px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 15px; font-weight: 600; text-decoration: none; box-shadow: 0 0 40px rgba(255,255,255,0.18)")}>Launch app</Link>
+          <LaunchApp className="ae-btn-w" style={sx("height: 50px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 15px; font-weight: 600; text-decoration: none; box-shadow: 0 0 40px rgba(255,255,255,0.18)")}>Launch app</LaunchApp>
           <a href="#m-how" className="ae-btn-g" style={sx("height: 50px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.22); color: #E6EEEC; font-size: 15px; text-decoration: none")}>How it works</a>
         </div>
       </div>

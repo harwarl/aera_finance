@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { useAccount, useConnect, useDisconnect, useSwitchChain, type Connector } from "wagmi";
+import { useEffect, useRef, useState } from "react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useAccount, useDisconnect, useSwitchChain, type Connector } from "wagmi";
 import { robinhoodTestnet } from "@/config/wagmi";
 import { saveVault, useVault } from "@/lib/vaultStore";
 import { sx } from "./sx";
 
 /* /connect · Layout C "Full-bleed vault ring" (design.md §8, animations.md §15).
-   States 1–3 (connect, network) use the real wallet via wagmi. States 4–6
+   States 1–3 (connect, network) use the real wallet: RainbowKit's modal picks
+   and connects it, wagmi reports status and switches the network. States 4–6
    (create, deploy, done) run on the spec's demo timing until a vault factory
    contract exists. TODO: replace runDeploy() with the factory call. */
 
@@ -20,28 +22,21 @@ const AMBER = "#FFBA5C";
 const FONT = "var(--font-geist), Geist, sans-serif";
 const MONO = "ui-monospace, SFMono-Regular, Menlo, monospace";
 
-type WalletDef = { key: "metamask" | "rabby" | "coinbase"; name: string; sub: string; mono: string; tint: string; match: RegExp };
-const WALLETS: WalletDef[] = [
-  // Placeholder monograms: replace with each wallet's official icon (design.md §8).
-  { key: "metamask", name: "MetaMask", sub: "Browser extension", mono: "M", tint: AMBER, match: /metamask/i },
-  { key: "rabby", name: "Rabby", sub: "Browser extension", mono: "R", tint: "#B4A6FF", match: /rabby/i },
-  { key: "coinbase", name: "Coinbase Wallet", sub: "Extension or mobile app", mono: "C", tint: "#6FB8FF", match: /coinbase/i },
-];
-
-type Eth = { isMetaMask?: boolean; isRabby?: boolean; isCoinbaseWallet?: boolean; providers?: Eth[] };
-function detect(): Record<WalletDef["key"], boolean> {
-  const w = window as unknown as { ethereum?: Eth; coinbaseWalletExtension?: unknown };
-  const list = w.ethereum?.providers ?? (w.ethereum ? [w.ethereum] : []);
-  return {
-    metamask: list.some((p) => p.isMetaMask && !p.isRabby),
-    rabby: list.some((p) => p.isRabby),
-    coinbase: !!w.coinbaseWalletExtension || list.some((p) => p.isCoinbaseWallet),
-  };
+// RainbowKit wallets carry their icon as a URL or a lazy loader; EIP-6963
+// injected wallets expose it as connector.icon.
+type RkConnector = Connector & { rkDetails?: { iconUrl?: string | (() => Promise<string>); iconBackground?: string } };
+function useWalletIcon(c?: Connector) {
+  const rk = (c as RkConnector | undefined)?.rkDetails;
+  const direct = c?.icon ?? (typeof rk?.iconUrl === "string" ? rk.iconUrl : undefined);
+  const [loaded, setLoaded] = useState<{ id: string; url: string } | null>(null);
+  useEffect(() => {
+    if (direct || !c || typeof rk?.iconUrl !== "function") return;
+    let live = true;
+    rk.iconUrl().then((url) => live && setLoaded({ id: c.uid, url })).catch(() => {});
+    return () => { live = false; };
+  }, [c, direct, rk]);
+  return { url: direct ?? (loaded && c && loaded.id === c.uid ? loaded.url : undefined), bg: rk?.iconBackground };
 }
-
-const NONE = { metamask: false, rabby: false, coinbase: false };
-let detectCache: Record<WalletDef["key"], boolean> | null = null;
-const noSubscribe = () => () => {};
 
 const short = (a?: string) => (a ? `${a.slice(0, 4)}…${a.slice(-2)}` : "");
 const LIT: Record<State, number> = { pick: 0, connecting: 3, network: 4, vault: 8, deploying: 11, done: 12 };
@@ -51,10 +46,15 @@ const DEPLOY_STEPS = (w: string) => [`Sign the request in ${w}`, "Deploy your va
 function Spinner({ size = 18 }: { size?: number }) {
   return <span aria-hidden="true" style={sx(`width: ${size}px; height: ${size}px; flex: none; box-sizing: border-box; border-radius: 50%; border: 2px solid #1A2326; border-top-color: var(--accent); animation: cx-spin .9s linear infinite`)} />;
 }
-function Tile({ w, size = 40 }: { w: WalletDef; size?: number }) {
+function Tile({ connector, name, size = 40 }: { connector?: Connector; name: string; size?: number }) {
+  const icon = useWalletIcon(connector);
+  const r = size * 0.3;
+  if (icon.url)
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={icon.url} alt="" aria-hidden="true" width={size} height={size} style={sx(`flex: none; border-radius: ${r}px; background: ${icon.bg ?? "#0A1013"}; border: 1px solid #1A2326; box-sizing: border-box`)} />;
   return (
-    <span aria-hidden="true" style={sx(`width: ${size}px; height: ${size}px; flex: none; border-radius: ${size * 0.3}px; display: flex; align-items: center; justify-content: center; font-size: ${size * 0.4}px; font-weight: 600; color: ${w.tint}; background: color-mix(in srgb, ${w.tint} 12%, transparent); border: 1px solid color-mix(in srgb, ${w.tint} 35%, transparent)`)}>
-      {w.mono}
+    <span aria-hidden="true" style={sx(`width: ${size}px; height: ${size}px; flex: none; border-radius: ${r}px; display: flex; align-items: center; justify-content: center; font-size: ${size * 0.4}px; font-weight: 600; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent)`)}>
+      {name.slice(0, 1).toUpperCase()}
     </span>
   );
 }
@@ -144,8 +144,8 @@ function MobileRing({ state }: { state: State }) {
 
 /* ---------- page ---------- */
 export function ConnectPage() {
-  const { address, isConnected, chainId, chain, connector: active } = useAccount();
-  const { connectors, connectAsync } = useConnect();
+  const { address, isConnected, status, chainId, chain, connector: active } = useAccount();
+  const { openConnectModal, connectModalOpen } = useConnectModal();
   const { switchChainAsync } = useSwitchChain();
   const { disconnect } = useDisconnect();
   const router = useRouter();
@@ -154,29 +154,21 @@ export function ConnectPage() {
   const next = nextParam && /^\/app(\/|$)/.test(nextParam) ? nextParam : "/app";
   const vault = useVault(address);
 
-  // Injected-wallet detection: client only, hydration-safe.
-  const detected = useSyncExternalStore(noSubscribe, () => (detectCache ??= detect()), () => NONE);
-  const [pending, setPending] = useState<WalletDef | null>(null);
   const [switching, setSwitching] = useState(false);
   const [phase, setPhase] = useState<"none" | "deploying" | "done">("none");
   const [step, setStep] = useState(0);
   const [error, setError] = useState("");
-  const cancelled = useRef(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  const walletDef = WALLETS.find((w) => active && w.match.test(active.name)) ?? pending ?? WALLETS[0];
-  const walletName = walletDef.name;
+  const walletName = active?.name ?? "your wallet";
 
   const state: State =
     isConnected && phase === "done" ? "done"
     : isConnected && phase === "deploying" ? "deploying"
-    : pending && !isConnected ? "connecting"
+    : status === "connecting" ? "connecting"
     : !isConnected ? "pick"
     : chainId !== TARGET.id ? "network"
     : "vault";
-
-  const findConnector = (w: WalletDef): Connector | undefined =>
-    connectors.find((c) => w.match.test(c.name)) ?? (detected[w.key] ? connectors.find((c) => c.id === "injected") : undefined);
 
   // Skip rule (design.md §8): a wallet that already owns a vault goes straight
   // to the app once it is connected on Robinhood Chain.
@@ -185,27 +177,16 @@ export function ConnectPage() {
     if (owned) router.replace(next);
   }, [owned, next, router]);
 
-  async function pick(w: WalletDef) {
+  function pick() {
     setError("");
     setPhase("none");
     setStep(0);
-    const c = findConnector(w);
-    if (!c) return setError(`${w.name} isn't available in this browser.`);
-    cancelled.current = false;
-    setPending(w);
-    try {
-      await connectAsync({ connector: c, chainId: TARGET.id });
-      if (cancelled.current) disconnect();
-    } catch (e) {
-      if (!cancelled.current) setError(e instanceof Error && /reject|denied/i.test(e.message) ? "Connection request was declined." : `Couldn't connect to ${w.name}.`);
-    } finally {
-      setPending(null);
-    }
+    openConnectModal?.();
   }
 
+  // Abandon a pending request (e.g. the wallet popup was closed without an answer).
   function cancel() {
-    cancelled.current = true;
-    setPending(null);
+    disconnect();
   }
 
   async function switchNetwork() {
@@ -300,7 +281,7 @@ export function ConnectPage() {
         <div key={state} className="cx-block" style={sx("display: flex; flex-direction: column; gap: 22px; animation: cx-in .6s cubic-bezier(.22,1,.36,1) both")}>
           {state === "vault" ? (
             <span style={sx("display: flex; align-items: center; gap: 12px")}>
-              <Tile w={walletDef} size={34} />
+              <Tile connector={active} name={walletName} size={34} />
               <span style={sx("display: flex; flex-direction: column")}>
                 <code style={sx(`font-family: ${MONO}; font-size: 14px; color: #E6EEEC`)}>{short(address)}</code>
                 <span style={sx("font-size: 12px; color: #5B686D")}>Robinhood Chain</span>
@@ -314,7 +295,7 @@ export function ConnectPage() {
 
           <h1 aria-live="polite" className="cx-h1" style={sx("margin: 0; font-size: 76px; font-weight: 500; letter-spacing: -0.045em; line-height: 0.98")}>
             {state === "pick" && <>Connect your<br /><span style={{ color: A }}>wallet.</span></>}
-            {state === "connecting" && <>Approve in<br /><span style={{ color: A }}>{walletName}.</span></>}
+            {state === "connecting" && <>Approve in<br /><span style={{ color: A }}>{active ? `${walletName}.` : "your wallet."}</span></>}
             {state === "network" && <>Switch to<br /><span style={{ color: A }}>Robinhood Chain.</span></>}
             {state === "vault" && <>Create your<br /><span style={{ color: A }}>vault.</span></>}
             {state === "deploying" && <>Creating your<br /><span style={{ color: A }}>vault.</span></>}
@@ -323,7 +304,7 @@ export function ConnectPage() {
 
           <p className="cx-body" style={sx(BODY)}>
             {state === "pick" && "Your wallet owns your vault. Aera never holds your keys or your funds."}
-            {state === "connecting" && `Open ${walletName} and approve the connection request. It only shares your address.`}
+            {state === "connecting" && `Open ${active ? walletName : "your wallet"} and approve the connection request. It only shares your address.`}
             {state === "network" && `${walletName} is on ${chain?.name ?? "another network"}. Aera vaults live on Robinhood Chain, so your wallet needs to switch first.`}
             {state === "vault" && "One vault contract, owned by your wallet. Nobody else can withdraw from it. You set the rules next."}
             {state === "deploying" && "Takes a few seconds. You can leave this tab open."}
@@ -331,19 +312,15 @@ export function ConnectPage() {
           </p>
 
           {state === "pick" && (
-            <div style={sx("display: flex; flex-direction: column; gap: 10px")}>
-              {WALLETS.map((w) => (
-                <button key={w.key} type="button" className="cx-wallet cx-row" aria-label={`Connect ${w.name}`} onClick={() => pick(w)} style={sx(`height: 70px; border-radius: 16px; background: #080C0F; border: 1px solid #1A2326; padding: 0 18px; display: flex; align-items: center; gap: 14px; color: #E6EEEC; font-family: ${FONT}; text-align: left; cursor: pointer`)}>
-                  <Tile w={w} />
-                  <span style={sx("flex: 1; display: flex; flex-direction: column; gap: 2px")}>
-                    <span style={sx("font-size: 16px; font-weight: 500")}>{w.name}</span>
-                    <span style={sx("font-size: 13px; color: #5B686D")}>{w.sub}</span>
-                  </span>
-                  {detected[w.key] && <span style={sx("font-size: 12px; color: var(--accent)")}>Detected</span>}
-                  <svg className="cx-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+            <div style={sx("display: flex; flex-direction: column; gap: 14px")}>
+              <div className="cx-actions" style={sx("display: flex; align-items: center; gap: 16px; flex-wrap: wrap")}>
+                <button type="button" onClick={pick} disabled={!openConnectModal} aria-haspopup="dialog" aria-expanded={connectModalOpen} className="ae-btn-w" style={sx(BTN_W)}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3" /><path d="M16 12.5h2M3 9h15a3 3 0 0 0-3-3" /></svg>
+                  Connect wallet
                 </button>
-              ))}
-              <span style={sx("font-size: 13px; color: #5B686D; padding-top: 4px")}>By connecting you accept the <a href="#" style={{ textDecoration: "none" }}>Terms</a>. Connecting signs nothing and spends nothing.</span>
+                <span style={sx("font-size: 13px; color: #85939A")}>MetaMask, Rabby, Coinbase Wallet or any WalletConnect wallet.</span>
+              </div>
+              <span style={sx("font-size: 13px; color: #5B686D")}>By connecting you accept the <a href="#" style={{ textDecoration: "none" }}>Terms</a>. Connecting signs nothing and spends nothing.</span>
             </div>
           )}
 
@@ -351,12 +328,12 @@ export function ConnectPage() {
             <div style={sx("display: flex; flex-direction: column; gap: 18px")}>
               <span style={sx("position: relative; width: 72px; height: 72px; display: flex; align-items: center; justify-content: center")}>
                 <span style={sx("position: absolute; inset: 0")}><Spinner size={72} /></span>
-                <Tile w={walletDef} size={52} />
+                <Tile connector={active} name={walletName} size={52} />
               </span>
               <div className="cx-actions" style={sx("display: flex; align-items: center; gap: 16px; flex-wrap: wrap")}>
                 <button type="button" onClick={cancel} className="ae-btn-g" style={sx(BTN_G)}>Cancel</button>
-                <span className="desk-only" style={sx("font-size: 13px; color: #5B686D")}>No popup? Click the {walletName} icon in your browser bar.</span>
-                <span className="mo-only" style={sx("font-size: 13px; line-height: 1.5; color: #5B686D")}>On mobile, {walletName} opens in its own app. Come back here after approving.</span>
+                <span className="desk-only" style={sx("font-size: 13px; color: #5B686D")}>No popup? Click your wallet&apos;s icon in the browser bar.</span>
+                <span className="mo-only" style={sx("font-size: 13px; line-height: 1.5; color: #5B686D")}>On mobile, your wallet opens in its own app. Come back here after approving.</span>
               </div>
             </div>
           )}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { sx } from "@/components/aera/sx";
+import { LaunchApp } from "@/components/aera/LaunchApp";
 
 const A = "var(--accent)";
 const CAM = "position: relative; width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 26px; text-align: center";
@@ -341,11 +342,11 @@ export function Footer() {
           <span style={sx("font-size: clamp(42px, 6.4vw, 92px); font-weight: 500; letter-spacing: -0.045em; line-height: 1.0; text-shadow: -0.012em 0 rgba(255,70,90,0.3), 0.012em 0 rgba(70,140,255,0.3)")}>
             Stocks, crypto, yield.<br /><span style={{ color: A }}>One vault.</span>
           </span>
-          <Link href="/app" className="ae-btn-w" style={sx("height: 52px; padding: 0 30px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 16px; font-weight: 600; text-decoration: none; box-shadow: 0 0 48px rgba(255,255,255,0.2)")}>Launch app</Link>
+          <LaunchApp className="ae-btn-w" style={sx("height: 52px; padding: 0 30px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 16px; font-weight: 600; text-decoration: none; box-shadow: 0 0 48px rgba(255,255,255,0.2)")}>Launch app</LaunchApp>
         </div>
 
         <div className="cin-credit" style={sx("width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 22px")}>
-          <Credit role="Product"><Link href="/app">Launch app</Link><a href="#how">How it works</a><Link href="/docs">Docs</Link></Credit>
+          <Credit role="Product"><LaunchApp>Launch app</LaunchApp><a href="#how">How it works</a><Link href="/docs">Docs</Link></Credit>
           <Credit role="Community"><a href="#">X</a><a href="#">Telegram</a></Credit>
           <Credit role="Network">Robinhood Chain</Credit>
           <Credit role="Audit"><a href="#">[AUDITOR NAME]</a></Credit>

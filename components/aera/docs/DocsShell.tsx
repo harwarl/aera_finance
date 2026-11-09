@@ -6,6 +6,7 @@ import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { sx } from "../sx";
 import { SEARCH_INDEX, TREE, anchor, href, type DocId, type SearchEntry } from "./data";
 import { OPEN_SEARCH, useActiveHeading } from "./Toc";
+import { LaunchApp } from "@/components/aera/LaunchApp";
 
 const FONT = "var(--font-geist), Geist, sans-serif";
 const SEARCH_ICON = (stroke = "currentColor", size = 16) => (
@@ -84,7 +85,7 @@ export function DocsShell({ active, toc, children }: { active: DocId; toc: strin
         <div style={sx("margin-left: auto; display: flex; align-items: center; gap: 22px; font-size: 14px")}>
           <Link href="/" style={sx("color: #85939A; text-decoration: none")}>Landing</Link>
           <a href="#" style={sx("color: #85939A; text-decoration: none")}>GitHub</a>
-          <Link href="/app" style={sx("height: 38px; padding: 0 18px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-weight: 600; text-decoration: none; white-space: nowrap")}>Launch app</Link>
+          <LaunchApp style={sx("height: 38px; padding: 0 18px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-weight: 600; text-decoration: none; white-space: nowrap")}>Launch app</LaunchApp>
         </div>
       </header>
 
@@ -101,7 +102,7 @@ export function DocsShell({ active, toc, children }: { active: DocId; toc: strin
         <button type="button" aria-label="Search docs" onClick={() => setSearch(true)} style={sx("width: 40px; height: 40px; flex: none; border: 0; border-radius: 12px; background: rgba(0,0,0,0); color: #AEBBBA; display: inline-flex; align-items: center; justify-content: center; cursor: pointer")}>
           {SEARCH_ICON("currentColor", 18)}
         </button>
-        <Link href="/app" style={sx("height: 36px; padding: 0 14px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap")}>Launch app</Link>
+        <LaunchApp style={sx("height: 36px; padding: 0 14px; display: inline-flex; align-items: center; border-radius: 999px; background: #FFFFFF; color: #04070A; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap")}>Launch app</LaunchApp>
       </header>
 
       <div className="dx-body" style={sx("flex: 1; min-height: 0; display: flex")}>
