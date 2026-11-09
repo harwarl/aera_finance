@@ -1,0 +1,32 @@
+/* Docs (calm). From reference/Aera-Docs.dc.html <helmet> styles. */
+.aera .dx-glass{background:linear-gradient(160deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.04) 45%,rgba(255,255,255,.06) 100%);border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 60px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.2),inset 1px 0 0 rgba(255,70,110,.22),inset -1px 0 0 rgba(70,150,255,.22);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6)}
+.aera .dx-nav:hover{color:#E6EEEC !important;background:rgba(255,255,255,.04) !important}
+.aera .dx-nav[aria-current="page"]:hover{background:color-mix(in srgb,var(--accent) 10%,transparent) !important}
+.aera .dx-tile:hover{border-color:rgba(46,230,214,.4) !important}
+.aera .dx-scroll{scrollbar-width:thin;scrollbar-color:#1A2326 transparent}
+@keyframes dx-pulse{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes dx-caret{50%{opacity:0}}
+@keyframes dx-breathe{0%,100%{filter:drop-shadow(0 0 10px rgba(46,230,214,.35))}50%{filter:drop-shadow(0 0 22px rgba(46,230,214,.7))}}
+@keyframes dx-rej{0%{transform:translateX(-200px);opacity:0}12%{opacity:1}42%{transform:translateX(0)}52%{transform:translateX(-26px) rotate(-4deg)}78%,100%{transform:translateX(-46px) rotate(-6deg);opacity:0}}
+@keyframes dx-pass{0%{transform:translateX(-200px);opacity:0}12%{opacity:1}42%{transform:translateX(0)}78%{transform:translateX(230px);opacity:1}100%{transform:translateX(260px);opacity:0}}
+@keyframes dx-ripple{0%,38%{opacity:0;transform:scale(.3)}46%{opacity:1}70%,100%{opacity:0;transform:scale(2.2)}}
+@keyframes dx-shimmer{0%{top:100%}100%{top:-80px}}
+
+/* Narrow screens: the design is 1440 wide. Drop the right rail, then the
+   left nav, and let tables/tiles stack, so nothing overflows. */
+@media (max-width:1100px){.aera .dx-right{display:none !important}}
+@media (max-width:860px){
+.aera .dx-left,.aera .dx-hide-sm{display:none !important}
+.aera .dx-brand{width:auto !important}
+.aera .dx-brand span:last-child{display:none}
+.aera .dx-top{gap:12px !important;padding:0 16px !important}
+.aera .dx-article{padding:28px 16px 60px !important}
+.aera .dx-tiles{grid-template-columns:1fr !important}
+.aera .dx-quick{flex-wrap:wrap}
+.aera .dx-table{overflow-x:auto !important}
+.aera .dx-table > div{min-width:520px}
+}
+@media (max-width:860px){
+.aera .dx-top button span{white-space:nowrap}
+.aera .dx-top button span:last-child{display:none}
+}

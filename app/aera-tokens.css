@@ -1,0 +1,49 @@
+/* Aera Finance tokens and shared primitives (BUILD.md §3), scoped to .aera
+   so the older pages keep their own theme. */
+.aera {
+  --bg: #04070A; --bg-deep: #020407;
+  --surface: #080C0F; --surface-2: #05090C; --surface-3: #070B0E;
+  --line: #1A2326; --line-soft: #121A1D; --line-strong: #263034;
+  --ink: #E6EEEC; --ink-soft: #AEBBBA; --muted: #85939A; --faint: #5B686D;
+  --accent: #2EE6D6; --accent-hover: #7FF2E8; --accent-dark: #0E8F86; --accent-white: #DFFFFB;
+  --sky: #6FB8FF; --lilac: #B4A6FF; --red: #FF5A6A; --red-text: #FF7A88; --amber: #FFBA5C;
+  --ease-out-expo: cubic-bezier(.22,1,.36,1);
+  --ease-follow: cubic-bezier(.16,1,.3,1);
+  --ease-bars: cubic-bezier(.65,0,.35,1);
+  --f: min(100vh, 900px);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-geist), Geist, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.aera a { color: var(--accent); }
+.aera a:hover { color: var(--accent-hover); }
+.aera ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--ink); }
+.aera button { font-family: inherit; }
+
+.aera .ae-glass, .aera .glass {
+  background: linear-gradient(160deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.04) 45%, rgba(255,255,255,.06) 100%);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 24px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.2),
+              inset 1px 0 0 rgba(255,70,110,.22), inset -1px 0 0 rgba(70,150,255,.22);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+}
+.aera .aera-mark {
+  display: inline-block;
+  flex: none;
+  -webkit-mask: url(/aera-mark.svg) center/contain no-repeat;
+  mask: url(/aera-mark.svg) center/contain no-repeat;
+  background: var(--accent);
+}
+.aera .ae-btn-w:hover { box-shadow: 0 0 56px rgba(255,255,255,.28) !important; }
+.aera .ae-btn-g:hover { border-color: rgba(255,255,255,.4) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .aera *, .aera *::before, .aera *::after { animation: none !important; transition: none !important; }
+}
+
+/* Tailwind preflight strips list markers; the docs use numbered steps. */
+.aera ol { list-style: decimal; }
+.aera ul.aera-list { list-style: disc; }
+.aera .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }

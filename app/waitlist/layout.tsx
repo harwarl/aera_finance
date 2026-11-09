@@ -1,15 +1,13 @@
-import { PageGrid } from "@/components/layout/PageGrid";
+import type { Metadata } from "next";
+import { geist } from "@/lib/aeraFont";
+import "../aera-tokens.css";
+import "../aera-pages.css";
 
-export default function WaitlistLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="relative flex min-h-dvh flex-col">
-      <PageGrid />
-      <main className="flex-1">{children}</main>
-      {/* <Footer /> */}
-    </div>
-  );
+export const metadata: Metadata = {
+  title: "Aera Finance waitlist",
+  description: "Aera opens in waves. Join the waitlist for early access.",
+};
+
+export default function WaitlistLayout({ children }: { children: React.ReactNode }) {
+  return <div className={`aera ${geist.variable}`}>{children}</div>;
 }

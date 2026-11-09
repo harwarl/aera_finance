@@ -16,9 +16,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Atlas — Your Portfolio Agent for Tokenized Stocks",
-  description:
-    "Atlas is an autonomous agent that manages a portfolio of tokenized real stocks and on-chain yield, built on Robinhood Chain — rebalancing, executing trades, and explaining every decision in plain language.",
+  metadataBase: new URL("https://aerafinance.xyz"),
+  title: "Aera Finance — Stocks, crypto, yield. One vault.",
+  description: "Agent-managed vaults on Robinhood Chain. Stocks, crypto, yield. One vault.",
 };
 
 export default function RootLayout({

@@ -1,0 +1,53 @@
+/* Waitlist + 404 (calm pages). From reference/Aera-Waitlist.dc.html and
+   reference/Aera-404.dc.html <helmet> styles. */
+.aera .wl-in:focus-within{border-color:rgba(46,230,214,.55) !important;box-shadow:0 0 0 4px rgba(46,230,214,.08)}
+.aera .wl-btn:hover,.aera .nf-btn:hover{box-shadow:0 0 40px rgba(255,255,255,.22) !important}
+@keyframes wl-rise{from{opacity:0;transform:translateY(24px);filter:blur(8px)}}
+@keyframes wl-queue{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+@keyframes wl-breathe{0%,100%{opacity:.5;transform:scale(.96)}50%{opacity:.85;transform:scale(1.03)}}
+@keyframes wl-pop{0%{opacity:0;transform:scale(.9)}60%{opacity:1;transform:scale(1.03)}100%{transform:none}}
+@keyframes nf-rise{from{opacity:0;transform:translateY(24px);filter:blur(8px)}}
+@keyframes nf-shimmer{0%{top:100%}100%{top:-120px}}
+@keyframes nf-hit{0%{transform:translateX(-420px);opacity:0}10%{opacity:1}38%{transform:translateX(0)}48%{transform:translateX(-34px) rotate(-5deg)}70%,100%{transform:translateX(-70px) rotate(-8deg);opacity:0}}
+@keyframes nf-col{0%,36%{color:#E6EEEC;border-color:rgba(255,255,255,.2);box-shadow:none}40%,100%{color:#FF7A88;border-color:rgba(255,122,136,.55);box-shadow:0 0 30px rgba(255,90,106,.3)}}
+@keyframes nf-ripple{0%,34%{opacity:0;transform:scale(.25)}42%{opacity:1}68%,100%{opacity:0;transform:scale(2.4)}}
+@keyframes nf-tag{0%,38%{opacity:0;transform:translateY(8px)}46%,80%{opacity:1;transform:none}92%,100%{opacity:0}}
+
+/* Phone: the references are 1440×900 boards; stack the copy and drop the
+   decorative right-hand column so nothing overflows (BUILD.md §12). */
+@media (max-width:860px){
+.aera .wl-head,.aera .nf-head{padding:0 20px !important}
+.aera .wl-queue{display:none}
+.aera .wl-left{left:20px !important;right:20px !important;width:auto !important;padding:96px 0 48px;position:relative !important;min-height:100vh}
+.aera .wl-h1{font-size:48px !important}
+.aera .wl-pos{font-size:88px !important}
+.aera .wl-ref{flex-wrap:wrap}
+.aera .wl-ref code{font-size:13px !important}
+.aera .nf-wall{transform:scale(.6);transform-origin:72% 35%}
+.aera .nf-copy{left:20px !important;right:20px !important;width:auto !important;bottom:48px !important}
+.aera .nf-copy h1{font-size:44px !important}
+}
+
+/* Connect · Layout C (design.md §8, animations.md §15). */
+@keyframes cx-in{from{opacity:0;transform:translateY(14px);filter:blur(6px)}}
+@keyframes cx-spin{to{transform:rotate(360deg)}}
+@keyframes cx-breathe{0%,100%{opacity:.5;transform:scale(.96)}50%{opacity:.9;transform:scale(1.04)}}
+@keyframes cx-ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.7);opacity:0}}
+@keyframes cx-pop{0%{opacity:0;transform:scale(.9)}60%{opacity:1;transform:scale(1.03)}100%{transform:none}}
+.aera .cx-wallet{transition:border-color .2s,background-color .2s,transform .25s cubic-bezier(.22,1,.36,1)}
+.aera .cx-wallet .cx-chev{color:#5B686D;transition:color .2s,transform .2s}
+.aera .cx-wallet:hover,.aera .cx-wallet:focus-visible{border-color:color-mix(in srgb,var(--accent) 45%,transparent) !important;background:#0A1215 !important;transform:translateX(3px)}
+.aera .cx-wallet:hover .cx-chev,.aera .cx-wallet:focus-visible .cx-chev{color:var(--accent);transform:translateX(3px)}
+.aera .ae-btn-w{transition:box-shadow .2s}
+.aera .ae-btn-w:hover{box-shadow:0 0 40px rgba(255,255,255,.22) !important}
+@media (max-width:1100px){
+.aera .cx-stage{transform:scale(.8);transform-origin:80% 40%}
+}
+@media (max-width:860px){
+.aera .cx-head{padding:0 20px !important}
+.aera .cx-stage{position:relative !important;height:380px;margin-top:76px;transform:none}
+.aera .cx-stage > div:first-child,.aera .cx-ring,.aera .cx-centre{left:50% !important}
+.aera .cx-ring{width:560px !important;height:560px !important;transform:translate(-50%,-50%) scale(.6) !important}
+.aera .cx-panel{position:relative !important;left:auto !important;bottom:auto !important;width:auto !important;padding:0 20px 56px}
+.aera .cx-h1{font-size:48px !important}
+}

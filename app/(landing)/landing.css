@@ -1,0 +1,126 @@
+/* Aera Finance landing. Translated from reference/Aera-Landing.dc.html
+   (<helmet><style>), tokens from BUILD.md §3. Scoped to .aera. */
+
+.aera a{color:var(--accent)}.aera a:hover{color:var(--accent-hover)}
+@keyframes ae-blur{0%{opacity:0;filter:blur(18px);transform:translateY(.35em);text-shadow:-.06em 0 rgba(255,70,90,.7),.06em 0 rgba(70,140,255,.7)}60%{text-shadow:-.015em 0 rgba(255,70,90,.35),.015em 0 rgba(70,140,255,.35)}100%{opacity:1;filter:none;transform:none}}
+@keyframes ae-pulse{50%{opacity:.3}}
+@keyframes ae-flow{to{stroke-dashoffset:-18}}
+@keyframes ae-orb{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.12)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes ae-hue{0%{filter:blur(12px) saturate(1.6) hue-rotate(0deg)}100%{filter:blur(12px) saturate(1.6) hue-rotate(360deg)}}
+@keyframes ae-caret{50%{opacity:0}}
+@keyframes ae-type{from{max-width:0}}
+@keyframes ae-rise{from{opacity:0;transform:translateY(40px);filter:blur(10px)}}
+@keyframes ae-orbit{to{transform:rotate(360deg)}}
+@keyframes cin-unveil{0%,30%{opacity:1}100%{opacity:0}}
+@keyframes cin-bar{0%,60%{transform:scaleY(1)}100%{transform:scaleY(0)}}
+@keyframes cin-grain{0%{transform:translate(0,0)}20%{transform:translate(-14px,9px)}40%{transform:translate(10px,-15px)}60%{transform:translate(-7px,-6px)}80%{transform:translate(15px,11px)}100%{transform:translate(0,0)}}
+@keyframes cin-breathe{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:.9;transform:scale(1.04)}}
+@keyframes cin-in{from{opacity:0;transform:scale(1.18);filter:blur(14px)}}
+@keyframes cin-up{from{opacity:0;transform:translateY(64px);filter:blur(10px)}}
+@keyframes cin-par{from{transform:translateY(160px)}to{transform:translateY(-160px)}}
+@keyframes cin-pop{from{opacity:0;transform:translateY(34px) scale(.88);filter:blur(6px)}}
+@keyframes cin-bloom{from{opacity:.1;transform:scale(.6)}to{opacity:.85;transform:scale(1.15)}}
+@keyframes cin-black{from{opacity:0}to{opacity:1}}
+@keyframes cin-titleout{to{transform:scale(1.22);opacity:0;filter:blur(14px)}}
+.ae-w{display:inline-block;animation:ae-blur 1.4s cubic-bezier(.22,1,.36,1) both}
+.ae-glass{background:linear-gradient(160deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.04) 45%,rgba(255,255,255,.06) 100%);border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 60px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.2),inset 1px 0 0 rgba(255,70,110,.22),inset -1px 0 0 rgba(70,150,255,.22);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6)}
+.ae-btn-w:hover{box-shadow:0 0 56px rgba(255,255,255,.28)}
+.ae-btn-g:hover{border-color:rgba(255,255,255,.4)}
+.cin-num{font-size:clamp(220px,30vw,420px);font-weight:600;letter-spacing:-.06em;line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.07)}
+@supports (animation-timeline: view()){
+.ae-reveal{animation:ae-rise both cubic-bezier(.22,1,.36,1);animation-timeline:view();animation-range:entry 10% entry 100%}
+.cin-scene{view-timeline-name:--scene}
+.cin-hero{view-timeline-name:--hero}
+.cin-cam{animation:cin-in linear both;animation-timeline:--scene;animation-range:entry 30% contain 12%}
+.cin-t1{animation:cin-up linear both;animation-timeline:--scene;animation-range:contain 0% contain 14%}
+.cin-t2{animation:cin-up linear both;animation-timeline:--scene;animation-range:contain 6% contain 20%}
+.cin-t3{animation:cin-up linear both;animation-timeline:--scene;animation-range:contain 12% contain 26%}
+.cin-par{animation:cin-par linear both;animation-timeline:--scene;animation-range:cover 0% cover 100%}
+.cin-bloom{animation:cin-bloom linear both;animation-timeline:--scene;animation-range:contain 0% contain 60%}
+.cin-p1{animation:cin-pop linear both;animation-timeline:--scene;animation-range:contain 18% contain 32%}
+.cin-p2{animation:cin-pop linear both;animation-timeline:--scene;animation-range:contain 28% contain 42%}
+.cin-p3{animation:cin-pop linear both;animation-timeline:--scene;animation-range:contain 38% contain 52%}
+.cin-p4{animation:cin-pop linear both;animation-timeline:--scene;animation-range:contain 48% contain 62%}
+.cin-type{animation:ae-type linear both;animation-timeline:--scene;animation-range:contain 12% contain 42%}
+.cin-reply{animation:cin-pop linear both;animation-timeline:--scene;animation-range:contain 44% contain 60%}
+.cin-black{animation:cin-black linear both;animation-timeline:--hero;animation-range:contain 35% contain 100%}
+.cin-titleout{animation:cin-titleout linear both;animation-timeline:--hero;animation-range:contain 8% contain 85%}
+}
+@keyframes hm-rise{from{opacity:0;transform:translateY(120px) scale(.86);filter:blur(16px)}}
+@keyframes hm-breathe{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:.95;transform:scale(1.05)}}
+@keyframes hm-sheen{0%{background-position:150% 0}100%{background-position:-50% 0}}
+@keyframes hm-stream{0%{transform:translate(var(--x0),0) scale(1);opacity:0}12%{opacity:1}80%{opacity:1}100%{transform:translate(0,var(--y1)) scale(.35);opacity:0}}
+@keyframes hm-push{to{transform:scale(2.6) translateY(-6%)}}
+@keyframes cin-assemble{from{transform:translate(var(--dx),var(--dy)) rotate(var(--rz)) scale(1.3);opacity:0;filter:blur(8px)}}
+@keyframes cin-lock{0%{opacity:0;transform:scale(.85)}60%{opacity:1;transform:scale(1.04)}100%{opacity:.6;transform:scale(1)}}
+@keyframes cin-draw1{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes cin-dots{to{stroke-dashoffset:-26.1}}
+@keyframes cin-dots-rev{to{stroke-dashoffset:34.1}}
+@keyframes cin-fade{from{opacity:0}}
+@keyframes cin-poolin{from{transform:scale(.3);opacity:.1}}
+@keyframes cin-ping{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.8);opacity:0}}
+@keyframes cin-flash{0%{opacity:0}30%{opacity:1}75%{opacity:1}100%{opacity:0}}
+@keyframes cin-dip{0%{opacity:1}30%{opacity:0}75%{opacity:0}100%{opacity:1}}
+@keyframes cin-shimmer{0%{top:100%}100%{top:-140px}}
+@keyframes cin-ripple{0%{opacity:0;transform:scale(.2)}25%{opacity:1}100%{opacity:0;transform:scale(2.6)}}
+@keyframes cin-mv-rej{0%{transform:translateX(-62vw);opacity:0}15%{opacity:1}70%{transform:translateX(0)}82%{transform:translateX(-36px) rotate(-5deg)}100%{transform:translateX(-90px) rotate(-8deg);opacity:.4}}
+@keyframes cin-mv-hold{0%{transform:translateX(-62vw);opacity:0}15%{opacity:1}80%{transform:translateX(-14px)}100%{transform:translateX(-14px)}}
+@keyframes cin-mv-pass{0%{transform:translateX(-62vw);opacity:0}15%{opacity:1}55%{transform:translateX(0)}100%{transform:translateX(36vw)}}
+@keyframes cin-c-rej{0%,68%{color:#E6EEEC;border-color:rgba(255,255,255,.18);box-shadow:none}74%,100%{color:#FF7A88;border-color:rgba(255,122,136,.55);box-shadow:0 0 30px rgba(255,90,106,.35)}}
+@keyframes cin-c-hold{0%,76%{color:#E6EEEC;border-color:rgba(255,255,255,.18);box-shadow:none}82%,100%{color:#FFBA5C;border-color:rgba(255,186,92,.5);box-shadow:0 0 30px rgba(255,186,92,.3)}}
+@keyframes cin-c-pass{0%,52%{color:#E6EEEC;border-color:rgba(255,255,255,.18);box-shadow:none}58%,100%{color:#2EE6D6;border-color:rgba(46,230,214,.55);box-shadow:0 0 34px rgba(46,230,214,.35)}}
+@keyframes cin-strip{0%,12%{transform:translateX(0)}40%,60%{transform:translateX(-33.3333%)}88%,100%{transform:translateX(-66.6667%)}}
+@keyframes cin-scanbar{from{top:0%}to{top:100%}}
+@keyframes cin-xr{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0% 0)}}
+@keyframes cin-ui{from{clip-path:inset(0% 0 0 0)}to{clip-path:inset(100% 0 0 0)}}
+@keyframes cin-feed{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+@keyframes cin-feedr{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+@keyframes cin-close{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.cin-track{display:flex;flex-direction:column;position:relative}
+.cin-stripframe{position:relative}
+.cin-fr{box-sizing:border-box;padding:56px 24px}
+.aera-mark{display:inline-block;flex:none;-webkit-mask:url("/aera-mark.svg") center/contain no-repeat;mask:url("/aera-mark.svg") center/contain no-repeat}
+.ae-faq:hover{border-color:rgba(255,255,255,.24)}
+.cin-credit a{color:#E6EEEC;text-decoration:none}.cin-credit a:hover{color:#2EE6D6}
+@supports (animation-timeline: view()){
+.cin-stripwrap{height:calc(var(--f) * 3.6)}
+.cin-stripframe{position:sticky;top:0;height:var(--f);overflow:hidden}
+.cin-track{flex-direction:row;width:300%;flex:1;min-height:0;animation:cin-strip linear both;animation-timeline:--scene;animation-range:contain 0% contain 100%}
+.cin-fr{flex:0 0 33.3333%;display:flex;align-items:center}
+.cin-scanbar{animation:cin-scanbar linear both;animation-timeline:--scene;animation-range:contain 10% contain 80%}
+.cin-xr{animation:cin-xr linear both;animation-timeline:--scene;animation-range:contain 10% contain 80%}
+.cin-ui{animation:cin-ui linear both;animation-timeline:--scene;animation-range:contain 10% contain 80%}
+.cin-end{view-timeline-name:--end}
+.cin-monopush{animation:hm-push linear both;animation-timeline:--hero;animation-range:contain 0% contain 100%}
+.cin-seg{animation-name:cin-assemble;animation-timing-function:linear;animation-fill-mode:both;animation-timeline:--scene}
+.cin-lock{animation:cin-lock linear both;animation-timeline:--scene;animation-range:contain 46% contain 60%}
+.cin-d1{animation:cin-draw1 linear both;animation-timeline:--scene;animation-range:contain 0% contain 32%}
+.cin-d2{animation:cin-draw1 linear both;animation-timeline:--scene;animation-range:contain 50% contain 75%}
+.cin-d3{animation:cin-draw1 linear both;animation-timeline:--scene;animation-range:contain 40% contain 78%}
+.cin-dfade{animation:cin-fade linear both;animation-timeline:--scene;animation-range:contain 18% contain 36%}
+.cin-d2-wrap{animation:cin-fade linear both;animation-timeline:--scene;animation-range:contain 48% contain 62%}
+.cin-dd0{animation:cin-draw1 linear both;animation-timeline:--scene;animation-range:contain 0% contain 30%}
+.cin-dd1{animation:cin-draw1 linear both;animation-timeline:--scene;animation-range:contain 5% contain 75%}
+.cin-ddx{animation:cin-flash linear both;animation-timeline:--scene;animation-range:contain 44% contain 62%}
+.cin-ddok{animation:cin-pop linear both;animation-timeline:--scene;animation-range:contain 54% contain 64%}
+.cin-ddr{animation:cin-fade linear both;animation-timeline:--scene;animation-range:contain 50% contain 58%}
+.cin-ddnum-bad{animation:cin-flash linear both;animation-timeline:--scene;animation-range:contain 38% contain 64%}
+.cin-ddnum-ok{animation:cin-dip linear both;animation-timeline:--scene;animation-range:contain 38% contain 64%}
+.cin-pool{transform-box:fill-box;transform-origin:center;animation:cin-poolin linear both;animation-timeline:--scene;animation-range:contain 20% contain 45%}
+.cin-close{animation:cin-close linear both;animation-timeline:--end;animation-range:entry 55% entry 100%}
+}
+@media (max-width:860px){.ae-navlinks{display:none !important}.ae-hide-sm{display:none !important}.cin-scene{height:auto !important}.cin-frame{position:relative !important;height:auto !important;padding:96px 0}.cin-num{display:none}.cin-stripwrap{height:auto !important}.cin-stripframe{position:relative !important;height:auto !important}.cin-track{flex-direction:column !important;width:100% !important;animation:none !important}.ae-faqside{position:relative !important;top:0 !important}.cin-hero{height:auto !important}.cin-hero > div{position:relative !important;height:760px !important}.cin-full{height:760px !important;padding:0 !important}}
+@media (prefers-reduced-motion:reduce){.aera *,.aera *::before,.aera *::after{animation:none !important;transition:none !important}}
+
+/* Phone fixes on top of the reference (BUILD.md §12: nothing broken ≤860px).
+   Unpinned, the hero's scroll-out timeline is already complete at load and
+   blacks the frame out, so skip it; and give unpinned scenes a mid-screen
+   timeline band so their scroll animations play over a full frame. */
+@media (max-width:860px){
+.cin-black,.cin-titleout,.cin-monopush{animation:none !important}
+.hm-anchor{left:50% !important;top:38% !important;scale:.55}
+.hero-copy{max-width:100%}
+.hero-copy h1{font-size:clamp(38px,11vw,46px) !important}
+.hero-readout{flex-wrap:wrap;white-space:normal !important;row-gap:6px}
+@supports (animation-timeline: view()){.cin-scene{view-timeline-inset:40% 40%}}
+}

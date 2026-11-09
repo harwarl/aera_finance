@@ -2,10 +2,12 @@ import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
   injectedWallet,
   metaMaskWallet,
+  rabbyWallet,
   rainbowWallet,
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { createConfig, http } from "wagmi";
+import { injected } from "wagmi/connectors";
 import { mainnet, sepolia } from "wagmi/chains";
 
 // WalletConnect (Reown Cloud) project ID — required for the WalletConnect
@@ -27,6 +29,7 @@ const connectors = connectorsForWallets(
       groupName: "Recommended",
       wallets: [
         metaMaskWallet,
+        rabbyWallet,
         walletConnectWallet,
         rainbowWallet,
         injectedWallet,
@@ -34,7 +37,7 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: "Atlas",
+    appName: "Aera Finance",
     projectId,
   },
 );
@@ -52,7 +55,9 @@ export const robinhoodTestnet = {
 // Robinhood Testnet is the default network for the app; mainnet is kept
 // available as an optional switch target, not the default.
 export const wagmiConfig = createConfig({
-  connectors,
+  // Coinbase Wallet's browser extension via a plain injected connector, so we
+  // get it on /connect without the Coinbase SDK (see note above).
+  connectors: [...connectors, injected({ target: "coinbaseWallet" })],
   chains: [robinhoodTestnet, mainnet],
   transports: {
     [robinhoodTestnet.id]: http(),
